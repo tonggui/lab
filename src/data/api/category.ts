@@ -26,7 +26,8 @@ import {
   convertCategoryTemplate as convertCategoryTemplateFromServer,
   convertCategoryTemplateTag as convertCategoryTemplateTagFromServer,
   convertTagWithSortList as convertTagWithSortListFromServer,
-  convertCategoryToTagList
+  convertCategoryToTagList,
+  convertSugCategoryList
 } from '../helper/category/convertFromServer'
 import {
   convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer
@@ -240,7 +241,7 @@ export const getCategoryAttrListByName = ({ attr, filter } :{ attr: CategoryAttr
     let { categoryAttrValueVos = [] } = data || {};
     categoryAttrValueVos = (categoryAttrValueVos || []).filter(v => +v.isLeaf === 1)
     return {
-      data: convertCategoryAttrValueListFromServer(categoryAttrValueVos),
+      data: convertSugCategoryList(categoryAttrValueVos),
       pagination: {
         ...pagination,
         total: categoryAttrValueVos.length,

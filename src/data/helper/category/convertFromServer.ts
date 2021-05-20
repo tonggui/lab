@@ -266,6 +266,33 @@ export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrVa
     //   return nextId - prevId
     // })
 }
+
+/**
+ * 清洗类目 /shangou/r/attrValueSug 属性（新版字段）
+ * @param list
+ * @param attr
+ */
+export const convertSugCategoryList = (list: any[], attr?): CategoryAttrValue[] => {
+  return (list || [])
+    .map((attrValue, index) => {
+      attrValue = attrValue || {}
+      attr = attr || {}
+      const node: CategoryAttrValue = {
+        id: attrValue.value || `${attrValuePrefix}${attrValue.text}`,
+        name: attrValue.text,
+        isCustomized: !attrValue.value, // TODO 自定义属性没有valueId，不是很稳定
+        namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],
+        idPath: attrValue.valueIdPath ? attrValue.valueIdPath.split(',').map(id => +id).filter(id => !!id) : [],
+        sequence: index + 1,
+        isLeaf: (+attrValue.isLeaf) === 1,
+        parentId: attr.id || attrValue.attrId,
+        parentName: attr.name || attrValue.attrName,
+        selected: attrValue.selected === 1
+      }
+      return node
+    })
+}
+
 /**
  * 清洗药品类目属性值
  * @param attrValue

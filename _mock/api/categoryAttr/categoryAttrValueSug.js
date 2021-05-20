@@ -8,8 +8,8 @@ module.exports = {
     totalCount: 0,
     // categoryAttrValueVos: [],
     "categoryAttrValueVos|0-5": [{
-      "valueId|+1": [1,11,21,31,41,51,61,71,81,91],
-      value: '@cname',
+      "value|+1": [1,11,21,31,41,51,61,71,81,91],
+      text: '@cname',
       valueIdPath: '1,11,111',
       valuePath: '@name,@name,@name',
       'isLeaf|1': [0, 1],
