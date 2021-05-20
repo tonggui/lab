@@ -8,6 +8,7 @@
     @change="handleSort"
     :smartSortSwitch="isSmartSort"
     @page-change="handlePageChange"
+    need-permission
   />
 </template>
 <script>

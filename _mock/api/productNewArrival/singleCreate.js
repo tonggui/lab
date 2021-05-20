@@ -6,6 +6,7 @@ module.exports = function (req) {
   return {
     code: 0,
     msg: '',
+    data: null
     // data: {
     //   code: 0, // 5102: "该商品被平台删除"
     //   message: '啦啦啦啦',

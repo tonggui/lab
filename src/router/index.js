@@ -4,6 +4,7 @@ import { parse } from 'qs'
 import routes from './config'
 import moduleControl from '@/module'
 import { install as installLeaveConfirmRouterPlugin } from '@/plugins/router-leave-confirm'
+import { install as installLxTimeCounterRouter } from '@/common/lx/lxReport/lxTime'
 import categoryMap from '@/module/category'
 import { pageGuardBeforeEach } from '@/common/app'
 import pvRouterGuard from '@/common/lx/pvRouterGuard'
@@ -112,6 +113,8 @@ router.beforeEach((to, _from, next) => {
 
 // lx pv上报
 router.beforeEach(pvRouterGuard)
+
+installLxTimeCounterRouter(router)
 
 // 装载页面离开确认插件
 installLeaveConfirmRouterPlugin(router)

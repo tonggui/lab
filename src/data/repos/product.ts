@@ -338,12 +338,13 @@ export const fetchUniSaveSubmitEditProduct = wrapAkitaBusiness(
     return [MODULE.SINGLE_POI_PRODUCT, type, true]
   }
 )(
-  (product: Product, context, poiId: number) => {
+  (product: Product, context, poiId: number, extra: any) => {
     // 审核中且编辑类型不为审核中修改时
     return submitEditProductUniSave({
       poiId,
       product,
-      context
+      context,
+      extra
     })
   }
 )
@@ -575,8 +576,9 @@ export const fetchSubmitBatchCreateRecommendProduct = (productList: RecommendPro
   poiId
 })
 
-export const fetchSubmitSingleCreateRecommendProduct = (product: RecommendProduct, poiId) => submitSingleCreateRecommendProduct({
+export const fetchSubmitSingleCreateRecommendProduct = (product: RecommendProduct, extra, poiId) => submitSingleCreateRecommendProduct({
   product,
+  extra,
   poiId
 })
 
@@ -590,8 +592,9 @@ export const fetchGetNewArrivalProductList =
 // 创建商品前校验 (魔方二期)
 export const fetchNewArrivalCheckProducts = (productList: RecommendProduct[], poiId: number) => newArrivalCheckProducts({ productList, poiId })
 
-export const fetchSubmitSingleCreateNewArrivalProduct = (product: RecommendProduct, poiId) => submitSingleCreateNewArrivalProduct({
+export const fetchSubmitSingleCreateNewArrivalProduct = (product: RecommendProduct, extra, poiId) => submitSingleCreateNewArrivalProduct({
   product,
+  extra,
   poiId
 })
 

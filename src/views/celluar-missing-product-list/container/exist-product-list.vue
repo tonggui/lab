@@ -63,12 +63,13 @@
             spu_id: id,
             st_spu_id: product.spId,
             create_source: decodeParamsFromURLSearch('awardCode') ? 5 : 0,
+            page_source: window.page_source,
             task_id: get(decodeParamsFromURLSearch('awardCode'), 'taskId')
           }
         })
         // 上架成功，列表中删除这个商品
         this.handleDelete(product, true)
-        this.$emit('after-put-on')
+        this.$emit('after-put-on', 'exist')
       }
     }
   }

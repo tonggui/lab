@@ -36,6 +36,7 @@
   import { helper } from '@/views/product-recommend/store'
   import { objToArray } from '../../../utils'
   import CubeLogo from '@/views/components/cube-logo/index'
+
   const MAX_SELECT = 100 // 最大可选数量
 
   const { mapActions, mapState } = helper('recommendList')
@@ -97,7 +98,7 @@
       },
       handleGoToRecommendEdit () {
         this.$emit('set-edit-product', this.editProductList)
-        this.$router.push({ path: '/product/recommend/edit', query: this.$route.query })
+        this.$router.push({ name: 'recommendEdit', query: this.$route.query })
       },
       handleClickCreate (callback) {
         if (this.drawerVisible) this.drawerVisible = false

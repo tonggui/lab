@@ -1,5 +1,7 @@
 import memoize from 'memoize-one'
 import { fetchGetPoiIsMedicineMerchant } from '@/data/repos/medicineMerchantPoi'
+import { fetchPageEnvInfo } from '@/data/repos/common'
+import { getCookie } from '@utiljs/cookie'
 
 export const some = (fn, defaultValue = false) => (list) => {
   if (list.length <= 0) {
@@ -83,6 +85,29 @@ export const getProductNameExample = (category) => {
 export const isAssociateMedicineMerchant = memoize(() => {
   return fetchGetPoiIsMedicineMerchant().catch((e) => {
     console.error(`获取门店是否关联医药商家商品中心失败: ${e}`)
+    return false
+  })
+})
+
+export const isMedicinePoild = memoize(() => {
+  const poiId = getCookie('wmPoiId')
+  // 医药健康二级经营品类id
+  const medicineIdList = [
+    6006, // 医疗器械店
+    4012, // 成人/情趣用品店
+    179, // 综合药店
+    180, // 中药店
+    181, // 营养保健品店，（PS：保健品走商超逻辑，但在产品业务层，还是属于药品类，不是零售类）
+    6005 // 眼镜店
+  ]
+  return fetchPageEnvInfo({ poiId }).then((data) => {
+    console.log(data)
+    const tags = data.poiTags
+    if (tags && Array.isArray(tags)) {
+      return tags.some(tag => medicineIdList.indexOf(tag.id) > -1)
+    }
+  }).catch((e) => {
+    console.error(`获取门店是否是医药门店失败: ${e}`)
     return false
   })
 })

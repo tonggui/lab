@@ -17,8 +17,10 @@
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import errorHandler from '@/views/edit-page-common/error'
   import { combineCategoryMap } from '@/data/helper/category/operation'
-  import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
+  import TimeCounters, { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
   import lx from '@/common/lx/lxReport'
+  import { getProductChangInfo } from '@/common/utils'
+  import { uuid } from '@utiljs/guid'
 
   export default {
     name: 'new-batch-product-create',
@@ -54,7 +56,9 @@
       }
     },
     mounted () {
+      this.createTime = Date.now()
       FillTime.fillStartTime = +new Date()
+      window.addEventListener('beforeunload', this.pageLeave)
     },
     methods: {
       handleValidate (cb) {
@@ -68,6 +72,7 @@
         try {
           const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
           const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
+          const traceId = uuid()
           const response = await fetchSubmitBatchCreateByProduct({
             product: {
               ...rest,
@@ -75,7 +80,11 @@
               categoryAttrValueMap
             },
             poiIdList: this.poiIdList,
-            context
+            context,
+            extra: {
+              biz: this.product.spId ? '单个商品搜索新建批量生成（跨店）' : '单个商品手动新建批量生成（跨店）',
+              traceId
+            }
           })
           FillTime.fillEndTime = +new Date()
           lx.mv({
@@ -84,9 +93,22 @@
               spu_id: this.product.spuId || response.id || 0,
               st_spu_id: this.product.spId || 0,
               source_id: 1,
-              viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
+              viewtime: `${(SearchTime.getSearchTime() + FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}, ${SearchTime.getSearchTime()}, ${(FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}`,
+              select_time: +new Date(),
+              list: TimeCounters.getResult(),
+              trace_id: traceId
             }
           })
+
+          lx.mv({
+            bid: 'b_shangou_online_e_5f609qb1_mv',
+            val: {
+              st_spu_id: this.product.spId || 0,
+              op_type: this.product.spId ? 1 : 0,
+              poi_num: this.poiIdList.length
+            }
+          })
+
           this.$emit('submit')
         } catch (err) {
           errorHandler(err)({
@@ -96,7 +118,20 @@
         } finally {
           callback()
         }
+      },
+      pageLeave () {
+        lx.mc({
+          cid: 'c_fd6n21x7',
+          bid: 'b_shangou_online_e_7cxe0v96_mc',
+          val: {
+            list: getProductChangInfo(this.product),
+            op_type: this.product.spId ? 1 : 0
+          }
+        })
       }
+    },
+    beforeDestroy () {
+      this.pageLeave()
     }
   }
 </script>

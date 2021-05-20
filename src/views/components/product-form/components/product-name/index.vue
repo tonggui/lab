@@ -8,6 +8,7 @@
 <script>
   import Input from '../Input'
   import AuditFieldTip from '../audit-field-tip'
+  import TimeCounters from '@/common/lx/lxReport/lxTime'
 
   export default {
     name: 'product-name',
@@ -42,11 +43,13 @@
     },
     methods: {
       handleFocus (e) {
+        TimeCounters.setTime('name', +new Date())
         this.using = true
         this.$emit('focus', e)
         this.val = this.value
       },
       handleBlur (e) {
+        TimeCounters.setTime('name', +new Date())
         this.using = false
         this.$emit('blur', e)
         if (this.value !== this.val) {

@@ -92,7 +92,7 @@
 </style>
 <style lang="less" scoped>
   .boo-icon.boo-icon-disabled {
-    color: @disabled-color;
+    color: @disabled-color !important;
     cursor: not-allowed !important;
   }
 </style>

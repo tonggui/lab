@@ -44,6 +44,7 @@ export {
 } from '../merchantApi/poi'
 export {
   getIsMerchant as fetchGetIsMerchant,
+  getIsHeadQuarterMode as fetchGetIsHeadQuarterMode,
   getPoiSizeConfig as fetchGetPoiSizeConfig,
   getMerchantCommonInfo as fetchGetMerchantInfo
 } from '../merchantApi/poi'
@@ -146,7 +147,7 @@ export const fetchGetModifyExcelTemplate = async () => {
 export const fetchGetDeleteRelExcelTemplate = () => getBatchExcelTemlateMap()
   .then(data => pickExcelTemplate(data, ['mpcDeleteRelTpl'], { extraLink: 'url' }))
 
-export const fetchSubmitBatchCreateExcel = async (wmPoiIds: number[], file: File, fillPicBySp: boolean) => {
+export const fetchSubmitBatchCreateExcel = async (wmPoiIds: number[], file: File, fillPicBySp: boolean, traceObj: object) => {
   if (await isAssociateMedicineMerchant()) {
     return submitMedicineBatchCreateExcel({
       wmPoiIds,
@@ -157,7 +158,8 @@ export const fetchSubmitBatchCreateExcel = async (wmPoiIds: number[], file: File
   return submitBatchCreateExcel({
     wmPoiIds,
     file,
-    fillPicBySp
+    fillPicBySp,
+    traceObj
   })
 }
 export const fetchSubmitBatchModifyExcel = async (wmPoiIds: number[], file: File, matchType: number) => {
@@ -176,8 +178,8 @@ export const fetchSubmitBatchRel = async (wmPoiIds: number[], syncTagList: objec
   return submitBatchRel({ wmPoiIds, syncTagList })
 }
 
-export const fetchSubmitNewBatchRel = async (wmPoiIds: number[], params: object) => {
-  return submitNewBatchRel({ wmPoiIds, params })
+export const fetchSubmitNewBatchRel = async (wmPoiIds: number[], params: object, traceId: string) => {
+  return submitNewBatchRel({ wmPoiIds, params, traceId })
 }
 
 export const fetchGetPoiInfoListByIdList = async (routerTagId: number, idList: number[]) => {
