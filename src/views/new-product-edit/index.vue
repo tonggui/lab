@@ -214,7 +214,6 @@
         if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.originalFormData
-          console.log('##diffCommon ', oldData, newData, this.needAuditList, diffCommon(oldData, newData, this.needAuditList))
           return diffCommon(oldData, newData, this.needAuditList)
         }
         return false

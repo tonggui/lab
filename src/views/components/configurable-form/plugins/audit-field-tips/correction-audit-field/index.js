@@ -19,7 +19,6 @@ const getNeedAuditTipConfig = () => Object.values(SPU_FIELD).map(val => ({
       },
       'options.original' () {
         const originalProduct = this.getContext('originalProduct')
-        console.log('##val ', val, get(originalProduct, val))
         return get(originalProduct, val)
       },
       'options.visible' () {

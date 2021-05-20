@@ -107,7 +107,6 @@ export default (WrapperComponent) => Vue.extend({
       }
     },
     getCfg () {
-      console.log('##this.complianceNeedAuditTip ', this.complianceNeedAuditTip)
       return Object.values(SKU_FIELD).filter(key => (this.complianceNeedAuditTip && this.needAuditList.includes(key)) || key === 'upcCode').reduce((prev, next) => {
         prev[next] = cfg => this.mergeConfig(cfg, next)
         return prev
