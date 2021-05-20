@@ -32,7 +32,7 @@ export const triggerTour = () => {
           steps: oldMerchantSteps,
           oncomplete
         }).start()
-      }, 1500)
+      }, 2000)
     } else { // 新商家
       // 因为存在一些异步获取的接口，所以一定延迟加载引导
       if (LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_WAY] === 'fromPoi') {
@@ -44,14 +44,14 @@ export const triggerTour = () => {
               toastModal()
             }
           }).start()
-        }, 1500)
+        }, 2000)
       } else {
         setTimeout(() => {
           stepTour({
             steps: stepsFromSelf,
             oncomplete
           }).start()
-        }, 1500)
+        }, 2000)
       }
     }
   }
@@ -66,6 +66,6 @@ export const triggerProductOperation = () => {
           LocalStorage[STORAGE_KEYS.MERCHANT_OPERATION_GUIDE] = true
         }
       }).start()
-    }, 1000)
+    }, 2000)
   }
 }
