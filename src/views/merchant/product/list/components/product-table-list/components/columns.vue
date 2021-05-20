@@ -77,12 +77,14 @@
           },
           render: (h, { row }) => {
             return (
-              <AssociatedPoi
-                id={row.id}
-                vMc={{ bid: 'b_shangou_online_e_t4mnknun_mc' }}
-              >
-                {row.poiCount}
-              </AssociatedPoi>
+              <div class="associatedPoi">
+                <AssociatedPoi
+                  id={row.id}
+                  vMc={{ bid: 'b_shangou_online_e_t4mnknun_mc' }}
+                >
+                  {row.poiCount}
+                </AssociatedPoi>
+              </div>
             )
           }
         }, {

@@ -2,10 +2,16 @@
   <div class="batch-entrance">
     <div>商品管理</div>
     <div>
-      旧版批量功能
-      <span class="line" />
+<!--      旧版批量功能-->
+<!--      <Tooltip type="custom" content="更多功能介绍，请点击这里学习哦~" keyName="MERCHANT_GUIDE_BOOK" :needOrders="true">-->
+<!--        <a>-->
+<!--          <Icon type="book" /> 遇到问题，查看"使用手册"-->
+<!--        </a>-->
+<!--      </Tooltip>-->
+<!--      <span class="line" />-->
       <NamedLink tag="a" :name="batchPage" :query="{ routerTagId }" v-mc="{ bid: 'b_shangou_online_e_act4ikmb_mc' }">
-        点击进入<Icon type="keyboard-arrow-right" size="18"/>
+<!--        点击进入<Icon type="keyboard-arrow-right" size="18"/>-->
+        <Icon local="switch" /> 我想要使用"旧版商品管理工具"
       </NamedLink>
     </div>
   </div>
@@ -13,6 +19,8 @@
 <script>
   import NamedLink from '@components/link/named-link'
   import BatchPage from '@sgfe/eproduct/navigator/pages/batch/create'
+  import LocalStorage, { KEYS } from '@/common/local-storage'
+
   export default {
     name: 'merchant-product-list-batch-entrance',
     props: {
@@ -24,6 +32,11 @@
     data () {
       return {
         batchPage: BatchPage.name
+      }
+    },
+    computed: {
+      showTooltip () {
+        return !LocalStorage[KEYS.MERCHANT_OPEN_STATUS]
       }
     },
     components: {

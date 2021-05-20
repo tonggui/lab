@@ -8,7 +8,7 @@
   </Tooltip>
 </template>
 <script>
-  import storage, { KEYS } from '@/common/local-storage'
+  import storage, { KEYS, orders } from '@/common/local-storage'
 
   export default {
     name: 'tooltip-guide',
@@ -31,10 +31,16 @@
       always: {
         type: Boolean,
         default: true
-      }
+      },
+      needOrders: Boolean,
+      orders: Array
     },
     computed: {
       _disabled () {
+        const customOrder = (this.orders && this.orders.length) ? this.orders : orders
+        const findIndex = customOrder.findIndex(item => item === this.keyName)
+        const previousGuideFinish = customOrder.slice(0, findIndex).every(item => storage[KEYS[item]])
+        if (this.needOrders && !previousGuideFinish) return true
         return this.disabled || storage[KEYS[this.keyName]]
       },
       visible () {

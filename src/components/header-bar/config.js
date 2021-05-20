@@ -159,6 +159,27 @@ export const leftMenu = [{
 }]
 
 export const rightMenu = [{
+  key: 'merchantWarehouseConfig',
+  label: '商品库设置',
+  icon: {
+    type: 'perm-data-setting'
+  },
+  children: [
+    {
+      key: 'importFromPoi',
+      label: '从分店导入商品'
+    },
+    {
+      key: 'resetMerchant',
+      label: '重置总部商品库'
+    },
+    {
+      key: 'closeMerchant',
+      label: '关闭总部商品库'
+    }
+  ],
+  bid: '' // TODO
+}, {
   key: 'productConfig',
   label: '商品配置管理',
   icon: {

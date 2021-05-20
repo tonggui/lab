@@ -84,10 +84,15 @@
     align-items: center;
     background: #fff;
     padding: 15px 20px;
+    justify-content: space-between;
   }
 
   .left {
     display: flex;
     flex: 1;
+  }
+  .right {
+    display: flex;
+    //flex: 1;
   }
 </style>

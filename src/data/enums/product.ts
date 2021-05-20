@@ -191,3 +191,12 @@ export enum PRODUCT_SALE_TYPE {
   NORMAL = 1,
   PRE = 2
 }
+
+/**
+ * 商品中心开通状态
+ */
+export enum MERCHANT_OPEN_STATUS {
+  DEFAULT = 0,
+  OPEN = 1,
+  CLOSE = 2
+}

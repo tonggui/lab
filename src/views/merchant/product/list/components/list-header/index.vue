@@ -1,6 +1,7 @@
 <template>
   <div>
     <BatchEntrance :router-tag-id="routerTagId" />
+    <ProductRelate />
     <BatchRelTaskResult />
     <NavigatorBar />
   </div>
@@ -9,6 +10,7 @@
   import BatchEntrance from './components/batch-entrance'
   import NavigatorBar from './components/navigator-bar'
   import BatchRelTaskResult from '@/views/merchant/batch-management/new-batch-rel/container/batch-rel-task-result'
+  import ProductRelate from '../../container/product-relate'
 
   export default {
     name: 'merchant-product-list-header',
@@ -20,7 +22,8 @@
     components: {
       BatchEntrance,
       NavigatorBar,
-      BatchRelTaskResult
+      BatchRelTaskResult,
+      ProductRelate
     }
   }
 </script>

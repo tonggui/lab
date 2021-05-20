@@ -50,7 +50,8 @@
         </div>
       </template>
       <template slot="empty">
-        <Empty description="还没有分类哦~" v-show="!loading">
+        <slot name="empty" v-if="$slots.empty"/>
+        <Empty description="还没有分类哦~" v-show="!loading" v-else>
           <PermissionBtn btn-type="CREATE_CLASSIFICATION" :need-permission="needPermission" @click="handleAddTag" type="primary">新建分类</PermissionBtn>
         </Empty>
       </template>
@@ -66,6 +67,7 @@
       :loading="submitting"
       :support-app-code="supportAppCode"
       :support-top-time="supportTopTime"
+      :isMerchant="isMerchant"
       @on-ok="handleSubmit"
       @on-cancel="handleHideModal"
     />
@@ -87,6 +89,7 @@
   export default {
     name: 'manage-tag-list',
     props: {
+      isMerchant: Boolean,
       labelInValue: Boolean,
       productCount: Number,
       expandList: Array,

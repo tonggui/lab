@@ -26,7 +26,13 @@ import {
   // submitCancelProductAudit,
   getProductRevocation,
   getNeedAudit,
-  getAuditProductDetail
+  getAuditProductDetail,
+  getMerchantOpenStatus,
+  getResetMerchant,
+  getCloseMerchant,
+  getRunningTaskStatus,
+  getTaskFinish,
+  getUnRelatedProductCount
 } from '../merchantApi/product'
 import { getProductList as getMedicineProductList } from '../api/medicineMerchantApi/product'
 import {
@@ -96,7 +102,19 @@ export const fetchGetAuditProductSearchSuggestion = (keyword: string) => {
   })
 }
 
+export const fetchGetMerchantOpenStatus = () => getMerchantOpenStatus()
+
+export const fetchGetResetMerchant = () => getResetMerchant()
+
+export const fetchGetRunningTaskStatus = (taskType) => getRunningTaskStatus({ taskType })
+
+export const fetchTaskFinish = (taskId) => getTaskFinish({ taskId })
+
+export const fetchGetCloseMerchant = () => getCloseMerchant()
+
 export const fetchGetCategoryAppealInfo = (id: number) => getCategoryAppealInfo({ id })
+
+export const fetchGetUnRelatedProductCount = () => getUnRelatedProductCount()
 
 export const getProductList = async (params) => await isAssociateMedicineMerchant() ? getMedicineProductList(params) : getShopProductList(params)
 

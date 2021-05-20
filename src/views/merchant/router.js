@@ -11,7 +11,10 @@ import SettingPages from './setting/router'
 import { PLATFORM } from '@/data/enums/common'
 import { KEYS } from './batch-management/menus'
 import BatchPages from './batch-management/router'
-
+import { fetchGetMerchantOpenStatus } from '@/data/repos/merchantProduct'
+import LocalStorage, { KEYS as STORAGE_KEYS } from '@/common/local-storage'
+import { MERCHANT_OPEN_STATUS } from '@/data/enums/product'
+import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
 import { isAssociateMedicineMerchant } from '@/module/helper/utils'
 
 export default [
@@ -43,6 +46,27 @@ export default [
     meta: {
       pv: { cid: 'c_shangou_online_e_036oyg8f' },
       title: '列表页'
+    },
+    beforeEnter: async (to, from, next) => {
+      try {
+        const {
+          closeTaskStatus,
+          resetTaskStatus,
+          merStatus
+        } = await fetchGetMerchantOpenStatus()
+        if (Object.values(BATCH_REL_TASK_STATUS).includes(resetTaskStatus)) {
+          next({ name: 'merchantReset' })
+        } else if (Object.values(BATCH_REL_TASK_STATUS).includes(closeTaskStatus)) {
+          next({ name: 'merchantClose' })
+        } else if (merStatus === MERCHANT_OPEN_STATUS.OPEN) {
+          next()
+        } else {
+          LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] = false
+          window.location.href = '/reuse/sc/product/views/seller/center/merchant'
+        }
+      } catch (err) {
+        next()
+      }
     }
   },
   {
@@ -176,5 +200,29 @@ export default [
       pv: { cid: 'c_shangou_online_e_l1zbbr16' },
       title: '审核详情修改页'
     }
+  },
+  {
+    name: 'merchantReset',
+    path: 'reset',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_reset" */ './status-page/reset'
+        )
+  },
+  {
+    name: 'merchantResetSelect',
+    path: 'resetSelect',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_reset_select" */ './status-page/reset-select'
+        )
+  },
+  {
+    name: 'merchantClose',
+    path: 'close',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_close" */ './status-page/close'
+        )
   }
 ]
