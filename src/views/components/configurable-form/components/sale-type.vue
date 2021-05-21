@@ -28,7 +28,7 @@
         :disabled="disabled"
         :options="rangeOptions"
         placement="bottom-end"
-        format="yyyy-MM-dd HH:mm"
+        format="yyyy-MM-dd HH:mm:ss"
         type="date"
         placeholder="请选择发货时间"
         :clearable="false"
