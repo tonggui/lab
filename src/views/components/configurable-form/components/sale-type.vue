@@ -19,17 +19,17 @@
       >
         <Icon class="tip" local="question-circle"/>
       </Tooltip>
-      <a class="show-link" @click.prevent="openView">c端效果展示</a>
+      <a class="show-link" @click.prevent="openView">用户端效果展示</a>
     </RadioGroup>
     <div class="field" v-if="saleType === PRODUCT_SALE_TYPE.PRE">
       <span class="label required">发货时间</span>
       <DatePicker
+        type="datetime"
         :value="deliveryTime"
         :disabled="disabled"
         :options="rangeOptions"
         placement="bottom-end"
         format="yyyy-MM-dd HH:mm:ss"
-        type="date"
         placeholder="请选择发货时间"
         :clearable="false"
         style="width: 250px"
@@ -39,11 +39,11 @@
     </div>
     <Modal
       v-model="imgModal"
-      title="c端效果展示图"
+      title="用户端效果展示"
       footer-hide
       width="720"
     >
-      <img style="width: 680px; height: 680px; object-fit: contain;" :src="preSaleImg" alt="c端效果展示">
+      <img style="width: 680px; height: 680px; object-fit: contain;" :src="preSaleImg" alt="用户端效果展示">
     </Modal>
   </div>
 </template>
@@ -108,6 +108,7 @@
     }
     .field {
       display: flex;
+      margin-top: 15px;
       margin-left: -65px;
       margin-bottom: 10px;
       font-size: 12px;
