@@ -114,29 +114,45 @@
           })
         } else if (index === 0) {
           this.submit(() => {
-            this.$Modal.confirm({
-              title: '温馨提示',
-              render: () => (
-                <div>
-                  <div>正在为所选商品进行设置····</div>
-                  <div>配置完成会通知您</div>
-                  现在可以点击【任务进度】查看，或返回商品列表等待配置结束
-                </div>
-              ),
-              okText: '查看任务进度',
-              cancelText: '返回商品列表',
-              onCancel: () => {
-                this.goToList()
-              },
-              onOk: () => {
-                this.$router.push({
-                  path: '/batchManagement/progress',
-                  query: {
-                    ...this.$route.query
-                  }
-                })
-              }
-            })
+            if (!this.config.isAll) {
+              this.$Modal.confirm({
+                title: '温馨提示',
+                render: () => (
+                  <div>
+                    <div>正在为所选商品进行设置····</div>
+                    <div>配置完成会通知您</div>
+                    现在可以点击【任务进度】查看，或返回商品列表等待配置结束
+                  </div>
+                ),
+                okText: '查看任务进度',
+                cancelText: '返回商品列表',
+                onCancel: () => {
+                  this.goToList()
+                },
+                onOk: () => {
+                  this.$router.push({
+                    path: '/batchManagement/progress',
+                    query: {
+                      ...this.$route.query
+                    }
+                  })
+                }
+              })
+            } else {
+              this.$Modal.success({
+                title: '提示',
+                content: '库存清0规则配置成功',
+                okText: '返回配置管理',
+                onOk: () => {
+                  this.$router.push({
+                    path: '/merchant/product/setting',
+                    query: {
+                      ...this.$route.query
+                    }
+                  })
+                }
+              })
+            }
           })
         }
       }
