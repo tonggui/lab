@@ -3,6 +3,7 @@ import { validate } from '@sgfe/product-validate'
 import { SPU_FIELD } from './field'
 import { VIDEO_STATUS } from '@/data/constants/video'
 import { noop, get } from 'lodash'
+import { PRODUCT_SALE_TYPE } from '@/data/enums/product'
 
 const validator = (...args) => {
   const result = validate(...args)
@@ -137,7 +138,7 @@ const validateCollection = {
     }
   },
   [SPU_FIELD.SALE_TYPE]: (value) => {
-    if (!value.deliveryTime) {
+    if (value.saleType === PRODUCT_SALE_TYPE.PRE && !value.deliveryTime) {
       return '发货时间不能为空'
     }
   }
