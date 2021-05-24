@@ -135,6 +135,11 @@ const validateCollection = {
     if (value && value.length > maxLength) {
       return `文字详情最多输入${maxLength}字`
     }
+  },
+  [SPU_FIELD.SALE_TYPE]: (value) => {
+    if (!value.deliveryTime) {
+      return '发货时间不能为空'
+    }
   }
 }
 

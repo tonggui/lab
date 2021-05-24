@@ -37,7 +37,6 @@ export default class BaseForm {
     this.plugins.forEach(plugin => {
       plugin.install(this, this.config)
     })
-    console.log('##init config', config, data)
 
     // container 组合
     traverse(this.config, (c) => {

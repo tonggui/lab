@@ -31,7 +31,6 @@
         placement="bottom-end"
         format="yyyy-MM-dd HH:mm:ss"
         placeholder="请选择发货时间"
-        :clearable="false"
         style="width: 250px"
         @on-change="handleDateChange"
       >
@@ -78,7 +77,7 @@
         return this.value.saleType
       },
       deliveryTime () {
-        return this.value.deliveryTime ? new Date(this.value.deliveryTime) : getToday().add(1, 'days')
+        return this.value.deliveryTime ? new Date(this.value.deliveryTime) : ''
       }
     },
     methods: {
@@ -91,7 +90,7 @@
       handleDateChange (v) {
         this.$emit('change', {
           saleType: this.saleType,
-          deliveryTime: (new Date(v)).getTime()
+          deliveryTime: v ? (new Date(v)).getTime() : ''
         })
       },
       openView () {
