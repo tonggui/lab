@@ -85,6 +85,8 @@ declare interface TaskInfo {
   taskType?: number;
   subType?: number; // 子类型
   tagList?: string[];
+  subTypeDesc?: string; // 修改方式描述
+  poiSelectType?: number; // 门店选择方式
 }
 
 declare interface MerchantTaskInfo {

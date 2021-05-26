@@ -8,6 +8,12 @@ const SUB_TYPE = {
   3: '删除'
 }
 
+const POI_SELECT_TYPE = {
+  1: '所有门店商品',
+  2: '指定门店商品',
+  3: '总部商品'
+}
+
 class NewMerchantTaskBatchModify extends NewMerchantProgressTask {
   private failText: any;
   private modalTitle: string;
@@ -43,7 +49,7 @@ class NewMerchantTaskBatchModify extends NewMerchantProgressTask {
 
   protected getDetailAction (): TaskAction[] {
     const actionList: TaskAction[] = []
-    const { productExcelUrl, subType = 1, poiExcelUrl, tagList, productCount } = this.task
+    const { productExcelUrl, subType = 1, poiExcelUrl, tagList, productCount, poiSelectType = 1 } = this.task
     if (this.sourceDisplayText && productExcelUrl) {
       actionList.push({
         text: '查看详情',
@@ -60,7 +66,7 @@ class NewMerchantTaskBatchModify extends NewMerchantProgressTask {
                 tag: tagList,
                 productUrl: productExcelUrl,
                 productUrlText: this.productUrlText,
-                poiRange: '',
+                poiRange: POI_SELECT_TYPE[poiSelectType],
                 poiUrl: poiExcelUrl
               })
             })

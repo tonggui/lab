@@ -120,7 +120,9 @@ export const convertTask = (node: any): TaskInfo => {
     poiCount: node.poiCount,
     productCount: node.productCount,
     subType: node.subType,
-    tagList: node.tagList
+    subTypeDesc: node.subTypeDesc,
+    tagList: node.tagList,
+    poiSelectType: node.poiSelectType
   }
   return task
 }
