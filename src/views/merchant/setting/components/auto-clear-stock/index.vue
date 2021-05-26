@@ -69,10 +69,10 @@
         let typeArr = []
         if (res.config.type) {
           res.config.type.map((item, i) => {
-            if (item === 1) {
+            if (item === 2) {
               typeArr.push('买家')
             }
-            if (item === 2) {
+            if (item === 1) {
               typeArr.push('店铺')
             }
           })

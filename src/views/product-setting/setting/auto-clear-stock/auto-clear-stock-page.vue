@@ -131,7 +131,7 @@
                 },
                 onOk: () => {
                   this.$router.push({
-                    path: '/batchManagement/progress',
+                    path: getIsSingle() ? '/batchManagement/progress' : '/merchant/progress',
                     query: {
                       ...this.$route.query
                     }
