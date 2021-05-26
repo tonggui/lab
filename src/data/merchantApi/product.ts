@@ -361,3 +361,14 @@ export const getAuditProductList = ({ pagination, searchWord, auditStatus } : {
  * @param poiId 门店id
  */
 export const downloadProductList = () => httpClient.post('hqcc/r/downloadMerchantProductByExcel')
+
+/**
+ * 商家商品中心批量修改分类接口
+ */
+export const apiBatchModifyTag = ({ spuIds, type, tagIds, isSelectAll, wmPoiIds }) => httpClient.post('hqcc/w/batchUpdateProductTag', {
+  spuIds,
+  type,
+  tagIds,
+  isSelectAll,
+  wmPoiIds
+})

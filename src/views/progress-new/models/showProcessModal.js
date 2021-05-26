@@ -6,6 +6,7 @@ import Exception from '@/views/progress/components/ModalContentException'
 import Merchant from '@/views/progress/components/ModalContentMerchant'
 import Modal from '@/components/modal'
 import ModalNewBatchTask from '@/views/progress/components/ModalNewBatchTask'
+import ModalNewBatchTaskModify from '@/views/progress/components/ModalNewBatchTaskModify'
 
 // TODO 解决tsx编译问题，可废除本文件通过OOP实现分层封装处理
 
@@ -18,7 +19,8 @@ export const ContentMap = {
   'EXCEPTION': Exception,
   'EXCEPTION_MERCHANT': Merchant,
   'DETAIL_MERCHANT': Merchant,
-  'NEW_BATCH_TASK': ModalNewBatchTask
+  'NEW_BATCH_TASK': ModalNewBatchTask,
+  'NEW_BATCH_TASK_MODIFY': ModalNewBatchTaskModify
 }
 
 export const Width = {

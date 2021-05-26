@@ -9,7 +9,7 @@ class MerchantProgressTask extends ProgressTask {
     const param1 = this.task.statusParam1
     const param2 = this.task.statusParam2
     switch (status) {
-      case MERCHANT_STATUS.PENDING: return ['待处理', '', '']
+      case MERCHANT_STATUS.PENDING: return ['排队中', '', '']
       case MERCHANT_STATUS.DOING: return [`处理中（已完成${param1}%）`, '', '']
       case MERCHANT_STATUS.PART_SUCCESS: return ['', `成功：${param1}`, `失败：${param2}`]
       case MERCHANT_STATUS.SUCCESS: return ['', '全部成功', '']

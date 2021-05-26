@@ -14,11 +14,13 @@
         :dataSource="list"
         :pagination="pagination"
         :loading="loading"
+        :tag-list="tagList"
         @page-change="handlePageChange"
         @delete="handleDelete"
         @edit="handleModify"
         @edit-sku="handleModifySku"
         @refresh="handleRefresh"
+        @batch="handleBatchOperation"
       >
         <div slot="tabs-extra" class="search-wrapper">
           <ProductSearch @search="handleSearch" />
@@ -37,6 +39,7 @@
   import withPromiseEmit from '@/hoc/withPromiseEmit'
 
   const { mapState, mapActions } = helper('product')
+  const { mapGetters } = helper()
 
   export default {
     name: 'merchant-product-manage-product-list-container',
@@ -49,7 +52,8 @@
         'pagination',
         'tagId',
         'error'
-      ])
+      ]),
+      ...mapGetters(['tagList'])
     },
     components: {
       ProductTableList: withPromiseEmit(ProductTableList),
@@ -62,7 +66,8 @@
         handleModify: 'modify',
         handleModifySku: 'modifySkuList',
         handleRefresh: 'getList',
-        handleDelete: 'delete'
+        handleDelete: 'delete',
+        handleBatchOperation: 'batch'
       }),
       handleSearch (item = {}) {
         this.$router.push({

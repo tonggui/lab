@@ -1,5 +1,6 @@
 import createForm from '@/views/merchant/edit-page-common/form'
-import createTagListPlugin from '@/views/components/configurable-form/plugins/tag-list'
+// import createTagListPlugin from '@/views/components/configurable-form/plugins/tag-list'
+import createSuggestTagListPlugin from '@/views/components/configurable-form/plugins/suggest-tag-list'
 import createSuggestCategoryPlugin from '@/views/components/configurable-form/plugins/suggest-category'
 import createCategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
 import createSelectProductFromLibraryPlugin from '@/views/components/configurable-form/plugins/product-library'
@@ -9,10 +10,12 @@ import createProductCorrectionAuditTips
 
 import { fetchGetSuggestCategoryByProductName, fetchGetTagList } from '@/data/repos/merchantCategory'
 import { fetchGetCategoryAppealInfo } from '@/data/repos/merchantProduct'
+import { fetchGetSuggestTagInfo } from '@/data/repos/category'
 
 const plugins = [
-  createTagListPlugin({
-    getTagList: fetchGetTagList
+  createSuggestTagListPlugin({
+    getTagList: fetchGetTagList,
+    getSuggestList: fetchGetSuggestTagInfo
   }),
   createCategorySelectSpPlugin(),
   createSelectProductFromLibraryPlugin(),

@@ -4,6 +4,7 @@ import { MerchantProgressTask } from '@/views/progress-new/models/merchant/merch
 import { MerchantTaskBatchUploadImage } from '@/views/progress-new/models/merchant/merchant-task-batch-upload-image'
 import { MerchantTaskBatchRel } from '@/views/progress-new/models/merchant/merchant-task-batch-rel'
 import { NewMerchantTaskBatchRel } from '@/views/progress-new/models/merchant/new-merchant-task-batch-rel'
+import { NewMerchantTaskBatchModify } from '@/views/progress-new/models/merchant/new-merchant-task-batch-modify'
 
 const createMerchantTaskViewModel = (task: TaskInfo) => {
   switch (task.type) {
@@ -16,6 +17,22 @@ const createMerchantTaskViewModel = (task: TaskInfo) => {
       return new MerchantTaskBatchUploadImage(task)
     case MerchantTaskType.NEW_BATCH_REL:
       return new NewMerchantTaskBatchRel(task)
+    case MerchantTaskType.BATCH_MODIFY_TAG:
+      return new NewMerchantTaskBatchModify({
+        task,
+        modalTitle: '批量修改分类',
+        failText: '有商品修改失败',
+        failUrlText: '修改商品分类处理失败明细.xlsx',
+        productUrlText: '修改分类的商品列表.xlsx'
+      })
+    case MerchantTaskType.BATCH_DELETE:
+      return new NewMerchantTaskBatchModify({
+        task,
+        modalTitle: '批量删除商品',
+        failText: '有商品删除失败',
+        failUrlText: '批量删除商品处理失败明细.xlsx',
+        productUrlText: '批量删除的商品列表.xlsx'
+      })
     default:
       return new MerchantProgressTask(task)
   }

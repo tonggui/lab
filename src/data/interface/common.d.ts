@@ -83,6 +83,8 @@ declare interface TaskInfo {
   poiCount?: number;
   productCount?: number;
   taskType?: number;
+  subType?: number; // 子类型
+  tagList?: string[];
 }
 
 declare interface MerchantTaskInfo {
