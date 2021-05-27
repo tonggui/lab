@@ -1,6 +1,6 @@
 <template>
   <Tooltip transfer :placement="placement" :max-width="210" :content="desc" :disabled="havePermission">
-    <component :class="className" :is="component" v-bind="$attrs" :type="realType" @click="handleClick" :disabled="innerDisabled">
+    <component :class="className" :is="component" v-bind="$attrs" :type="realType" v-on="listeners" :disabled="innerDisabled">
       <slot></slot>
     </component>
   </Tooltip>
@@ -42,11 +42,17 @@
       },
       realType () { // ToolTipContainer use type
         return this.component === 'Button' ? this.btnTheme : this.type
+      },
+      listeners () {
+        return {
+          ...this.$listeners,
+          click: this.handleClick
+        }
       }
     },
     methods: {
-      handleClick () {
-        !this.innerDisabled && this.$emit('click')
+      handleClick (...args) {
+        !this.innerDisabled && this.$emit('click', ...args)
       }
     }
   }
