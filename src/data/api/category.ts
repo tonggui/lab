@@ -240,6 +240,10 @@ export const getCategoryAttrListByName = ({ attr, filter } :{ attr: CategoryAttr
   }).then(data => {
     let { categoryAttrValueVos = [] } = data || {};
     categoryAttrValueVos = (categoryAttrValueVos || []).filter(v => +v.isLeaf === 1)
+    console.log(convertSugCategoryList(categoryAttrValueVos, {
+      attrCode: id
+    }), 'convert values');
+    
     return {
       data: convertSugCategoryList(categoryAttrValueVos, {
         attrCode: id
