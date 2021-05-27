@@ -148,7 +148,9 @@ export const convertProductDetail = (product: Product) => {
     sourceFoodCode: product.sourceFoodCode,
     releaseType: product.releaseType,
     tagList: JSON.stringify((product.tagList || []).map(item => ({ tagId: item.id, tagName: item.name }))),
-    sellStatus: product.sellStatus
+    sellStatus: product.sellStatus,
+    saleType: product.preSale && product.preSale.saleType,
+    deliveryTime: product.preSale && product.preSale.deliveryTime
   }
   return node
 }

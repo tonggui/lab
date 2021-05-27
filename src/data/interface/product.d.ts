@@ -340,6 +340,11 @@ declare interface StandardProduct extends BaseProduct {
   spVideo?: BrandProductVideo; // 品牌商视频
   isMedicare?: string;// 医保
 }
+// 售卖方式
+declare interface PreSale {
+  saleType?: number; // 售卖方式
+  deliveryTime?: number; // 发货时间
+}
 // 商超商品
 declare interface Product extends BaseProduct {
   tagList: BaseTag[]; // TODO 店内分类
@@ -370,6 +375,7 @@ declare interface Product extends BaseProduct {
   isMedicare?: string; // 是否是医保商品
   recoverySymbol?: number; // 是否支持医药商品纠错
   detailSymbol?: number; // 是否支持查看医药标品详情
+  preSale?: PreSale; // 售卖方式
 }
 
 declare interface MatchRule {

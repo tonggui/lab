@@ -121,7 +121,10 @@ export const convertProductDetail = (product: Product, { showLimitSale = true })
     sellStatus: product.sellStatus,
     marketingPicture: (product.marketingPicture || []).join(','),
     shippingTemplateId: product.shippingTemplateId,
-    video: JSON.stringify(convertProductVideoToServer(product.video as ProductVideo))
+    video: JSON.stringify(convertProductVideoToServer(product.video as ProductVideo)),
+    saleType: product.preSale && product.preSale.saleType,
+    deliveryTime: product.preSale && product.preSale.deliveryTime
+
   }
   return node
 }
