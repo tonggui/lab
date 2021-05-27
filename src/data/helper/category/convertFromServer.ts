@@ -273,11 +273,7 @@ export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrVa
  * @param attr
  */
 const formatList = [
-  '1200000088', // 品牌
-  '1200000016', // 商品名
-  '1200000100', // 商品名/商标
-  '1200000101', // 商标
-  '1200000003', // 剂型
+  1200000088, // 品牌
 ]
 export const convertSugCategoryList = (list: any[], attr?): CategoryAttrValue[] => {
   return (list || [])
@@ -287,9 +283,11 @@ export const convertSugCategoryList = (list: any[], attr?): CategoryAttrValue[] 
       let node = {} as CategoryAttrValue
       if (formatList.includes(attr.attrCode)) {
         node = {
-          id: attrValue.value || `${attrValuePrefix}${attrValue.text}`,
-          name: attrValue.text,
-          isCustomized: !attrValue.value, // TODO 自定义属性没有valueId，不是很稳定
+          id: attrValue.valueId || `${attrValuePrefix}${attrValue.value}`,
+          name: attrValue.value,
+          text: attrValue.text || attrValue.value + '111',
+          textEffected: true,
+          isCustomized: !attrValue.valueId,
           namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],
           idPath: attrValue.valueIdPath ? attrValue.valueIdPath.split(',').map(id => +id).filter(id => !!id) : [],
           sequence: index + 1,
@@ -302,7 +300,7 @@ export const convertSugCategoryList = (list: any[], attr?): CategoryAttrValue[] 
         node = {
           id: attrValue.valueId || `${attrValuePrefix}${attrValue.value}`,
           name: attrValue.value,
-          isCustomized: !attrValue.valueId, // TODO 自定义属性没有valueId，不是很稳定
+          isCustomized: !attrValue.valueId,
           namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],
           idPath: attrValue.valueIdPath ? attrValue.valueIdPath.split(',').map(id => +id).filter(id => !!id) : [],
           sequence: index + 1,
