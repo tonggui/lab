@@ -36,7 +36,9 @@
 <script>
   import SelectedClassifyProductList from '../components/selected-classify-product-list'
   import { helper } from '@/views/product-recommend/store'
-  import { covertObjectToSequenceArr } from '../../../utils'
+  import { covertObjectToSequenceArr, getLxParams, listItemParams } from '../../../utils'
+  import lx from '@/common/lx/lxReport'
+
   const { mapActions, mapState } = helper()
 
   export default {
@@ -70,6 +72,13 @@
         this.$emit('on-drawer-close')
       },
       handleItemUnselect (title, item) {
+        lx.mc({
+          bid: 'b_shangou_online_e_73ccd3jn_mc',
+          val: {
+            op_res: 0,
+            ...getLxParams(item)
+          }
+        })
         this.deSelectProduct([item])
       },
       handleEmptySelected () {
@@ -94,6 +103,15 @@
             )
           },
           onOk: () => {
+            lx.mc({
+              bid: 'b_shangou_online_e_73ccd3jn_mc',
+              val: {
+                list: listItemParams(this.showDataSourceList),
+                select_time: Date.now(),
+                page_source: window.page_source,
+                op_res: 1
+              }
+            })
             this.clearSelected()
             this.handleClose()
           }

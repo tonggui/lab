@@ -1,9 +1,5 @@
 export const matchingRulesList = [
   {
-    value: 1,
-    label: '关键词限制'
-  },
-  {
     value: 2,
     label: 'UPC限制'
   }

@@ -9,7 +9,46 @@
     @click="handleClick($event, menu.bid)"
   >
     <component :is="component" v-bind="tooltip">
-      <template >
+      <template v-if="menu.children">
+        <Dropdown trigger="hover" :visible="menu.initVisible">
+          <Icon :class="{ active: menu.active }" class="icon" v-bind="getIconProps(icon)">
+            <component v-if="isComponent(icon)" :is="icon" />
+            <Badge v-if="badgeProps" v-bind="badgeProps" />
+          </Icon>
+          <div>
+            {{menu.label}}
+            <Icon type="keyboard-arrow-down" />
+          </div>
+          <DropdownMenu slot="list">
+            <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx">
+              <Tooltip type="guide" v-bind="subMenu.tooltip ? subMenu.tooltip : { disabled: true }">
+                <RouteLink
+                  v-if="!['批量新建', '批量修改', '批量传图'].includes(subMenu.label)"
+                  class="download-item-link"
+                  tag="a"
+                  :to="subMenu.link||''"
+                  :disabled="!!subMenu.disabled"
+                  @click="handleClick($event, subMenu.bid)"
+                >{{subMenu.label}}
+                </RouteLink>
+                <PermissionBtn
+                  v-else
+                  placement="left"
+                  component="RouteLink"
+                  :need-permission="needPermission"
+                  :btn-type="subMenu.label === '批量新建' ? 'CREATE' : 'EDIT'"
+                  className="download-item-link"
+                  tag="a"
+                  :to="subMenu.link||''"
+                  :disabled="!!subMenu.disabled"
+                  @click="handleClick($event, subMenu.bid)"
+                >{{subMenu.label}}</PermissionBtn>
+              </Tooltip>
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </template>
+      <template v-else>
         <Icon class="icon" :class="{ active: menu.active }" v-bind="getIconProps(icon)">
           <component v-if="isComponent(icon)" :is="icon" />
           <Badge v-if="badgeProps" v-bind="badgeProps" />
@@ -32,6 +71,9 @@
     mixins: [menuItemMixins],
     components: {
       RouteLink
+    },
+    props: {
+      needPermission: Boolean
     }
   }
 </script>
@@ -114,7 +156,8 @@
       }
     }
   }
-
+</style>
+<style lang="less">
   .download-item-link {
     color: @text-color;
     font-size: @font-size-base;

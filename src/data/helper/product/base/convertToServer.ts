@@ -23,13 +23,16 @@ export const convertProductVideoToServer = (video: ProductVideo) => {
     ...rest
   }
 }
-
-export const convertSellTime = (sellTime) => {
+// product 是为了错误监控sellTime为undefined
+export const convertSellTime = (sellTime, product?: Product) => {
+  if (typeof sellTime === 'undefined') {
+    throw new Error('product.sellTime为undefined:' + JSON.stringify(product))
+  }
   const { type = SELLING_TIME_TYPE.Infinite, timeZone } = sellTime
   if (type === SELLING_TIME_TYPE.Infinite) {
     return '-'
   }
-  const { days, timeList } = timeZone;
+  const { days, timeList = [] } = timeZone
   const result = [[], [], [], [], [], [], []] as any;
   days.forEach(d => {
     result[d] = timeList.map(({ start, end }) => `${start}-${end}`)

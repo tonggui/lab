@@ -12,6 +12,7 @@
     @toggle-smart-sort="handleToggleSmartSort"
     @select="handleSelect"
     @expand="handleExpand"
+    need-permission
   />
 </template>
 <script>

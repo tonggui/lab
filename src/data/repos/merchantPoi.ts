@@ -22,9 +22,11 @@ import {
   submitBatchCreateExcel,
   submitBatchModifyExcel,
   submitBatchUploadImage,
-  submitBatchRel
+  submitBatchRel,
+  submitNewBatchRel,
+  batchRelConfirm
 } from '../merchantApi/batch'
-import { fetchDownloadTaskList } from '../merchantApi/task'
+import { fetchDownloadTaskList, fetchRunningTask } from '../merchantApi/task'
 import {
   convertTaskList as convertTaskListFromServer
 } from '@/data/helper/product/merchant/convertFromServer'
@@ -42,6 +44,7 @@ export {
 } from '../merchantApi/poi'
 export {
   getIsMerchant as fetchGetIsMerchant,
+  getIsHeadQuarterMode as fetchGetIsHeadQuarterMode,
   getPoiSizeConfig as fetchGetPoiSizeConfig,
   getMerchantCommonInfo as fetchGetMerchantInfo
 } from '../merchantApi/poi'
@@ -144,7 +147,7 @@ export const fetchGetModifyExcelTemplate = async () => {
 export const fetchGetDeleteRelExcelTemplate = () => getBatchExcelTemlateMap()
   .then(data => pickExcelTemplate(data, ['mpcDeleteRelTpl'], { extraLink: 'url' }))
 
-export const fetchSubmitBatchCreateExcel = async (wmPoiIds: number[], file: File, fillPicBySp: boolean) => {
+export const fetchSubmitBatchCreateExcel = async (wmPoiIds: number[], file: File, fillPicBySp: boolean, traceObj: object) => {
   if (await isAssociateMedicineMerchant()) {
     return submitMedicineBatchCreateExcel({
       wmPoiIds,
@@ -155,7 +158,8 @@ export const fetchSubmitBatchCreateExcel = async (wmPoiIds: number[], file: File
   return submitBatchCreateExcel({
     wmPoiIds,
     file,
-    fillPicBySp
+    fillPicBySp,
+    traceObj
   })
 }
 export const fetchSubmitBatchModifyExcel = async (wmPoiIds: number[], file: File, matchType: number) => {
@@ -172,6 +176,10 @@ export const fetchSubmitBatchRel = async (wmPoiIds: number[], syncTagList: objec
     return submitMedicineCreateBatchRel({ wmPoiIds, syncTagList })
   }
   return submitBatchRel({ wmPoiIds, syncTagList })
+}
+
+export const fetchSubmitNewBatchRel = async (wmPoiIds: number[], params: object, traceId: string) => {
+  return submitNewBatchRel({ wmPoiIds, params, traceId })
 }
 
 export const fetchGetPoiInfoListByIdList = async (routerTagId: number, idList: number[]) => {
@@ -197,3 +205,7 @@ export const fetchGetDownloadTaskList = async () => {
 
 // 下载商品
 export const fetchDownloadProduct = () => downloadProductList()
+
+export const fetchGetRunningTask = (taskType) => fetchRunningTask({ taskType })
+
+export const fetchBatchRelConfirm = (taskType) => batchRelConfirm({ taskType })

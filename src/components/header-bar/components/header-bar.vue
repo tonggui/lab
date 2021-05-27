@@ -34,6 +34,19 @@
         <div v-if="index !== 0" class="border" :key="index"></div>
         <transition :name="menu.transitionName" :key="index">
           <IconItem
+            v-if="!['新建单个商品', '从商品库新建'].includes(menu.label)"
+            :need-permission="needPermission"
+            :id="menu.id"
+            :menu="menu"
+            @click="handleClick"
+            :disabled="disabled"
+            v-show="!menu.hide"
+          />
+          <PermissionBtn
+            v-else
+            component="IconItem"
+            :need-permission="needPermission"
+            btn-type="CREATE"
             :id="menu.id"
             :menu="menu"
             :showBorder="index !== 0"
@@ -67,12 +80,24 @@
         <template v-for="(menu, index) in right" class="aaaa">
           <transition :name="menu.transitionName" :key="index">
             <LinkItem
-              :id="menu.id"
-              :menu="menu"
-              @click="handleClick"
-              :disabled="disabled"
-              v-show="!menu.hide"
-            />
+            v-if="menu.label !== '回收站'"
+            :id="menu.id"
+            :menu="menu"
+            @click="handleClick"
+            :disabled="disabled"
+            v-show="!menu.hide"
+          />
+          <PermissionBtn
+            v-else
+            component="LinkItem"
+            :need-permission="needPermission"
+            btn-type="RECYCLE_BIN"
+            :id="menu.id"
+            :menu="menu"
+            @click="handleClick"
+            :disabled="disabled"
+            v-show="!menu.hide"
+          />
           </transition>
         </template>
       </div>
@@ -101,7 +126,8 @@
     props: {
       left: Array,
       right: Array,
-      disabled: Boolean
+      disabled: Boolean,
+      needPermission: Boolean
     },
     computed: {
       ...mapModule({

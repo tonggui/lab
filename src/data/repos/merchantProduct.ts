@@ -113,6 +113,17 @@ export const fetchGetProductListBySearch = ({ tagId, keyword, brandId } : { tagI
 }
 
 /**
+ * 新批量关联分类商品获取接口
+ * @param tagId
+ * @param keyword
+ * @param brandId
+ * @param pagination
+ */
+export const fetchGetProductListForNewBatchRel = ({ tagId, keyword, startCTime } : { tagId: number, keyword: string, startCTime: number }, pagination: Pagination) => {
+  return getProductList({ tagId, pagination, includeStatus: 1, keyword, needTags: 1, startCTime })
+}
+
+/**
  * 商家商品中心详情获取接口
  * @param spuId
  */
@@ -146,7 +157,7 @@ export const fetchSaveOrUpdateProduct = wrapAkitaBusiness(
     return [MODULE.MERCHANT_PRODUCT, type, true]
   }
 )(
-  (product: Product, context: object) => submitProductInfo(product, context)
+  (product: Product, context: object, extra: any) => submitProductInfo(product, context, extra)
 )
 
 export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeProduct({ spuIdList })
@@ -244,9 +255,10 @@ export const fetchSubmitPoiProductSellStatus = (spuId: number, poiIdList: number
   poiIdList,
   sellStatus
 })
-export const fetchSubmitAddRelPoi = (spuId: number, poiIdList: number[]) => submitAddRelPoi({
+export const fetchSubmitAddRelPoi = (spuId: number, poiIdList: number[], traceId: string) => submitAddRelPoi({
   spuId,
-  poiIdList
+  poiIdList,
+  traceId
 })
 
 // TODO

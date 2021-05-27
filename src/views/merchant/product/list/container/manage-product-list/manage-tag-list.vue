@@ -13,6 +13,7 @@
       :expand-list="expandList"
       :tag-id="tagId"
       :disabled="isMedicine"
+      :toolTipDisable="true"
       @change-level="handleChangeLevel"
       @open-sort="$emit('open-sort')"
       @delete="handleDelete"
