@@ -272,22 +272,45 @@ export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrVa
  * @param list
  * @param attr
  */
+const formatList = [
+  '1200000088', // 品牌
+  '1200000016', // 商品名
+  '1200000100', // 商品名/商标
+  '1200000101', // 商标
+  '1200000003', // 剂型
+]
 export const convertSugCategoryList = (list: any[], attr?): CategoryAttrValue[] => {
   return (list || [])
     .map((attrValue, index) => {
       attrValue = attrValue || {}
       attr = attr || {}
-      const node: CategoryAttrValue = {
-        id: attrValue.value || `${attrValuePrefix}${attrValue.text}`,
-        name: attrValue.text,
-        isCustomized: !attrValue.value, // TODO 自定义属性没有valueId，不是很稳定
-        namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],
-        idPath: attrValue.valueIdPath ? attrValue.valueIdPath.split(',').map(id => +id).filter(id => !!id) : [],
-        sequence: index + 1,
-        isLeaf: (+attrValue.isLeaf) === 1,
-        parentId: attr.id || attrValue.attrId,
-        parentName: attr.name || attrValue.attrName,
-        selected: attrValue.selected === 1
+      let node = {} as CategoryAttrValue
+      if (formatList.includes(attr.attrCode)) {
+        node = {
+          id: attrValue.value || `${attrValuePrefix}${attrValue.text}`,
+          name: attrValue.text,
+          isCustomized: !attrValue.value, // TODO 自定义属性没有valueId，不是很稳定
+          namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],
+          idPath: attrValue.valueIdPath ? attrValue.valueIdPath.split(',').map(id => +id).filter(id => !!id) : [],
+          sequence: index + 1,
+          isLeaf: (+attrValue.isLeaf) === 1,
+          parentId: attr.id || attrValue.attrId,
+          parentName: attr.name || attrValue.attrName,
+          selected: attrValue.selected === 1
+        }
+      } else {
+        node = {
+          id: attrValue.valueId || `${attrValuePrefix}${attrValue.value}`,
+          name: attrValue.value,
+          isCustomized: !attrValue.valueId, // TODO 自定义属性没有valueId，不是很稳定
+          namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],
+          idPath: attrValue.valueIdPath ? attrValue.valueIdPath.split(',').map(id => +id).filter(id => !!id) : [],
+          sequence: index + 1,
+          isLeaf: (+attrValue.isLeaf) === 1,
+          parentId: attr.id || attrValue.attrId,
+          parentName: attr.name || attrValue.attrName,
+          selected: attrValue.selected === 1
+        }
       }
       return node
     })

@@ -241,7 +241,9 @@ export const getCategoryAttrListByName = ({ attr, filter } :{ attr: CategoryAttr
     let { categoryAttrValueVos = [] } = data || {};
     categoryAttrValueVos = (categoryAttrValueVos || []).filter(v => +v.isLeaf === 1)
     return {
-      data: convertSugCategoryList(categoryAttrValueVos),
+      data: convertSugCategoryList(categoryAttrValueVos, {
+        attrCode: id
+      }),
       pagination: {
         ...pagination,
         total: categoryAttrValueVos.length,
