@@ -9,6 +9,7 @@
 import PlusCircle from '@/assets/icons/circle-add.svg'
 import SearchCreate from '@/assets/icons/search-create.svg'
 import BatchCreate from '@/assets/icons/batch-create.svg'
+import BatchRel from '@/assets/icons/batchRel.svg'
 // import Menu from '@/assets/icons/menu.svg'
 // import SpAdd from '@/assets/icons/library-add.svg'
 import BatchOp from '@/assets/icons/batch-op.svg'
@@ -26,14 +27,13 @@ import SpCreatePage from '@sgfe/eproduct/navigator/pages/product/spCreate'
 // import BatchCreatePage from '@sgfe/eproduct/navigator/pages/batch/create'
 import BatchUploadImagePage from '@sgfe/eproduct/navigator/pages/batch/uploadImgs'
 // import BatchModifyPage from '@sgfe/eproduct/navigator/pages/batch/modify'
-import TaskListPage from '@sgfe/eproduct/navigator/pages/batch/process'
+// import TaskListPage from '@sgfe/eproduct/navigator/pages/batch/process'
 import RecyclePage from '@sgfe/eproduct/navigator/pages/product/recycle'
 import ViolationPage from '@sgfe/eproduct/navigator/pages/violation/product'
 // import MonitorPage from '@sgfe/eproduct/navigator/pages/product/monitor'
 import VideoCenterPage from '@sgfe/eproduct/navigator/pages/product/videoCenter'
 // 样式1
 // Icon、Text、children、埋点、Link、（Count + Color）
-
 // 样式2
 // Icon、Text、Badge、埋点、Link、Modal？、Tip
 export const leftMenu = [{
@@ -46,20 +46,7 @@ export const leftMenu = [{
   bid: 'b_e66gkndk',
   description: '自行录入单个商品信息'
 },
-// {
-//   key: 'packageProduct',
-//   label: '新建组包商品',
-//   icon: Menu,
-//   link: {
-//     path: '/product/package'
-//   },
-//   bid: 'b_shangou_online_e_k89q1z47_mc'
-// },
 {
-  key: 'createRegister', // 发热药品登记新增配置
-  label: '单个城市配置',
-  icon: PlusCircle
-}, {
   key: 'productLibrary',
   label: '搜索新建',
   icon: SearchCreate,
@@ -73,7 +60,7 @@ export const leftMenu = [{
   key: 'batchCreate',
   label: '批量新建',
   link: {
-    path: '/batchManagement/batchCreate'
+    path: !window.isNewBatchCreate ? '/batchManagement/batchCreate' : '/reuse/sc/product/views/new/create'
   },
   icon: BatchCreate,
   bid: 'b_1xrhzpqn',
@@ -95,49 +82,59 @@ export const rightMenu = [{
   link: {
     name: BatchUploadImagePage.name
   },
-  bid: 'b_shangou_online_e_bzjwotke_mc',
-  children: [{
-    key: 'batchCreate',
-    label: '批量新建',
-    link: {
-      path: '/batchManagement/batchCreate'
-    },
-    bid: 'b_1xrhzpqn'
-  }, {
-    key: 'batchUpload',
-    label: '批量传图',
-    link: {
-      name: BatchUploadImagePage.name
-    },
-    bid: 'b_1qs629km'
-  }, {
-    key: 'batchModify',
-    label: '批量修改',
-    link: {
-      path: '/batchManagement/batchModify'
-    },
-    bid: 'b_art4dqo0'
-  }, {
-    key: 'batchRel',
-    label: '批量关联',
-    link: {
-      path: '/merchant/batchManagement/batchRel'
-    },
-    bid: ''
-  }, {
-    key: 'batchSync',
-    label: '批量同步',
-    link: '',
-    bid: ''
-  }, {
-    key: 'batchProgress',
-    label: '处理进度',
-    link: {
-      name: TaskListPage.name
-    },
-    bid: 'b_shangou_online_e_4kv94zvl_mc'
-  }]
-}, {
+  bid: 'b_shangou_online_e_bzjwotke_mc'
+  // children: [{
+  //   key: 'batchCreate',
+  //   label: '批量新建',
+  //   link: {
+  //     path: '/batchManagement/batchCreate'
+  //   },
+  //   bid: 'b_1xrhzpqn'
+  // }, {
+  //   key: 'batchUpload',
+  //   label: '批量传图',
+  //   link: {
+  //     name: BatchUploadImagePage.name
+  //   },
+  //   bid: 'b_1qs629km'
+  // }, {
+  //   key: 'batchModify',
+  //   label: '批量修改',
+  //   link: {
+  //     path: '/batchManagement/batchModify'
+  //   },
+  //   bid: 'b_art4dqo0'
+  // }, {
+  //   key: 'batchRel',
+  //   label: '批量关联',
+  //   link: {
+  //     path: '/merchant/batchManagement/batchRel'
+  //   },
+  //   bid: ''
+  // }, {
+  //   key: 'batchSync',
+  //   label: '批量同步',
+  //   link: '',
+  //   bid: ''
+  // }, {
+  //   key: 'batchProgress',
+  //   label: '处理进度',
+  //   link: {
+  //     name: TaskListPage.name
+  //   },
+  //   bid: 'b_shangou_online_e_4kv94zvl_mc'
+  // }]
+},
+{
+  key: 'batchRel',
+  label: '批量关联',
+  icon: BatchRel,
+  link: {
+    path: '/merchant/batchManagement/batchRel'
+  },
+  bid: ''
+},
+{
   key: 'merchantProductConfig',
   label: '商品配置管理',
   icon: {
@@ -158,7 +155,7 @@ export const rightMenu = [{
   bid: 'b_shangou_online_e_8o6hqov0_mc'
 }, {
   key: 'videoManage',
-  label: '视频管理',
+  label: '封面视频管理',
   icon: Video,
   link: {
     name: VideoCenterPage.name
