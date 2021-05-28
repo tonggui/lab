@@ -294,26 +294,28 @@
                 page_source: 12
               }
             })
-            lx.mv({
-              bid: 'b_shangou_online_e_aifq7sdx_mv',
-              val: {
-                spu_id: this.spuId || response.id || 0,
-                st_spu_id: this.product.spId || 0,
-                source_id: 2,
-                viewtime: `${(SearchTime.getSearchTime() + FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}, ${SearchTime.getSearchTime()}, ${(FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}`,
-                list: TimeCounters.getResult(),
-                select_time: +new Date(),
-                trace_id: response.traceId || ''
-              }
-            })
-            lx.mv({
-              bid: 'b_shangou_online_e_5f609qb1_mv',
-              val: {
-                st_spu_id: this.product.spId || 0,
-                op_type: this.product.spId ? 1 : 0,
-                poi_num: this.poiIdList.length
-              }
-            })
+            if (!this.spuId) {
+              lx.mv({
+                bid: 'b_shangou_online_e_aifq7sdx_mv',
+                val: {
+                  spu_id: this.spuId || response.id || 0,
+                  st_spu_id: this.product.spId || 0,
+                  source_id: 2,
+                  viewtime: `${(SearchTime.getSearchTime() + FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}, ${SearchTime.getSearchTime()}, ${(FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}`,
+                  list: TimeCounters.getResult(),
+                  select_time: +new Date(),
+                  trace_id: response.traceId || ''
+                }
+              })
+              lx.mv({
+                bid: 'b_shangou_online_e_5f609qb1_mv',
+                val: {
+                  st_spu_id: this.product.spId || 0,
+                  op_type: this.product.spId ? 1 : 0,
+                  poi_num: this.poiIdList.length
+                }
+              })
+            }
             this.popConfirmModal(response)
           }
           if (isFunction(callback)) callback()
