@@ -64,6 +64,9 @@ export default () => ({
         },
         'options.businessNeedAudit' () {
           return !!this.getContext('businessNeedAudit')
+        },
+        'options.complianceNeedAuditTip' () {
+          return !!this.getContext('complianceNeedAuditTip')
         }
       }
     }]
@@ -76,7 +79,7 @@ export default () => ({
     rules: {
       result: {
         'options.needCorrectionAudit' () {
-          return !!this.getContext('needCorrectionAudit') && !!this.getContext('businessNeedAudit')
+          return !!this.getContext('needCorrectionAudit') && (!!this.getContext('businessNeedAudit') || !!this.getContext('complianceNeedAuditTip'))
         },
         'options.original' () {
           const originalProduct = this.getContext('originalProduct')

@@ -87,6 +87,9 @@ export const diffCommon = (oldData, newData, depList = []) => {
     const realKey = isSkuKey(get(newData, 'skuList'), key) ? 'skuList' : key
     let old = get(oldData, realKey)
     let newN = get(newData, realKey)
+    if (key === 'attributeList') {
+      return diffCategoryAttrs(oldData, newData)
+    }
     if (realKey === 'skuList') {
       old = sortBy(old, o => o.id)
       newN = sortBy(newN, o => o.id)

@@ -6,7 +6,7 @@ module.exports = {
   msg: '',
   data: {
     odinAuditType: 1,
-    auditType: 1,
+    auditType: 0,
     meetPoiCondition: true,
     meetCategoryCondition: true,
   },
