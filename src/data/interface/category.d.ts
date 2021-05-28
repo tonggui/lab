@@ -80,6 +80,8 @@ declare interface CategoryAttrValue {
   parentId?: number; // 属于的属性id
   parentName?: string; // 属于的属性名称
   selected: boolean;
+  text?: string;
+  textEffected?: boolean;
 }
 // 分类模版 基本信息
 declare interface BaseCategoryTemplate {
