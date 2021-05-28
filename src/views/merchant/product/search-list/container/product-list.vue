@@ -33,13 +33,15 @@
   import { helper } from '../store'
 
   const { mapActions, mapState } = helper('product')
-  const { mapGetters } = helper()
+  const { mapGetters } = helper('tag')
 
   export default {
     name: 'merchant-search-list-product-container',
     computed: {
       ...mapState(['error', 'loading', 'list', 'pagination', 'tagId']),
-      ...mapGetters(['tagList'])
+      ...mapGetters({
+        tagList: 'list'
+      })
     },
     components: {
       ProductTableList: withPromiseEmit(ProductTableList)
