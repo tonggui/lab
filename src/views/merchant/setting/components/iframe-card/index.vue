@@ -9,7 +9,8 @@
   export default {
     name: 'iframe-card',
     data () {
-      return { submitting: false, url: window.location.origin + `/reuse/sc/product/views/setting?wmPoiId=${getPoiId()}&from=single` }
+      const random = Math.random()
+      return { submitting: false, url: window.location.origin + `/reuse/sc/product/views/setting?wmPoiId=${getPoiId()}&from=single&random=${random}` }
     },
     mounted () {
       this.$refs.iframeCard.onload = () => {
