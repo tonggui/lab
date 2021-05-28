@@ -9,11 +9,10 @@
   export default {
     name: 'iframe-card',
     data () {
-      const random = Math.random()
-      return { submitting: false, url: window.location.origin + `/reuse/sc/product/views/setting?wmPoiId=${getPoiId()}&from=single&random=${random}` }
+      return { submitting: false, url: window.location.origin + `/reuse/sc/product/views/setting?wmPoiId=${getPoiId()}&from=single` }
     },
-    mounted () {
-      this.$refs.iframeCard.onload = () => {
+    methods: {
+      getHeight () {
         let height = 0
         let win = this.$refs.iframeCard.contentWindow
         win.document.getElementsByClassName('breadcrumb')[0].style.display = 'none'
@@ -23,6 +22,16 @@
           dom.style.borderRadius = 'unset'
         })
         this.$refs.iframeCard.style.height = height + (cardDoms.length - 1) * 20 + 'px'
+      }
+    },
+    mounted () {
+      this.$refs.iframeCard.onload = () => {
+        this.getHeight()
+        let win = this.$refs.iframeCard.contentWindow
+        let targetNode = win.document.getElementsByClassName('setting-list')[0]
+        const observer = new MutationObserver(this.getHeight)
+
+        observer.observe(targetNode, { childList: true })
       }
     }
   }
