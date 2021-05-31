@@ -6,6 +6,7 @@
     description="分类获取失败～"
   >
     <ManageTagList
+      need-permission
       :disabled="disabled"
       label-in-value
       :show-smart-sort="showSmartSort"

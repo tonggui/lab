@@ -5,8 +5,11 @@
       v-model="productInfo"
       navigation
       ref="form"
+      :footer-btn-type="btnType"
+      need-permission
       :confirmText="auditBtnText"
       :context="context"
+      :disabled="editNotPermission"
       :is-edit-mode="isEditMode"
       @validate-error="handleValidateError"
       @confirm-click="handleConfirmClick"
@@ -29,9 +32,11 @@
   import errorHandler from '../edit-page-common/error'
   import { diffKeyAttrs } from '@/common/product/audit'
   import { contextSafetyWrapper, getProductChangInfo } from '@/common/utils'
+  import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
   export default {
     name: 'combine-product-edit',
+    mixins: [getPermissionMixin()],
     props: {
       isBusinessClient: Boolean,
       product: Object,
@@ -60,6 +65,12 @@
       }
     },
     components: { Form },
+    data () {
+      return {
+        needPermission: true,
+        btnType: this.spuId ? 'EDIT' : 'CREATE'
+      }
+    },
     computed: {
       param () {
         return JSON.stringify({
@@ -170,6 +181,9 @@
             allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
           }
         }
+      },
+      editNotPermission () {
+        return !this.havePermission && this.spuId
       }
     },
     methods: {
@@ -318,33 +332,34 @@
                   select_time: +new Date()
                 }
               })
+            } else {
+              if (window.page_source === 3) {
+                LX.mv({
+                  bid: 'b_shangou_online_e_xe7mbypq_mv',
+                  val: {
+                    spu_id: this.spuId,
+                    st_spu_id: this.product.spId || 0,
+                    viewtime: (Date.now() - this.startTime) / 1000,
+                    page_source: window.page_source,
+                    task_id: (window.page_source_param && window.page_source_param.task_id)
+                  }
+                })
+              } else {
+                LX.mv({
+                  bid: 'b_shangou_online_e_aifq7sdx_mv',
+                  val: {
+                    spu_id: this.spuId || response.id || 0,
+                    source_id: 0,
+                    st_spu_id: this.product.spId || 0,
+                    viewtime: `${SearchTime.getSearchTime() + FillTime.getFillTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
+                    list: TimeCounters.getResult(),
+                    trace_id: response.traceId,
+                    select_time: +new Date()
+                  }
+                })
+              }
             }
 
-            if (window.page_source === 3) {
-              LX.mv({
-                bid: 'b_shangou_online_e_xe7mbypq_mv',
-                val: {
-                  spu_id: this.spuId,
-                  st_spu_id: this.product.spId || 0,
-                  viewtime: (Date.now() - this.startTime) / 1000,
-                  page_source: window.page_source,
-                  task_id: (window.page_source_param && window.page_source_param.task_id)
-                }
-              })
-            } else {
-              LX.mv({
-                bid: 'b_shangou_online_e_aifq7sdx_mv',
-                val: {
-                  spu_id: this.spuId || response.id || 0,
-                  source_id: 0,
-                  st_spu_id: this.product.spId || 0,
-                  viewtime: `${SearchTime.getSearchTime() + FillTime.getFillTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
-                  list: TimeCounters.getResult(),
-                  trace_id: response.traceId,
-                  select_time: +new Date()
-                }
-              })
-            }
             LXContext.destroyVm()
             this.popConfirmModal(response)
           }

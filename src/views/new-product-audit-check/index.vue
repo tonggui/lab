@@ -6,7 +6,7 @@
         navigation
         ref="form"
         v-model="productInfo"
-        :disabled="formDisable"
+        :disabled="formDisable || !havePermission"
         :context="context"
         @validate-error="handleValidateError"
         @cancel="handleCancel"
@@ -15,8 +15,8 @@
       >
         <template slot="footer">
           <Button style="min-width: 120px" @click="handleCancel" :disabled="submitting">取消</Button>
-          <Button style="min-width: 120px" type="primary" :loading="submitting" @click="handleRevocation" v-if="isAuditing">撤销</Button>
-          <Button style="min-width: 120px" type="primary" :loading="submitting" @click="triggerConfirm" v-else>{{ auditBtnText }}</Button>
+          <PermissionBtn :btn-type="btnType" need-permission style="min-width: 120px" type="primary" :loading="submitting" @click="handleRevocation" v-if="isAuditing">撤销</PermissionBtn>
+          <PermissionBtn :btn-type="btnType" need-permission style="min-width: 120px" type="primary" :loading="submitting" @click="triggerConfirm" v-else>{{ auditBtnText }}</PermissionBtn>
         </template>
       </Form>
     </div>
@@ -38,9 +38,11 @@
   import { get } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { diffKeyAttrs } from '@/common/product/audit'
+  import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
   export default {
     name: 'product-audit-check',
+    mixins: [getPermissionMixin('EDIT')],
     props: {
       isBusinessClient: Boolean,
       product: Object,
@@ -61,7 +63,8 @@
         productSource: undefined, // 纠错送审还是xxx
         snapshot: {}, // 快照
         approveSnapshot: {}, // xxx快照?
-        submitting: false
+        submitting: false,
+        needPermission: true
       }
     },
     computed: {

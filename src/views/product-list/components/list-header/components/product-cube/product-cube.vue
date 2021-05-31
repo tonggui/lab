@@ -7,9 +7,15 @@
           <div>
             <span class="product-cube-tag">建品神器</span>
             <span class="product-cube-title">{{ title }}</span>
-            <router-link class="product-cube-link" :to="{ name: 'productRecommend', query: $route.query }">
+            <PermissionBtn
+              component="router-link"
+              need-permission
+              btn-type="CREATE"
+              class="product-cube-link"
+              :to="{ name: 'productRecommend', query: $route.query }"
+            >
               <span v-mc:productCube="{ bid: 'b_shangou_online_e_i4acqwpi_mc' }">立即去创建</span>
-            </router-link>
+            </PermissionBtn>
           </div>
           <div v-if="description" class="product-cube-description">
             <Icon size="14" local="horn" class="product-cube-horn-icon" />{{ description }}
@@ -22,10 +28,11 @@
 <script>
   import lx from '@/common/lx/lxReport'
   import CubeLogo from '@/views/components/cube-logo/index'
+  import PermissionBtn from '@/views/components/permission-bth'
 
   export default {
     name: 'product-cube',
-    components: { CubeLogo },
+    components: { CubeLogo, PermissionBtn },
     props: {
       title: String,
       description: String

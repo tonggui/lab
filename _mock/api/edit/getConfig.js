@@ -41,6 +41,9 @@ module.exports = {
       },
       b2cSinglePoi: {
         visible: true,
+      },
+      preSale: {
+        visible: true,
       }
     },
     skuFieldConfig: {

@@ -23,6 +23,7 @@
             <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx">
               <Tooltip type="guide" v-bind="subMenu.tooltip ? subMenu.tooltip : { disabled: true }">
                 <RouteLink
+                  v-if="!['批量新建', '批量修改', '批量传图'].includes(subMenu.label)"
                   class="download-item-link"
                   tag="a"
                   :to="subMenu.link||''"
@@ -30,6 +31,18 @@
                   @click="handleClick($event, subMenu.bid)"
                 >{{subMenu.label}}
                 </RouteLink>
+                <PermissionBtn
+                  v-else
+                  placement="left"
+                  component="RouteLink"
+                  :need-permission="needPermission"
+                  :btn-type="subMenu.label === '批量新建' ? 'CREATE' : 'EDIT'"
+                  className="download-item-link"
+                  tag="a"
+                  :to="subMenu.link||''"
+                  :disabled="!!subMenu.disabled"
+                  @click="handleClick($event, subMenu.bid)"
+                >{{subMenu.label}}</PermissionBtn>
               </Tooltip>
             </DropdownItem>
           </DropdownMenu>
@@ -55,6 +68,9 @@
     mixins: [menuItemMixins],
     components: {
       RouteLink
+    },
+    props: {
+      needPermission: Boolean
     }
   }
 </script>
@@ -114,7 +130,8 @@
       }
     }
   }
-
+</style>
+<style lang="less">
   .download-item-link {
     color: @text-color;
     font-size: @font-size-base;

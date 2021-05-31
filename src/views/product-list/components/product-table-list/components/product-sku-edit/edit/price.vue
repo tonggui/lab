@@ -2,7 +2,7 @@
   <EditInput
     :on-confirm="onConfirm"
     :value="value"
-    :disabled="isDisabled"
+    :disabled="isDisabled || havePermission"
     input-prefix="¥"
     :input-props="inputProps"
     editing-style="z-index: 10"
@@ -10,7 +10,17 @@
     <template v-slot:display="{ edit }">
       <template>
         <ProductPrice :price="value" />
-        <Icon :class="{ disabled: isDisabled }" class="edit-icon" local="edit" @click="() => handleClickEvent(edit)" size="20" v-mc="{ bid: 'b_puojmmh2' }" />
+        <PermissionBtn
+          component="Icon"
+          need-permission
+          :btn-type="btnType"
+          :class="{ disabled: isDisabled }"
+          class="edit-icon"
+          local="edit"
+          @click="() => handleClickEvent(edit)"
+          size="20"
+          v-mc="{ bid: 'b_puojmmh2' }"
+        />
       </template>
     </template>
   </EditInput>
@@ -18,9 +28,12 @@
 <script>
   import EditInput from '@components/edit-input/edit-input'
   import ProductPrice from '@components/product-price'
+  import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
+  import PermissionBtn from '@/views/components/permission-bth/index'
 
   export default {
     name: 'product-sku-edit-price',
+    mixins: [getPermissionMixin('MODIFY_PRICE')],
     props: {
       onConfirm: {
         type: Function,
@@ -50,6 +63,7 @@
       }
     },
     components: {
+      PermissionBtn,
       EditInput,
       ProductPrice
     }

@@ -1232,6 +1232,8 @@ module.exports = function () {
     data: {
       name: '[天龙]维胺酯维E乳膏',
       id: 111111,
+      saleType: 2,
+      deliveryTime: 1620385000000,
       auditStatus: 0,
       limitSale: JSON.stringify({
         limitSale: false,

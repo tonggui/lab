@@ -1,5 +1,5 @@
 <template>
-  <div class="batch-create">
+  <div v-if="havePermission" class="batch-create">
     <Alert style="margin: -30px -30px 30px" type="warning">暂不支持批量新建组包商品</Alert>
     <div class="batch-create-single-poi" v-if="isSinglePoi || isMedicine">
       <ExcelCreate
@@ -35,6 +35,7 @@
       </Tabs>
     </div>
   </div>
+  <EmptyTip v-else />
 </template>
 <script>
   import ExcelCreate from './components/excel-create'
@@ -47,9 +48,12 @@
     POI_CUSTOM_PRODUCT,
     BUSINESS_MEDICINE
   } from '@/module/moduleTypes'
+  import { forceGetPermission } from '@/views/components/permission-bth/getPermissionMixin'
+  import EmptyTip from '../components/empty-tip'
 
   export default {
     name: 'batch-create-page',
+    mixins: [forceGetPermission('CREATE')],
     props: {
       isSinglePoi: Boolean,
       routerTagId: [Number, String],
@@ -73,7 +77,8 @@
       ExcelCreate,
       ProductCreate,
       Tabs,
-      TabPane
+      TabPane,
+      EmptyTip
     },
     methods: {
       handleSubmit () {

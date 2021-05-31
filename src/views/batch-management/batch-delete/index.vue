@@ -1,5 +1,6 @@
 <template>
-  <ProductDelete @submit="handleSubmit" :context="modules" :isSinglePoi="isSinglePoi" :routerTagId="routerTagId" :isBusinessClient="isBusinessClient" />
+  <ProductDelete v-if="havePermission" @submit="handleSubmit" :context="modules" :isSinglePoi="isSinglePoi" :routerTagId="routerTagId" :isBusinessClient="isBusinessClient" />
+  <EmptyTip v-else></EmptyTip>
 </template>
 <script>
   import ProductDelete from './components/product-delete'
@@ -8,9 +9,12 @@
   import {
     BUSINESS_MEDICINE
   } from '@/module/moduleTypes'
+  import { forceGetPermission } from '@/views/components/permission-bth/getPermissionMixin'
+  import EmptyTip from '../components/empty-tip'
 
   export default {
     name: 'product-batch-delete-container',
+    mixins: [forceGetPermission('DEL_PRODUCT')],
     props: {
       isSinglePoi: Boolean,
       routerTagId: [Number, String]
@@ -21,7 +25,7 @@
         tagList: []
       }
     },
-    components: { ProductDelete },
+    components: { ProductDelete, EmptyTip },
     computed: {
       ...mapModule({
         isMedicine: BUSINESS_MEDICINE

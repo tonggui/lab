@@ -71,6 +71,7 @@ import {
 } from '../helper/category/convertFromServer'
 import { setHeaderMContext, trimSplit, trimSplitId } from '@/common/utils'
 import { uuid } from '@utiljs/guid'
+import { getCookie } from '@utiljs/cookie'
 /**
  * 下载门店商品
  * @param poiId 门店id
@@ -927,4 +928,13 @@ export const getUpcIsAuditProduct = ({ upcCode, poiId, auditStatus }: { upcCode:
   wmPoiId: poiId,
   upcCode: upcCode,
   auditStatus: auditStatus
+})
+
+/**
+ * 商品操作权限查询接口
+ * https://km.sankuai.com/page/747417627
+ */
+export const getProductPermissionId = ({ appId = 1000 }: { appId: number }) => httpClient.get('permission/r/getProductPermissionId', {
+  accountId: getCookie('acctId'),
+  appId
 })

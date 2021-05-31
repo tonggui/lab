@@ -1,5 +1,5 @@
 <template>
-  <div class="batch-upload-img">
+  <div v-if="havePermission" class="batch-upload-img">
     <OrderFormItem label="准备图片">
       <div>可同时批量上传商品图片、商品条码图。</div>
       <CollapsePanel title="商品图片">
@@ -67,6 +67,7 @@
       :bid="['b_3dtqifg4']"
     />
   </div>
+  <EmptyTip v-else/>
 </template>
 
 <script>
@@ -79,17 +80,21 @@
   import CollapsePanel from './components/panel'
   import { PictureUploadRuleTypeList, PICTURE_MEMOS, UPC_PICTURE_MEMOS } from './constants'
   import { mapStateWatcher } from '@/plugins/router-leave-confirm'
+  import { forceGetPermission } from '@/views/components/permission-bth/getPermissionMixin'
+  import EmptyTip from '../components/empty-tip'
 
   const MAX_SIZE = 50 * 1024 * 1024
 
   export default {
     name: 'BatchUploadImg',
+    mixins: [forceGetPermission('EDIT')],
     components: {
       FileSelect,
       StickFooter,
       CollapsePanel,
       RadioGroup,
-      OrderFormItem
+      OrderFormItem,
+      EmptyTip
     },
     props: {
       submitData: {

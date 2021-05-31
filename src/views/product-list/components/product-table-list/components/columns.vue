@@ -53,6 +53,7 @@
             }
             return (
               <ProductTableInfo
+                need-permission
                 product={row}
                 disabled={this.disabled}
                 editableMap={editableMap}

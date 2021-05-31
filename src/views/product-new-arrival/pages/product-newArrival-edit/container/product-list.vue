@@ -117,6 +117,23 @@
       },
       handleGoRecommendList () {
         this.$router.back()
+      },
+      leaveReport () {
+        try {
+          lx.mv({
+            cid: 'c_shangou_online_e_m17be667',
+            bid: 'b_shangou_online_e_hn5n5kq9_mv',
+            val: {
+              viewtime: (+new Date() - this.createTime) / 1000,
+              spu_num: this.createdProductCount,
+              list: this.createdProductIdList,
+              source_id: 1,
+              page_source: window.page_source || ''
+            }
+          }, 'productCube')
+        } catch (err) {
+          console.log(err)
+        }
       }
     },
     mounted () {
@@ -124,19 +141,12 @@
         bid: 'b_shangou_online_e_dby4v8ve_mv',
         val: { spu_num: this.remainingProductCount } }, 'productCube')
       this.createTime = +new Date()
+      window.addEventListener('beforeunload', () => {
+        this.leaveReport()
+      })
     },
     beforeDestroy () {
-      lx.mv({
-        cid: 'c_shangou_online_e_m17be667',
-        bid: 'b_shangou_online_e_hn5n5kq9_mv',
-        val: {
-          viewtime: (+new Date() - this.createTime) / 1000,
-          spu_num: this.createdProductCount,
-          list: this.createdProductIdList,
-          source_id: 1,
-          page_source: window.page_source || ''
-        }
-      }, 'productCube')
+      this.leaveReport()
       this.resetCreatedProductCount()
       this.resetCreatedProductIdList()
       this.destroy()

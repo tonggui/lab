@@ -14,12 +14,20 @@
         <div class="product-info-image-preview-picture">
           <img :src="currentPicture" />
         </div>
-        <div v-if="editable" class="product-info-image-preview-footer" @click="handleUpload">
+        <PermissionBtn :need-permission="needPermission" component="div" :btn-type="btnType" is-native-tag v-if="editable" class="product-info-image-preview-footer" @click="handleUpload">
           {{ text }}
-        </div>
+        </PermissionBtn>
       </template>
     </div>
-    <div class="product-info-image-preview-thumb" :class="{ 'with-video': video }">
+    <PermissionBtn
+      component="div"
+      :need-permission="needPermission"
+      :btn-type="btnType"
+      is-native-tag
+      not-needed-gray
+      class="product-info-image-preview-thumb"
+      :class="{ 'with-video': video }"
+    >
       <ProductPicture
         ref="productPicture"
         box-class="product-info-image-preview-box"
@@ -27,7 +35,7 @@
         :value="list"
         :max="tips.length"
         :tips="tips"
-        :disabled="!editable"
+        :disabled="!editable && !havePermission"
         selectable
         :selected="currentIndex"
         :autoCropArea="autoCropArea"
@@ -46,7 +54,7 @@
           viewMode
         />
       </ProductPicture>
-    </div>
+    </PermissionBtn>
   </Modal>
 </template>
 <script>
@@ -54,9 +62,11 @@
   import PictureBox from '@components/product-picture/picture-box'
   import ProductPicture from '@components/product-picture'
   import VideoPlayer from '@components/video/video-player'
+  import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
   export default {
     name: 'product-info-image-preview',
+    mixins: [getPermissionMixin('EDIT')],
     props: {
       visible: Boolean,
       video: Object,
@@ -64,7 +74,8 @@
         type: Array,
         required: true
       },
-      editable: Boolean
+      editable: Boolean,
+      needPermission: Boolean
     },
     data () {
       return {
