@@ -142,7 +142,7 @@
           }
         } else if (this.type === PRODUCT_BATCH_OP.DELETE) {
           params = {
-            isMerchantDelete: [POI_SELECT_TYPE.MERCHANT, POI_SELECT_TYPE.ALL_POI].includes(range),
+            isMerchantDelete: [POI_SELECT_TYPE.MERCHANT].includes(range),
             isSelectAll: POI_SELECT_TYPE.ALL_POI === range,
             poiIdList: this.poiIdList
           }
