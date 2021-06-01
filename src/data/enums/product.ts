@@ -194,3 +194,9 @@ export enum MERCHANT_OPEN_STATUS {
   OPEN = 1,
   CLOSE = 2
 }
+
+// 售卖方式， 1 正常售卖，2 预售
+export enum PRODUCT_SALE_TYPE {
+  NORMAL = 1,
+  PRE = 2
+}

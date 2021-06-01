@@ -447,6 +447,14 @@ export default () => ([{
     binding: {
       event: 'change'
     }
+  },
+  {
+    key: FIELD.SALE_TYPE,
+    label: '售卖方式',
+    type: 'SaleType',
+    binding: {
+      event: 'change'
+    }
   }
   ]
 }])
