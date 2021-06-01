@@ -60,7 +60,7 @@ export const leftMenu = [{
   key: 'batchCreate',
   label: '批量新建',
   link: {
-    path: !window.isNewBatchCreate ? '/batchManagement/batchCreate' : '/reuse/sc/product/views/new/create'
+    path: !window.isNewBatchCreate ? '/batchManagement/batchCreate' : '/reuse/sc/product/views/seller/center/new/create'
   },
   icon: BatchCreate,
   bid: 'b_1xrhzpqn',
