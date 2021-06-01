@@ -48,4 +48,9 @@ export default [{
   validate ({ key, value = '', options }) {
     return validator(key)(value, options)
   }
+}, {
+  key: SPU_FIELD.SALE_TYPE,
+  validate ({ key, value = '', options }) {
+    return validator(key)(value, options)
+  }
 }]

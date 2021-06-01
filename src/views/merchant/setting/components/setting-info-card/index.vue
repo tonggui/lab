@@ -58,6 +58,7 @@
     padding: 10px 32px 20px 32px;
     background: @component-bg;
     box-shadow: 1px 1px 5px 0 rgba(0,0,0,0.30);
+    margin-bottom: 20px;
     &-content {
       display: flex;
       align-items: center;

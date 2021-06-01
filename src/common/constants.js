@@ -24,6 +24,8 @@ export const getQueryObj = (url = window.location.href) => {
 
 export const getPoiId = () => window.wmPoiId || getParam('wmPoiId') || undefined
 export const getSpuId = () => getParam('spuId') || undefined
+export const getMerchantId = () => getParam('merchantId') || undefined
+export const getRuleId = () => getParam('ruleId') || undefined
 export const getRouterTagId = () => getParam('routerTagId') || undefined
 export const getIsSingle = () => getParam('from') === 'single' && !!getPoiId()
 export const getIsMedicine = () => isMedicinePoi || getRouterTagId() === '22'

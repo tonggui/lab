@@ -21,6 +21,7 @@ import {
   convertPoi as convertPoiFromServer,
   convertAuditStatistics as convertAuditStatisticsFromServer
 } from '../helper/poi/convertFromServer'
+import { getMerchantId } from '@/common/constants'
 
 /**
  * 获取门店类型
@@ -350,15 +351,19 @@ export const getPoiBusinessTemplateInfo = ({ poiId } : { poiId: number }) => htt
   }
 })
 
-export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => httpClient.post('retail/r/stockConfig', {
+export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => httpClient.post('retail/r/stockConfig', poiId ? {
   wmPoiId: poiId
+} : {
+  merchantId: getMerchantId() || 0
 }).then((data) => {
-  const { productStockConfig = {}, tagStats = [] } = data || {}
+  const { productStockConfig = {}, tagStats = [], wmPoiIds = [] } = data || {}
   const {
     status,
     type,
     limitStop,
-    syncNextDay
+    syncNextDay,
+    isAll,
+    ruleId
   } = (productStockConfig || {}) as any
   if (status !== 1) { // 1:开启 2:关闭
     return {
@@ -369,7 +374,10 @@ export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => htt
   }
   return {
     status: true,
+    wmPoiIds,
     config: {
+      ruleId: ruleId,
+      isAll: isAll,
       type: type || defaultAutoClearStockConfig.type, // 1:B端用户拒绝订单 2:C端商家拒绝订单
       syncStatus: !!(limitStop || {}).limitStopSyncStock,
       syncTime: (limitStop || {}).schedule || defaultAutoClearStockConfig.syncTime,
@@ -393,11 +401,14 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
 }) => {
   let productStockConfig = {}
   let tagVos: object[] = []
+
   if (!status) {
     // 2 表示清空配置 1表示开启配置
-    productStockConfig = { status: 2 }
+    productStockConfig = { status: 2, ruleId: config.ruleId || 0 }
   } else {
     productStockConfig = {
+      ruleId: config.ruleId || 0,
+      isAll: config.isAll,
       status: 1,
       type: config.type,
       limitStop: {
@@ -409,27 +420,38 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
         syncCount: config.stock
       }
     }
-    tagVos = Object.entries(productMap).reduce((prev, [key, value]) => {
-      const node = {
-        tagId: key,
-        includes: value.checked ? [] : value.list,
-        excludes: value.checked ? value.list : []
-      }
-      // 全选 但是 exclude 小于 total 表示有选中的
-      if (value.checked && value.list.length < value.total) {
-        prev.push(node)
-      } else if (!value.checked && value.list.length > 0) { // 非全选 但是 include有值，则表示有选中的
-        prev.push(node)
-      }
-      // 否则 此分类不需要处理
-      return prev
-    }, [] as object[])
+    if (!config.isAll) {
+      tagVos = Object.entries(productMap).reduce((prev, [key, value]) => {
+        const node = {
+          tagId: key,
+          includes: value.checked ? [] : value.list,
+          excludes: value.checked ? value.list : []
+        }
+        // 全选 但是 exclude 小于 total 表示有选中的
+        if (value.checked && value.list.length < value.total) {
+          prev.push(node)
+        } else if (!value.checked && value.list.length > 0) { // 非全选 但是 include有值，则表示有选中的
+          prev.push(node)
+        }
+        // 否则 此分类不需要处理
+        return prev
+      }, [] as object[])
+    }
   }
-  return httpClient.post('retail/w/batchSaveStockConfig', {
-    wmPoiId: poiId,
+  let poiList = poiId ? [poiId] : []
+  if (!poiId && config.isAll && config.poiList && config.poiList.length) {
+    poiList = config.poiList
+  }
+
+  let body: any = {
+    wmPoiIds: JSON.stringify(poiList),
     productStockConfig: JSON.stringify(productStockConfig),
     tagVos: JSON.stringify(tagVos)
-  })
+  }
+  if (!poiId) {
+    body.merchantId = getMerchantId() || 0
+  }
+  return httpClient.post('retail/w/batchSaveStockConfig', body)
 }
 
 export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => httpClient.post('shangou/audit/r/statistics', {

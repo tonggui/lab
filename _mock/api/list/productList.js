@@ -47,6 +47,7 @@ module.exports = function(req, mock, random) {
           "酷儿维生素C+钙香橙汁450ml酷儿维生素C+钙香橙汁450ml酷儿维生素C+钙香橙汁450ml",
           "可口可乐"
         ],
+        "limitRuleId|1": [0,213],
         "isMedicare|1": [true, false],
         "picture|1": [
           "http://p0.meituan.net/mallimages/83ee82d46deb91585f7db1a7c38eb43056974.jpg@88h_88w_1e",

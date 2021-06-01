@@ -165,7 +165,12 @@ export const rightMenu = [{
   icon: {
     type: 'cloud-queue'
   },
-  link: '/reuse/sc/product/views/setting',
+  link: {
+    path: '/merchant/product/setting'
+    // query: {
+    //   merchantId: getMerchantId()
+    // }
+  },
   bid: 'b_shangou_online_e_87g8c28d_mc'
 }, {
   key: 'merchantProductConfig',
@@ -176,18 +181,20 @@ export const rightMenu = [{
   link: {
     path: '/merchant/product/setting'
   }
-}, {
-  key: 'autoClearStock',
-  label: '缺货自动库存清0',
-  icon: {
-    type: 'update',
-    style: 'line-height: 1.5'
-  },
-  link: {
-    path: '/product/setting/stockoutAutoClearStock'
-  },
-  bid: 'b_shangou_online_e_8o6hqov0_mc'
-}, {
+},
+//  {
+//   key: 'autoClearStock',
+//   label: '缺货自动库存清0',
+//   icon: {
+//     type: 'update',
+//     style: 'line-height: 1.5'
+//   },
+//   link: {
+//     path: '/product/setting/stockoutAutoClearStock'
+//   },
+//   bid: 'b_shangou_online_e_8o6hqov0_mc'
+// }
+{
   key: 'videoManage',
   label: '视频管理',
   icon: Video,
