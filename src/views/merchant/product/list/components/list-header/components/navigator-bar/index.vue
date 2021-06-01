@@ -251,8 +251,12 @@
             title: '确定关闭总部商品库',
             content: '确定关闭后，当前商品库中的商品将被清除，请谨慎操作。分店中相应商品不会被删除。',
             onOk: async () => {
-              await fetchGetCloseMerchant()
-              this.$router.push({ name: 'merchantClose' })
+              try {
+                await fetchGetCloseMerchant()
+                this.$router.push({ name: 'merchantClose' })
+              } catch (err) {
+                this.$Message.error(err.msg || err.message || '网络错误')
+              }
             }
           })
           break

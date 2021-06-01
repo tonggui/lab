@@ -25,7 +25,7 @@ export const stepsFromPoi = [
   {
     title: '从分店导⼊商品',
     element: '#import',
-    intro: '如要继续向商品库中添加，请使⽤“从分类导⼊商品'
+    intro: '如要继续向商品库中添加，请使⽤“从分店导⼊商品'
   },
   {
     title: '重置总部商品库',
