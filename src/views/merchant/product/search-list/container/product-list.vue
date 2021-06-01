@@ -40,7 +40,7 @@
     computed: {
       ...mapState(['error', 'loading', 'list', 'pagination', 'tagId']),
       ...mapGetters({
-        tagList: 'list'
+        tagList: 'fullTagList'
       })
     },
     components: {

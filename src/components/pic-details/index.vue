@@ -89,7 +89,8 @@
     },
     watch: {
       needSync (val) {
-        if (!val) this.$emit('change-sync', !val)
+        // 不能勾选情况下，默认可以同步到门店
+        if (!val) this.$emit('change-sync', val)
       },
       picSync (val) {
         this.sync = val

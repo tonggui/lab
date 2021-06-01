@@ -1,4 +1,5 @@
 import {
+  fetchGetSortedTagList,
   fetchGetTagListBySearch
 } from '@/data/repos/merchantCategory'
 import {
@@ -10,6 +11,7 @@ import {
 
 export default {
   tag: {
+    getFullTagList: fetchGetSortedTagList,
     getList: ({ keyword, brandId }) => fetchGetTagListBySearch(keyword, brandId)
   },
   product: {

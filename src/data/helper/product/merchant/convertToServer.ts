@@ -45,7 +45,7 @@ export const convertProductToServer = (product: MerchantDetailProduct, context =
     spuSaleAttrMap,
     sellStatus: product.sellStatus,
     spPicContentSwitch: !!product.spPictureContentSwitch ? 1 : 2,
-    picContentSyncPoi: !!product.picContentSyncPoi
+    picContentSyncPoi: !product.picContentSyncPoi
   }
   return params
 }

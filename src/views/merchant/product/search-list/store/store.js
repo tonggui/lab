@@ -11,6 +11,7 @@ export default {
     getTagList ({ dispatch, state }) {
       const { filters } = state.product
       dispatch('tag/getList', filters)
+      dispatch('tag/getFullTagList')
     },
     getProduct ({ dispatch }) {
       dispatch('product/getList')

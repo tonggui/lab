@@ -5,6 +5,19 @@ import message from '@/store/helper/toast'
 export default (api) => {
   const tagListStoreInstance = createTagListStore(api)
   return mergeModule(tagListStoreInstance, {
+    state: {
+      fullTagList: []
+    },
+    getters: {
+      fullTagList (state) {
+        return state.fullTagList
+      }
+    },
+    mutations: {
+      setFullTagList (state, list) {
+        state.fullTagList = list
+      }
+    },
     actions: {
       async getList ({ commit }, query) {
         try {
@@ -21,6 +34,10 @@ export default (api) => {
         } finally {
           commit('setLoading', false)
         }
+      },
+      async getFullTagList ({ commit }) {
+        const { tagList } = await api.getFullTagList()
+        commit('setFullTagList', tagList)
       }
     }
   })
