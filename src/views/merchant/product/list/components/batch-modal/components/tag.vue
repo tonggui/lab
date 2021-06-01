@@ -32,7 +32,7 @@
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
   import TagList from '@components/taglist/tag-list-with-suggest'
-  import { POI_SELECT_OPTIONS } from '../config'
+  import { POI_SELECT_OPTIONS, defaultPoiType } from '../config'
 
   const TYPE = {
     ADD: 1,
@@ -42,6 +42,10 @@
   export default {
     name: 'product-batch-modify-tag',
     props: {
+      range: {
+        type: Number,
+        default: defaultPoiType
+      },
       tagList: {
         type: Array,
         required: true
@@ -56,6 +60,14 @@
         type: undefined,
         tagIdList: [],
         poiType: null
+      }
+    },
+    watch: {
+      range: {
+        immediate: true,
+        handler (val) {
+          if (val) this.poiType = val
+        }
       }
     },
     computed: {

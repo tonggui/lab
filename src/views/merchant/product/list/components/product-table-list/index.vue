@@ -32,6 +32,7 @@
     </template>
   </Columns>
   <BatchModal
+    :range="batch.range"
     :tag-list="tagList"
     :loading="batch.loading"
     :value="batch.visible"
@@ -80,7 +81,8 @@
           visible: false,
           selectIdList: [],
           callback: noop,
-          tip: {}
+          tip: {},
+          range: null
         }
       }
     },
@@ -95,6 +97,7 @@
       },
       handleBatchModalSubmit (type, params) {
         if (type === PRODUCT_BATCH_OP.MOD_TAG) {
+          this.batch.range = params.range || this.batch.range || null
           this.$emit('batch', {
             type: params.type,
             data: {
@@ -103,12 +106,20 @@
               poiIds: params.poiIdList
             },
             idList: this.batch.selectIdList
-          })
+          }, this.createCallback((data) => {
+            this.$Message.success('修改分类成功')
+          }, (err) => {
+            this.$Message.success(err.message || err.msg || '修改分类失败')
+          }))
         } else if (type === PRODUCT_BATCH_OP.DELETE) {
           this.$emit('delete', {
             product: this.batch.selectIdList,
             params
-          })
+          }, this.createCallback((data) => {
+            this.$Message.success('批量删除成功')
+          }, (err) => {
+            this.$Message.success(err.message || err.msg || '批量删除失败')
+          }))
         }
       },
       handleBatchOperation (op, selectIdList) {

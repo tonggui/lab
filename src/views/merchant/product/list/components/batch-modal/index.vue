@@ -14,7 +14,7 @@
 <!--      <Alert v-show="error" type="error">{{ error }}</Alert>-->
       <div class="modal-content-title">{{displayText}}</div>
       <div class="modal-content-tip" v-if="config.tip">{{ config.tip }}</div>
-      <component ref="form" v-if="showForm" :tag-list="tagList" :is="component" @submit="handleSubmit"></component>
+      <component ref="form" v-if="showForm" :range="range" :tag-list="tagList" :is="component" @submit="handleSubmit"></component>
     </template>
     <template v-else>
       <div>{{ confirm }}</div>
@@ -34,6 +34,7 @@
   export default {
     name: 'product-list-batch-modal',
     props: {
+      range: Number,
       value: Boolean,
       loading: Boolean,
       type: {
