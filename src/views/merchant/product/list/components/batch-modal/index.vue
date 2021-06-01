@@ -14,7 +14,7 @@
 <!--      <Alert v-show="error" type="error">{{ error }}</Alert>-->
       <div class="modal-content-title">{{displayText}}</div>
       <div class="modal-content-tip" v-if="config.tip">{{ config.tip }}</div>
-      <component ref="form" v-if="showForm" :range="range" :tag-list="tagList" :is="component" @submit="handleSubmit"></component>
+      <component ref="form" v-if="showForm" :range="poiSelectType" :tag-list="tagList" :is="component" @submit="handleSubmit"></component>
     </template>
     <template v-else>
       <div>{{ confirm }}</div>
@@ -34,7 +34,7 @@
   export default {
     name: 'product-list-batch-modal',
     props: {
-      range: Number,
+      range: Object,
       value: Boolean,
       loading: Boolean,
       type: {
@@ -60,6 +60,9 @@
       }
     },
     computed: {
+      poiSelectType () {
+        return this.range[this.type]
+      },
       displayText () {
         if (this.type === PRODUCT_BATCH_OP.MOD_TAG) {
           return `共选择${this.count}件商品`
@@ -144,7 +147,8 @@
           params = {
             isMerchantDelete: [POI_SELECT_TYPE.MERCHANT].includes(range),
             isSelectAll: POI_SELECT_TYPE.ALL_POI === range,
-            poiIdList: this.poiIdList
+            poiIdList: this.poiIdList,
+            range
           }
         }
         this.$emit('submit', this.type, params)

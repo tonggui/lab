@@ -7,7 +7,7 @@ import Delete from './components/delete'
 export const POI_SELECT_TYPE = {
   ALL_POI: 1,
   PART_POI: 2,
-  MERCHANT: 0
+  MERCHANT: 3
 }
 
 export const defaultPoiType = POI_SELECT_TYPE.PART_POI

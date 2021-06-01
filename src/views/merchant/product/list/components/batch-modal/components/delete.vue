@@ -10,7 +10,7 @@
   </Form>
 </template>
 <script>
-  import { MERCHANT_OPTIONS } from '../config'
+  import { defaultPoiType, MERCHANT_OPTIONS } from '../config'
 
   const TYPE = {
     ADD: 1,
@@ -20,6 +20,10 @@
   export default {
     name: 'product-batch-modify-tag',
     props: {
+      range: {
+        type: Number,
+        default: defaultPoiType
+      },
       tagList: {
         type: Array,
         required: true
@@ -42,6 +46,14 @@
       },
       TYPE () {
         return TYPE
+      }
+    },
+    watch: {
+      range: {
+        immediate: true,
+        handler (val) {
+          if (val) this.poiType = val
+        }
       }
     },
     methods: {

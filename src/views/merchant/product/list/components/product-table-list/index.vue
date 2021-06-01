@@ -82,7 +82,7 @@
           selectIdList: [],
           callback: noop,
           tip: {},
-          range: null
+          range: {}
         }
       }
     },
@@ -97,7 +97,7 @@
       },
       handleBatchModalSubmit (type, params) {
         if (type === PRODUCT_BATCH_OP.MOD_TAG) {
-          this.batch.range = params.range || this.batch.range || null
+          this.batch.range[PRODUCT_BATCH_OP.MOD_TAG] = params.range || this.batch.range[PRODUCT_BATCH_OP.MOD_TAG]
           this.$emit('batch', {
             type: params.type,
             data: {
@@ -112,6 +112,7 @@
             this.$Message.success(err.message || err.msg || '修改分类失败')
           }))
         } else if (type === PRODUCT_BATCH_OP.DELETE) {
+          this.batch.range[PRODUCT_BATCH_OP.DELETE] = params.range || this.batch.range[PRODUCT_BATCH_OP.MOD_TAG]
           this.$emit('delete', {
             product: this.batch.selectIdList,
             params
