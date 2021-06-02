@@ -40,9 +40,9 @@
       v-model="imgModal"
       title="用户端效果展示"
       footer-hide
-      width="720"
+      width="590"
     >
-      <img style="width: 680px; height: 680px; object-fit: contain;" :src="preSaleImg" alt="用户端效果展示">
+      <img style="width: 550px; height: 550px;" :src="preSaleImg" alt="用户端效果展示">
     </Modal>
   </div>
 </template>

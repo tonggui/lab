@@ -298,6 +298,21 @@ export default () => ([{
     key: FIELD.PICTURE_CONTENT,
     label: '图片详情',
     type: 'PicDetails',
+    options: {
+      needSync: false
+    },
+    rules: {
+      result: {
+        'options.needSync' () {
+          return !!this.getContext('features').needPicSync
+        }
+      }
+    },
+    events: {
+      'change-sync' (val) {
+        this.setData('picContentSyncPoi', val)
+      }
+    },
     binding: {
       event: 'change'
     }
@@ -323,8 +338,8 @@ export default () => ([{
           return list.length > 0
         },
         'options.description' () {
-          const pictureContentList = this.getData('pictureContentList')
-          return (pictureContentList && pictureContentList.length) ? '勾选“展示给买家”，可在用户端的商品详情页中展示品牌商图片详情；' : ''
+          const spPictureContentList = this.getData('spPictureContentList')
+          return (spPictureContentList && spPictureContentList.length) ? '勾选“展示给买家”，可在用户端的商品详情页中展示品牌商图片详情；' : ''
         },
         'options.pictureList' () {
           return this.getData('spPictureContentList')

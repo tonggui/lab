@@ -8,7 +8,7 @@ module.exports = function (req) {
       code: 0,
       msg: '',
       data: {
-        "pageNum": 1,
+        "pageNum": 2,
         "pageSize": 30,
         "totalPage": 10,
         "totalSize": 100,
@@ -17,7 +17,7 @@ module.exports = function (req) {
           "name": "@cname",
           "id": "@id",
           // "type|1": [0, 501, 502, 503, 504, 12003],
-          "type|1": [12003],
+          "type|1": [106],
           "time|1": [1564489541, 1564489571, 1564541238, 1564541238, 1564553827, 1564558527],
           "statusType|1": [100, 200, 201, 300, 301, 302, 400],
           "statusParam1": 50,
@@ -28,7 +28,8 @@ module.exports = function (req) {
           "contentUrl|1": ['', 'http://vfile.meituan.net/scproduct/f916ec9b8500f7d81ee1ed4a68cac4f912800.xls'],
           "detailUrl": 'http://s3plus.vip.sankuai.com/v1/mss_03d0d9cf21144ba0b7747ba1dc1acf6e/product/agreements/agreementV20180726/agreement_confirm.html?signed=1',
           "poiCount": 100,
-          "productCount": 200
+          "productCount": 200,
+          "tagList": ['你', '好', '吗']
         }],
         "data|7": [{
           "name": "@cname",

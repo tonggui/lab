@@ -14,7 +14,7 @@ abstract class NewMerchantProgressTask extends MerchantProgressTask {
   get displayStatusInfo (): string[] {
     const status: number = this.task.status || -1
     switch (status) {
-      case MERCHANT_STATUS.PENDING: return ['待处理', '', '']
+      case MERCHANT_STATUS.PENDING: return ['排队中', '', '']
       case MERCHANT_STATUS.DOING: return [`处理中`, '', '']
       case MERCHANT_STATUS.PART_SUCCESS: return ['', '处理完成', '']
       case MERCHANT_STATUS.SUCCESS: return ['', '处理完成', '']

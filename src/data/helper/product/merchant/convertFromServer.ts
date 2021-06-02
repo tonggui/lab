@@ -91,6 +91,8 @@ export const convertProductDetail = data => {
     upcImage: data.upcImage,
     isMissingInfo: !!data.missingRequiredInfo,
     sellStatus: defaultTo(data.sellStatus, PRODUCT_SELL_STATUS.OFF),
+    spPictureContentList: trimSplit(data.spPicContent),
+    spPictureContentSwitch: data.spPicContentSwitch === 1,
     preSale: {
       saleType: data.saleType,
       deliveryTime: data.deliveryTime
