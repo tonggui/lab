@@ -224,13 +224,10 @@
         return false
       },
       checkComplianceNeedAuditTip () {
-        // 初始状态的类目需要审核，才会出现纠错审核
-        if (this.originalProductCategoryNeedAudit) {
-          const newData = this.productInfo
-          const oldData = this.originalFormData
-          return diffCommon(oldData, newData, this.needAuditList)
-        }
-        return false
+        // 合规审核只需要判断时候是先审后发，不用判断类目是否需要审核originalProductCategoryNeedAudit，这个是业务审核的
+        const newData = this.productInfo
+        const oldData = this.originalFormData
+        return diffCommon(oldData, newData, this.needAuditList)
       },
       getModalTipAndText () {
         let tip = []
@@ -279,12 +276,13 @@
         // 获取弹窗提示信息
         const { tip, okText, cancelText } = this.getModalTipAndText()
         // 正常新建编辑场景下如果提交审核需要弹框, 并且需要满足审核条件
-        if ((this.needAudit || this.complianceNeedAuditTip) && tip.length) {
+        if ((this.needAudit || (this.spuId ? this.complianceNeedAuditTip : this.complianceNeedAudit)) && tip.length) {
           LX.mv({
             bid: 'b_shangou_online_e_nwej6hux_mv',
             val: { spu_id: this.spuId || 0 }
           })
-          const $modal = this.$Modal.confirm({
+          const showModal = cancelText ? this.$Modal.confirm : this.$Modal.success
+          const $modal = showModal({
             title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
             content: `<div>${tip.map(t => `<p>${t}</p>`).join('')}</div>`,
             centerLayout: true,
