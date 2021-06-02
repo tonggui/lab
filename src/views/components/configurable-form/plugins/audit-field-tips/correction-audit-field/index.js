@@ -79,7 +79,7 @@ export default () => ({
     rules: {
       result: {
         'options.needCorrectionAudit' () {
-          return !!this.getContext('needCorrectionAudit') && (!!this.getContext('businessNeedAudit') || !!this.getContext('complianceNeedAuditTip'))
+          return (!!this.getContext('needCorrectionAudit') && !!this.getContext('businessNeedAudit')) || !!this.getContext('complianceNeedAuditTip')
         },
         'options.original' () {
           const originalProduct = this.getContext('originalProduct')

@@ -224,13 +224,10 @@
         return false
       },
       checkComplianceNeedAuditTip () {
-        // 初始状态的类目需要审核，才会出现纠错审核
-        if (this.originalProductCategoryNeedAudit) {
-          const newData = this.productInfo
-          const oldData = this.originalFormData
-          return diffCommon(oldData, newData, this.needAuditList)
-        }
-        return false
+        // 合规审核只需要判断时候是先审后发，不用判断类目是否需要审核originalProductCategoryNeedAudit，这个是业务审核的
+        const newData = this.productInfo
+        const oldData = this.originalFormData
+        return diffCommon(oldData, newData, this.needAuditList)
       },
       getModalTipAndText () {
         let tip = []
