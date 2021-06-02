@@ -279,12 +279,13 @@
         // 获取弹窗提示信息
         const { tip, okText, cancelText } = this.getModalTipAndText()
         // 正常新建编辑场景下如果提交审核需要弹框, 并且需要满足审核条件
-        if ((this.needAudit || this.complianceNeedAuditTip) && tip.length) {
+        if ((this.needAudit || (this.spuId ? this.complianceNeedAuditTip : this.complianceNeedAudit)) && tip.length) {
           LX.mv({
             bid: 'b_shangou_online_e_nwej6hux_mv',
             val: { spu_id: this.spuId || 0 }
           })
-          const $modal = this.$Modal.confirm({
+          const showModal = cancelText ? this.$Modal.confirm : this.$Modal.success
+          const $modal = showModal({
             title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
             content: `<div>${tip.map(t => `<p>${t}</p>`).join('')}</div>`,
             centerLayout: true,

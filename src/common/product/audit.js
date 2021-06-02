@@ -96,6 +96,7 @@ export const diffCommon = (oldData, newData, depList = []) => {
       // sku特殊处理
       return skuIsEqual(old, newN, key)
     }
+    console.log('##realKey ', realKey, !isEqual(old, newN))
     return !isEqual(old, newN)
   })
 }

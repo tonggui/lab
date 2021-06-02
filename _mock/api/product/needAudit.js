@@ -8,6 +8,6 @@ module.exports = {
     odinAuditType: 1,
     auditType: 0,
     meetPoiCondition: true,
-    meetCategoryCondition: true,
+    meetCategoryCondition: false,
   },
 };
