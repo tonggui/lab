@@ -84,6 +84,12 @@ export default () => ({
         'options.original' () {
           const originalProduct = this.getContext('originalProduct')
           return get(originalProduct, SPU_FIELD.CATEGORY_ATTRS)
+        },
+        'options.businessNeedAudit' () {
+          return !!this.getContext('businessNeedAudit')
+        },
+        'options.complianceNeedAuditTip' () {
+          return !!this.getContext('complianceNeedAuditTip')
         }
       }
     }
