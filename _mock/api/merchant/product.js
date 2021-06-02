@@ -8,7 +8,7 @@ module.exports = function (req, mock, random) {
     code: 0,
     msg: '',
     data: {
-      "products|0": [{
+      "products|20": [{
         "spuId|+1": 1,
         'sellStatus|1': [0, 1],
         "name|1": [

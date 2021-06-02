@@ -82,8 +82,9 @@
       }
     },
     mounted () {
-      if (LocalStorage[KEYS.MERCHANT_OPEN_STATUS] === false) {
+      if (LocalStorage[KEYS.MERCHANT_OPEN_STATUS] === false && !LocalStorage[KEYS.MERCHANT_WELCOME]) {
         this.$Message.success('欢迎使用，请尽快创建总部商品~')
+        LocalStorage[KEYS.MERCHANT_WELCOME] = true
       }
       this.getMerchantTaskStatus()
       this.getUnRelatedProductCount()

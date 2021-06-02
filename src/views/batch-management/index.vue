@@ -23,9 +23,9 @@
             <span v-if="isMerchantAccount">旧版</span>批量管理
           </BreadcrumbItem>
         </Breadcrumb>
-        <RouteLink v-if="isMerchantAccount" :to="prevPage.path" tag="a">
-          <Icon type="arrow-left-double" />返回商家中心
-        </RouteLink>
+<!--        <RouteLink v-if="isMerchantAccount" :to="prevPage.path" tag="a">-->
+<!--          <Icon type="arrow-left-double" />返回商家中心-->
+<!--        </RouteLink>-->
       </div>
       <div class="batch-management-header">
         <Tabs :value="currentTab" name="batch-management">
