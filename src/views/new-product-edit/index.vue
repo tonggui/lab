@@ -234,9 +234,9 @@
         let okText = '返回商品列表'
         let cancelText = '查看商品审核'
         // 合规审核为先发后审、需业务审核且为先审后发, 或者编辑商品页面时无需合规审核
-        if ((this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.START_SELL &&
-          this.businessAuditStatus === BUSINESS_AUDIT_TYPE.START_AUDIT) ||
-          (this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.NO_AUDIT && this.spuId)
+        if ((this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.START_SELL ||
+          this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.NO_AUDIT) &&
+          this.businessAuditStatus === BUSINESS_AUDIT_TYPE.START_AUDIT
         ) {
           tip = [
             '此商品已送平台业务审核，预计1-2个工作日审核完毕。',
