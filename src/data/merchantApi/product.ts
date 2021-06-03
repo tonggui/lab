@@ -427,4 +427,4 @@ export const downloadProductList = () => httpClient.post('hqcc/r/downloadMerchan
 /**
  * 查询未关联的总部商品数量
  */
-export const getUnRelatedProductCount = () => httpClient.post('hqcc/r/getUnRelatedProductCount')
+// export const getUnRelatedProductCount = () => httpClient.post('hqcc/r/getUnRelatedProductCount')
