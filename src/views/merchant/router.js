@@ -61,7 +61,7 @@ export default [
         } else if (Object.values(BATCH_REL_TASK_STATUS).includes(closeTaskStatus)) {
           next({ name: 'merchantClose' })
         } else if (merStatus === MERCHANT_OPEN_STATUS.OPEN) {
-          if (id <= 0 && BATCH_REL_TASK_STATUS.FINISH === status && resultStatus !== BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS) {
+          if (id > 0 && BATCH_REL_TASK_STATUS.FINISH === status && resultStatus !== BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS) {
             jumpTo('/reuse/sc/product/views/seller/center/productImport')
           } else {
             next()
