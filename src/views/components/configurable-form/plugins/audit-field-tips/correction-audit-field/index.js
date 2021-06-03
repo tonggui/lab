@@ -155,7 +155,7 @@ export default () => ({
         commit('setNeedCorrectionAudit', needCorrectionAudit)
       }
       if (businessNeedAudit !== get(oldContext, 'features.audit.businessNeedAudit')) {
-        commit('setBusinessNeedAudit', businessNeedAudit || {})
+        commit('setBusinessNeedAudit', businessNeedAudit)
       }
       if (complianceNeedAuditTip !== get(oldContext, 'features.audit.complianceNeedAuditTip')) {
         commit('setComplianceNeedAuditTip', complianceNeedAuditTip)
