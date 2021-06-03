@@ -40,7 +40,7 @@
   import { fetchGetRunningTaskStatus } from '@/data/repos/merchantProduct'
   import LocalStorage, { KEYS } from '@/common/local-storage'
   import moment from 'moment'
-  import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
+  import { BATCH_REL_TASK_STATUS, BATCH_REL_TASK_RESULT_STATUS } from '@/data/enums/batch'
   import { jumpTo } from '@components/link'
 
   export default {
@@ -68,10 +68,14 @@
         this.$router.push({ name: 'newBatchRel' })
       },
       async getMerchantTaskStatus () {
-        const { id, status, ctime } = await fetchGetRunningTaskStatus(2)
+        const { id, status, ctime, resultStatus } = await fetchGetRunningTaskStatus(2)
         this.taskId = id
         this.ctime = ctime
         this.status = status
+        // 如果有失败任务，默认跳转到失败页面
+        if (id > 0 && BATCH_REL_TASK_STATUS.FINISH === status && resultStatus !== BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS) {
+          this.handleGoToTask()
+        }
       },
       handleGoToTask () {
         jumpTo(`/reuse/sc/product/views/seller/center/productImport`)
