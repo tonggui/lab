@@ -140,6 +140,7 @@ declare interface ProductInfo {
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
   category: BaseCategory; // 商品分类
   isMedicare: boolean // 是否是医保商品
+  limitRuleId: number; // 商品限购Id
 }
 
 // 商品基本信息
@@ -269,6 +270,7 @@ declare interface MerchantProduct {
   categoryId?:[string, number];
   displayInfo?: (string|string[])[]
   tagList?: Tag[];
+  limitRuleId?: number;
 }
 
 // 药品
@@ -519,7 +521,7 @@ declare interface MedicineRegisterInfo {
   cityId: number[]; // 城市
   purchaseType: string | number; // 购买方式
   matchingRules: string | number; // 药品识别方式
-  productInfo: string;  // 商品信息
+  productInfo: string; // 商品信息
 }
 
 declare interface MedicineRegisterInfoModify extends MedicineRegisterInfo {

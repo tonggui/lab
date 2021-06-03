@@ -9,7 +9,7 @@ import {
 import {
   defaultPagination
 } from '@/data/constants/common'
-import { getPoiId } from '@/common/constants'
+import { getPoiId, getMerchantId, getRuleId } from '@/common/constants'
 
 const initState = {
   submitting: false,
@@ -31,7 +31,8 @@ const initState = {
     error: false,
     loading: false,
     pagination: { ...defaultPagination }
-  }
+  },
+  ruleRelProduct: {}
 }
 
 export default {
@@ -62,9 +63,6 @@ export default {
     setConfig (state, config) {
       state.config = config
     },
-    setPoiList (state, poiList) {
-      state.poiList = poiList
-    },
     setStatus (state, status) {
       state.status = !!status
     },
@@ -85,6 +83,9 @@ export default {
     },
     setTagList (state, tagList) {
       state.tag.list = tagList
+    },
+    setRuleRelProductMap (state, ruleRelProductMap) {
+      state.ruleRelProductMap = ruleRelProductMap
     },
     destory (state) {
       state = Object.assign(state, cloneDeep(initState))
@@ -110,6 +111,25 @@ export default {
     }
   },
   actions: {
+    async getRuleRelProduct ({ commit, state }, ruleId) {
+      const merchantId = getMerchantId() || 0
+      try {
+        let res = await api.getRuleRelProduct(ruleId, getPoiId(), merchantId)
+        let ruleRelProductMap = {}
+        if (res && res.tagStats) {
+          res.tagStats.map((item, i) => {
+            if (item.includes) {
+              item.includes.map((id) => {
+                ruleRelProductMap[id] = true
+              })
+            }
+          })
+          commit('setRuleRelProductMap', ruleRelProductMap)
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    },
     async getTagList ({ commit, state }) {
       try {
         commit('setTagLoading', true)
@@ -144,6 +164,7 @@ export default {
     },
     async getProductList ({ commit, getters, state }) {
       const tagId = getters.currentTagId
+      const ruleId = getRuleId()
       try {
         commit('setProductLoading', true)
         commit('setProductError', false)
@@ -154,9 +175,16 @@ export default {
           if (getters.isSelectAllProductTag) {
             tagIdList = product.tagList.map(tag => tag.id)
           }
-          const checked = helper.getProductState(product, state.productMap, tagIdList)
-          return { ...product, _checked: checked }
+          let checked = helper.getProductState(product, state.productMap, tagIdList)
+          let disabled = false
+          if (!checked && product.limitRuleId + '' === ruleId) {
+            checked = true
+          } else if (!checked && product.limitRuleId) {
+            disabled = true
+          }
+          return { ...product, _checked: checked, _disabled: disabled }
         })
+        console.log('newList', newList)
         commit('setProductList', newList)
         commit('setProductPagination', pagination)
       } catch (err) {
@@ -167,19 +195,16 @@ export default {
       }
     },
     async getConfig ({ commit }) {
-      const { status, config, productMap, wmPoiIds } = await api.getConfig(getPoiId())
+      const { status, config, productMap } = await api.getConfig(getPoiId())
       commit('setStatus', status)
       commit('setConfig', config)
-      commit('setPoiList', wmPoiIds)
       commit('setProductMap', productMap)
-      return wmPoiIds
     },
-    async getData ({ dispatch, commit }, cb) {
+    async getData ({ dispatch, commit }) {
       try {
         commit('setLoading', true)
         commit('setError', false)
-        const wmPoiIds = await dispatch('getConfig')
-        cb(wmPoiIds)
+        // await dispatch('getConfig')
         dispatch('getTagList')
         dispatch('getProductList')
       } catch (err) {
@@ -233,25 +258,20 @@ export default {
     },
     async submit ({ state, commit }, callback) {
       try {
-        const { status, config, productMap, poiList } = state
+        const { status, config, productMap } = state
         if (status) {
           if (config.type.length <= 0) {
             message.warning('请选择取消订单方式')
             return
           }
           const { count } = helper.getAllTagStatus(productMap)
-          if (!config.isAll && count <= 0) {
+          if (count <= 0) {
             message.warning('请选择所需要设置的商品')
-            return
-          }
-          if (!getPoiId() && config.isAll && (!poiList || !poiList.length)) {
-            message.warning('请选择关联门店')
             return
           }
         }
         commit('setSubmitting', true)
-        config.poiList = poiList
-        await api.saveConfig(status, config, productMap, getPoiId())
+        await api.saveConfig(status, config, productMap)
         callback()
       } catch (err) {
         console.error(err)

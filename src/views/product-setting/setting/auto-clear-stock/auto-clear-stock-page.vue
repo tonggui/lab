@@ -11,9 +11,14 @@
           <FormCard title="配置信息" class="form">
             <Form />
           </FormCard>
-          <FormCard title="选择商品" tip="勾选配置应用生效的商品">
+          <FormCard v-show="!config.isAll" title="选择商品" tip="勾选配置应用生效的商品">
             <ProductList />
           </FormCard>
+          <PoiSelectForm
+            v-if="config.isAll && !getIsSingle()"
+            :data="[...poiListInfo]"
+            @data-change="handleDataChange"
+          />
         </div>
         <div v-else class="closed">
           <img :src="img" />
@@ -39,6 +44,8 @@
   import ProductList from './container/product-list'
   import Form from './container/form'
   import invalidImg from '@/assets/invalid.png'
+  import { getIsSingle } from '@/common/constants'
+  import PoiSelectForm from './components/poi-select-form'
 
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('autoClearStockConfig')
 
@@ -49,17 +56,22 @@
       FormCard,
       ProductList,
       Form,
-      StickyFooter
+      StickyFooter,
+      PoiSelectForm
     },
     data () {
-      return { img: invalidImg }
+      return {
+        img: invalidImg,
+        poiListInfo: []
+      }
     },
     computed: {
       ...mapState({
         status: 'status',
         loading: 'loading',
         error: 'error',
-        submitting: 'submitting'
+        submitting: 'submitting',
+        config: 'config'
       })
     },
     methods: {
@@ -69,49 +81,86 @@
       }),
       ...mapMutations({
         handleStatusChange: 'setStatus',
-        destory: 'destory'
+        destory: 'destory',
+        setPoiList: 'setPoiList'
       }),
+      getIsSingle () {
+        return getIsSingle()
+      },
+      handleDataChange (key, value) {
+        this.poiListInfo = [...value]
+        this.setPoiList([...value])
+      },
       goToList () {
+        let path = '/merchant/product/list'
+        let query = this.$route.query
+        if (getIsSingle()) {
+          path = '/product/list'
+          query = {
+            from: query.from,
+            wmPoiId: query.wmPoiId
+          }
+        }
         this.$router.push({
-          path: '/product/list',
-          query: this.$route.query
+          path,
+          query
         })
       },
       handleSubmit (index) {
         if (index === 1) {
-          this.goToList()
+          this.$router.push({
+            path: '/merchant/product/setting',
+            query: this.$route.query
+          })
         } else if (index === 0) {
           this.submit(() => {
-            this.$Modal.confirm({
-              title: '温馨提示',
-              render: () => (
-                <div>
-                  <div>正在为所选商品进行设置····</div>
-                  <div>配置完成会通知您</div>
-                  现在可以点击【任务进度】查看，或返回商品列表等待配置结束
-                </div>
-              ),
-              okText: '查看任务进度',
-              cancelText: '返回商品列表',
-              onCancel: () => {
-                this.goToList()
-              },
-              onOk: () => {
-                this.$router.push({
-                  path: '/batchManagement/progress',
-                  query: {
-                    ...this.$route.query,
-                    from: 'single'
-                  }
-                })
-              }
-            })
+            if (!this.config.isAll) {
+              this.$Modal.confirm({
+                title: '温馨提示',
+                render: () => (
+                  <div>
+                    <div>正在为所选商品进行设置····</div>
+                    <div>配置完成会通知您</div>
+                    现在可以点击【任务进度】查看，或返回商品列表等待配置结束
+                  </div>
+                ),
+                okText: '查看任务进度',
+                cancelText: '返回商品列表',
+                onCancel: () => {
+                  this.goToList()
+                },
+                onOk: () => {
+                  this.$router.push({
+                    path: getIsSingle() ? '/batchManagement/progress' : '/merchant/progress',
+                    query: {
+                      ...this.$route.query
+                    }
+                  })
+                }
+              })
+            } else {
+              this.$Modal.success({
+                title: '提示',
+                content: '库存清0规则配置成功',
+                okText: '返回配置管理',
+                onOk: () => {
+                  this.$router.push({
+                    path: '/merchant/product/setting',
+                    query: {
+                      ...this.$route.query
+                    }
+                  })
+                }
+              })
+            }
           })
         }
       }
     },
     mounted () {
-      this.getData()
+      this.getData((wmPoiIds) => {
+        this.poiListInfo = wmPoiIds || []
+      })
     },
     beforeDestroy () {
       this.destory()

@@ -19,6 +19,7 @@
   import { fetchGetMerchantInfo } from '@/data/repos/merchantPoi'
   import ErrorPage from '@/views/error/error'
   import moduleControl from '@/module'
+  import { getPoiId } from '@/common/constants'
 
   export default {
     name: 'MerchantPageContainer',
@@ -84,28 +85,36 @@
       }
     },
     async created () {
-      if (!this.isBusinessClient) {
-        this.merchantId = this.$route.query.merchantId || getMerchantConfig(ConfigKeys.MERCHANT_ID)
-        updateMerchantConfig(ConfigKeys.MERCHANT_ID, this.merchantId)
-        // 运营端如果缺少routerTagId，需要通过接口获取routerTagId
-        if (this.merchantId && !this.$route.query.routerTagId) {
-          await this.loadMerchantInfo()
+      if (!getPoiId()) {
+        if (!this.isBusinessClient) {
+          this.merchantId = this.$route.query.merchantId || getMerchantConfig(ConfigKeys.MERCHANT_ID)
+          updateMerchantConfig(ConfigKeys.MERCHANT_ID, this.merchantId)
+          // 运营端如果缺少routerTagId，需要通过接口获取routerTagId
+          if (this.merchantId && !this.$route.query.routerTagId) {
+            await this.loadMerchantInfo()
+          } else {
+            await this.syncMerchantParamsToRouter({ merchantId: this.merchantId })
+          }
+          this.loading = false
         } else {
-          await this.syncMerchantParamsToRouter({ merchantId: this.merchantId })
+          // 商家端环境加载，必须先清空。（解决商家端切换账号引起的merchantId仍然是之前的缓存，后端按照缓存返回数据）
+          updateMerchantConfig(ConfigKeys.MERCHANT_ID, '')
+          await this.loadMerchantInfo()
         }
-        this.loading = false
       } else {
-        // 商家端环境加载，必须先清空。（解决商家端切换账号引起的merchantId仍然是之前的缓存，后端按照缓存返回数据）
-        updateMerchantConfig(ConfigKeys.MERCHANT_ID, '')
-        await this.loadMerchantInfo()
+        this.loading = false
       }
     },
     beforeRouteEnter (to, from, next) {
-      moduleControl.setContext({ merchant: true })
+      if (!getPoiId()) {
+        moduleControl.setContext({ merchant: true })
+      }
       next()
     },
     beforeRouteLeave (to, from, next) {
-      moduleControl.setContext({ merchant: false })
+      if (!getPoiId()) {
+        moduleControl.setContext({ merchant: false })
+      }
       next()
     }
   }
