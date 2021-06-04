@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { find, get } from 'lodash'
+import { find, get, isEqual } from 'lodash'
 import { cloneElement, forwardComponent } from '@/common/vnode'
 import { diffSkuByUpc } from '@/common/product/audit'
 import './index.less'
@@ -60,6 +60,7 @@ export default (WrapperComponent) => Vue.extend({
   methods: {
     // 渲染提示
     renderTips (h, tipText = this.formatter(this.original)) {
+      console.log(tipText)
       return h('div', { class: 'correction-audit-field-tip' }, [
         h('p', { class: 'popper' }, [h('div', { class: 'popper-arrow' }), '修改需审核']),
         h('p', { class: 'desc' }, [`修改前：${tipText || '空'}`])
@@ -91,13 +92,18 @@ export default (WrapperComponent) => Vue.extend({
               active = originValue !== key.map(v => get(row, v, '')).join('')
             } else {
               originValue = get(this.findOriginalSku(row.id), key, '')
-              active = originValue !== row[key]
+              if (typeof originValue === 'object') {
+                active = !isEqual(originValue, row[key])
+                originValue = Object.keys(originValue).map(v => originValue[v]).join('和')
+              } else {
+                active = originValue !== row[key]
+              }
             }
           }
           return h(DiffTableCellContainer, {
             props: {
               active,
-              originalValueText: originValue
+              originalValueText: `${originValue}`
             },
             scopedSlots: {
               content: () => childNode
