@@ -103,7 +103,7 @@ export default (WrapperComponent) => Vue.extend({
           return h(DiffTableCellContainer, {
             props: {
               active,
-              originalValueText: originValue
+              originalValueText: `${originValue}`
             },
             scopedSlots: {
               content: () => childNode
