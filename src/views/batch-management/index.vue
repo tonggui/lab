@@ -1,7 +1,7 @@
 <template>
   <div class="batch-management">
     <template v-if="showHeader">
-      <template v-if="isMerchantAccount && !isMedicineAccount">
+      <template v-if="!isMedicineAccount">
         <Alert type="success" class="batch-management-alert" closable>
           <div class="left">
             <Icon type="error" size="17" color="#63D29D" />&nbsp;
