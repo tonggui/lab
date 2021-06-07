@@ -168,6 +168,7 @@ export default ({ Component }) => (Api) => {
       async handleSubmit (product, context, cb, config = {}) {
         try {
           this.product = product
+          // 透传参数加入兜底逻辑
           const { noMessage } = config
           const response = await this.fetchSubmitEditProduct(context)
           response && !noMessage && this.$Message.success('编辑商品信息成功')
