@@ -8,8 +8,9 @@
             平台建议您使⽤新版商品管理⼯具 “总部商品库” ，可⼤幅提⾼连锁总部商品管理效率。
           </div>
           <div class="right" slot="close">
-            <Button type="primary" @click="handleRelate">
-              <RouteLink :to="prevPage.path" tag="a" style="color: #fff">返回新版</RouteLink>
+            <Button type="primary">
+<!--              返回新版-->
+              <RouteLink :to="newPage.path" tag="a" style="color: #fff">返回新版</RouteLink>
             </Button>&nbsp;
           </div>
         </Alert>
@@ -64,7 +65,7 @@
       },
       isMedicineAccount () {
         // 商家端壳子注入进来的
-        const localAllPoiList = localStorage.getItem('localAllPoiList')
+        const localAllPoiList = (typeof localStorage.getItem('localAllPoiList') === 'string' ? JSON.parse(localStorage.getItem('localAllPoiList')) : localStorage.getItem('localAllPoiList')) || []
         // 医药tag为22
         return localAllPoiList.some(poi => poi.firstTagId === 22)
       },
@@ -96,6 +97,12 @@
           }
         }
         return null
+      },
+      newPage () {
+        return {
+          name: '商品管理',
+          path: '/merchant/product/list'
+        }
       },
       currentTab () {
         return this.$route.name
