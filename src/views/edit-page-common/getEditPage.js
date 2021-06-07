@@ -165,7 +165,7 @@ export default ({ Component }) => (Api) => {
           this.$Message.error(err.message)
         }
       },
-      async handleSubmit (product, context, cb, config) {
+      async handleSubmit (product, context, cb, config = {}) {
         try {
           this.product = product
           const { noMessage } = config
