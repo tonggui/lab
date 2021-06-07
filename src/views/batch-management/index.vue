@@ -90,12 +90,12 @@
             path: `/reuse/product/router/page/multiPoiRouter`
           }
         }
-        if (this.isMedicineAccount && this.isMerchantAccount) {
-          return {
-            name: '商品管理',
-            path: '/merchant/product/list'
-          }
-        }
+        // if (this.isMedicineAccount && this.isMerchantAccount) {
+        //   return {
+        //     name: '商品管理',
+        //     path: '/merchant/product/list'
+        //   }
+        // }
         return null
       },
       newPage () {
