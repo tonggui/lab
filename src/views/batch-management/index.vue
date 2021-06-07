@@ -1,15 +1,16 @@
 <template>
   <div class="batch-management">
     <template v-if="showHeader">
-      <template v-if="isMerchantAccount">
+      <template v-if="!isMedicineAccount">
         <Alert type="success" class="batch-management-alert" closable>
           <div class="left">
             <Icon type="error" size="17" color="#63D29D" />&nbsp;
             平台建议您使⽤新版商品管理⼯具 “总部商品库” ，可⼤幅提⾼连锁总部商品管理效率。
           </div>
           <div class="right" slot="close">
-            <Button type="primary" @click="handleRelate">
-              <RouteLink :to="prevPage.path" tag="a" style="color: #fff">返回新版</RouteLink>
+            <Button type="primary">
+<!--              返回新版-->
+              <RouteLink :to="newPage.path" tag="a" style="color: #fff">返回新版</RouteLink>
             </Button>&nbsp;
           </div>
         </Alert>
@@ -23,9 +24,9 @@
             <span v-if="isMerchantAccount">旧版</span>批量管理
           </BreadcrumbItem>
         </Breadcrumb>
-<!--        <RouteLink v-if="isMerchantAccount" :to="prevPage.path" tag="a">-->
-<!--          <Icon type="arrow-left-double" />返回商家中心-->
-<!--        </RouteLink>-->
+        <RouteLink v-if="isMerchantAccount && isMedicineAccount" :to="prevPage.path" tag="a">
+          <Icon type="arrow-left-double" />返回商家中心
+        </RouteLink>
       </div>
       <div class="batch-management-header">
         <Tabs :value="currentTab" name="batch-management">
@@ -62,6 +63,12 @@
       isSinglePoi () {
         return getIsSinglePoi(this.$route.query)
       },
+      isMedicineAccount () {
+        // 商家端壳子注入进来的
+        const localAllPoiList = (typeof localStorage.getItem('localAllPoiList') === 'string' ? JSON.parse(localStorage.getItem('localAllPoiList')) : localStorage.getItem('localAllPoiList')) || []
+        // 医药tag为22
+        return localAllPoiList.some(poi => poi.firstTagId === 22)
+      },
       /**
        * 上一页地址
        * 单店：返回列表页面
@@ -83,13 +90,19 @@
             path: `/reuse/product/router/page/multiPoiRouter`
           }
         }
-        if (this.isMerchantAccount) {
-          return {
-            name: '商品管理',
-            path: '/merchant/product/list'
-          }
-        }
+        // if (this.isMedicineAccount && this.isMerchantAccount) {
+        //   return {
+        //     name: '商品管理',
+        //     path: '/merchant/product/list'
+        //   }
+        // }
         return null
+      },
+      newPage () {
+        return {
+          name: '商品管理',
+          path: '/merchant/product/list'
+        }
       },
       currentTab () {
         return this.$route.name

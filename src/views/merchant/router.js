@@ -15,6 +15,7 @@ import { fetchGetMerchantOpenStatus } from '@/data/repos/merchantProduct'
 import LocalStorage, { KEYS as STORAGE_KEYS } from '@/common/local-storage'
 import { MERCHANT_OPEN_STATUS } from '@/data/enums/product'
 import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
+import MerchantCube from './cube/router'
 import { isAssociateMedicineMerchant } from '@/module/helper/utils'
 
 export default [
@@ -200,5 +201,16 @@ export default [
       pv: { cid: 'c_shangou_online_e_l1zbbr16' },
       title: '审核详情修改页'
     }
+  },
+  {
+    /* 商家商品库中心 审核中修改页 */
+    name: 'merchantCube',
+    path: 'cube',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_cube" */ './cube/index'
+        ),
+    redirect: { path: '/merchant/cube/list' },
+    children: MerchantCube
   }
 ]
