@@ -1,7 +1,7 @@
 <template>
   <div class="batch-management">
     <template v-if="showHeader">
-      <template v-if="isMerchantAccount">
+      <template v-if="isMerchantAccount && !isMedicineAccount">
         <Alert type="success" class="batch-management-alert" closable>
           <div class="left">
             <Icon type="error" size="17" color="#63D29D" />&nbsp;
@@ -23,9 +23,9 @@
             <span v-if="isMerchantAccount">旧版</span>批量管理
           </BreadcrumbItem>
         </Breadcrumb>
-<!--        <RouteLink v-if="isMerchantAccount" :to="prevPage.path" tag="a">-->
-<!--          <Icon type="arrow-left-double" />返回商家中心-->
-<!--        </RouteLink>-->
+        <RouteLink v-if="isMerchantAccount && isMedicineAccount" :to="prevPage.path" tag="a">
+          <Icon type="arrow-left-double" />返回商家中心
+        </RouteLink>
       </div>
       <div class="batch-management-header">
         <Tabs :value="currentTab" name="batch-management">
@@ -61,6 +61,12 @@
       // 单店判断
       isSinglePoi () {
         return getIsSinglePoi(this.$route.query)
+      },
+      isMedicineAccount () {
+        // 商家端壳子注入进来的
+        const localAllPoiList = localStorage.getItem('localAllPoiList')
+        // 医药tag为22
+        return localAllPoiList.some(poi => poi.firstTagId === 22)
       },
       /**
        * 上一页地址
