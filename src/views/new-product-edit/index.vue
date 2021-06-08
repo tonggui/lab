@@ -89,7 +89,7 @@
         }
       },
       auditStatus () {
-        return this.productInfo.auditState
+        return this.productInfo.auditStatus
       },
       auditBtnStatus () {
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
