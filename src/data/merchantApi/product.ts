@@ -428,3 +428,14 @@ export const downloadProductList = () => httpClient.post('hqcc/r/downloadMerchan
  * 查询未关联的总部商品数量
  */
 // export const getUnRelatedProductCount = () => httpClient.post('hqcc/r/getUnRelatedProductCount')
+
+/*
+ * 商家商品中心批量修改分类接口
+ */
+export const apiBatchModifyTag = ({ spuIds, type, tagIds, isSelectAll, wmPoiIds }) => httpClient.post('hqcc/w/batchUpdateProductTag', {
+  spuIds,
+  type,
+  tagIds,
+  isSelectAll,
+  wmPoiIds
+})

@@ -1,29 +1,35 @@
 <template>
-  <div :class="['pic-details', { 'no-pic': noPic }]">
-    <div class="uploader-container">
-      <MultiImgsUpload
-        ref="multiUpload"
-        :max-num="maxPicsNum"
-        :accept="accept"
-        :format-err-msg="formatErrMsg"
-        :single-file-max-size="singleFileMaxSize"
-        :loading="submitting"
-        :disabled="disabled"
-        @change="handleInputChange"
-      />
+  <div>
+    <div v-if="needSync">
+      <Checkbox v-model="sync">保存后，会保留门店中此商品已上传的图片详情。（取消勾选：保存后，门店中此商品若已上传图片详情将会同步删除清空）</Checkbox>
     </div>
-    <div :class="['image-box', { 'no-pic': noPic }]">
-      <PicDisplay
-        v-for="(item, index) in pics" :key="`${index}-${item.src}`"
-        :src="item.src || item.base64"
-        :move-up="index > 0"
-        :move-down="index < pics.length - 1"
-        :re-upload="item.error || false"
-        :disabled="disabled"
-        @move="move => handleMove(move, index)"
-        @delete-pic="handleDelete(index)"
-        @upload-again="handleReUpload(index)"
-      />
+    <div :class="['pic-details', { 'no-pic': noPic }]">
+      <div class="uploader-container">
+        <MultiImgsUpload
+          ref="multiUpload"
+          :max-num="maxPicsNum"
+          :accept="accept"
+          :format-err-msg="formatErrMsg"
+          :single-file-max-size="singleFileMaxSize"
+          :loading="submitting"
+          :disabled="disabled"
+          @change="handleInputChange"
+        />
+        <div v-if="!noPic" class="preview" @click="handlePreview">效果预览</div>
+      </div>
+      <div :class="['image-box', { 'no-pic': noPic }]">
+        <PicDisplay
+          v-for="(item, index) in pics" :key="`${index}-${item.src}`"
+          :src="item.src || item.base64"
+          :move-up="index > 0"
+          :move-down="index < pics.length - 1"
+          :re-upload="item.error || false"
+          :disabled="disabled"
+          @move="move => handleMove(move, index)"
+          @delete-pic="handleDelete(index)"
+          @upload-again="handleReUpload(index)"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -42,6 +48,7 @@
       PicDisplay
     },
     props: {
+      needSync: Boolean,
       disabled: Boolean,
       value: { // 图片数组
         type: Array,
@@ -55,10 +62,12 @@
       },
       singleFileMaxSize: { // 单张图片大小上限，单位 M
         type: [Number, String]
-      }
+      },
+      picSync: Boolean
     },
     data () {
       return {
+        sync: true,
         pics: [], // 组件内部state
         picsToUpload: [], // 待上传的图片文件数组
         submitting: false // 图片上传中
@@ -79,6 +88,16 @@
       }
     },
     watch: {
+      needSync (val) {
+        // 不能勾选情况下，默认可以同步到门店
+        if (!val) this.$emit('change-sync', val)
+      },
+      picSync (val) {
+        this.sync = val
+      },
+      sync (val) {
+        this.$emit('change-sync', val)
+      },
       value: {
         immediate: true,
         handler (val) {
@@ -96,6 +115,23 @@
       }
     },
     methods: {
+      handlePreview () {
+        const pics = this.pics
+        this.$Modal.open({
+          className: 'pic-detail-preview-container',
+          title: '图片详情',
+          footerHide: true,
+          render () {
+            return <ul class="preview-container">
+              {
+                pics.map(({ base64, src }) => <li>
+                  <img src={base64 || src} width="200" />
+                </li>)
+              }
+            </ul>
+          }
+        })
+      },
       compare (item, pf) {
         if (item.file) {
           return item.file.name === pf.file.name && item.file.lastModified === pf.file.lastModified && item.file.size === pf.file.size
@@ -167,6 +203,17 @@
   }
 </script>
 
+<style lang='less'>
+.pic-detail-preview-container {
+  .preview-container {
+    list-style: none;
+    text-align: center;
+    > li {
+      margin-bottom: 10px;
+    }
+  }
+}
+</style>
 <style lang='less' scoped>
 .pic-details {
   display: inline-block;
@@ -190,6 +237,18 @@
     padding: 0 10px;
     background-color: #FAFAFA;
     border-bottom: 1px solid @border-color-base;
+    .preview {
+      height: 40px;
+      line-height: 40px;
+      width: 120px;
+      border: 1px solid #E9EAF2;
+      text-align: center;
+      margin-left: 10px;
+      background: #fff;
+      cursor: pointer;
+      color: #333;
+      font-size: 14px;
+    }
   }
   .image-box {
     display: flex;

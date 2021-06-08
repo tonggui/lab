@@ -44,6 +44,8 @@ export const convertProductToServer = (product: MerchantDetailProduct, context =
     categoryAttrMap,
     spuSaleAttrMap,
     sellStatus: product.sellStatus,
+    spPicContentSwitch: !!product.spPictureContentSwitch ? 1 : 2,
+    picContentSyncPoi: !product.picContentSyncPoi,
     saleType: product.preSale && product.preSale.saleType,
     deliveryTime: product.preSale && product.preSale.deliveryTime
   }
