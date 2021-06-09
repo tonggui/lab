@@ -42,7 +42,7 @@
         if (this.isBusinessClient) {
           return this.error ? `加载失败，请重试` : ''
         } else {
-          return this.merchantId ? '' : `缺少商家商品中心ID，请重新访问`
+          return getPoiId() || this.merchantId ? '' : `缺少商家商品中心ID，请重新访问`
         }
       }
     },
