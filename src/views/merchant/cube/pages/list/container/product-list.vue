@@ -13,9 +13,9 @@
 
 <script>
   import ProductTableList from '../components/product-table-list'
-  import { helper } from '@/views/product-recommend/store'
+  import { helper } from '../../../store'
 
-  const { mapActions, mapState } = helper('recommendList/productList')
+  const { mapActions, mapState } = helper('multiCubeList/productList')
 
   export default {
     name: 'product-table-list-container',

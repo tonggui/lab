@@ -19,7 +19,10 @@
           </Checkbox>
         </div>
         <div slot="right">
-          <a class="visible-switch" @click="showExist = !showExist">{{ showExist ? '隐藏' : '显示' }}已有商品</a>
+          <a
+            class="visible-switch"
+            @click="handleExistSwitch"
+          >{{ showExist ? '隐藏' : '显示' }}售卖中商品</a>
       </div>
       </Header>
       <div slot="content" class="content">
@@ -43,12 +46,12 @@
 
 <script>
   import DoubleColumnsTableList from './double-columns-table-list'
-  import { isProductQualificationNotValid, isProductHasNoTagList, getProductQualificationStatus } from '../../../../utils'
-  import { handleToast } from '../qualification-tip'
+  import { isProductQualificationNotValid, getProductQualificationStatus } from '@/views/product-recommend/utils'
+  import { handleToast } from '@/views/product-recommend/pages/product-recommend-list/components/qualification-tip'
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
-  // import lx from '@/common/lx/lxReport'
+  import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
 
   export default {
     name: 'product-table-list',
@@ -72,7 +75,7 @@
         if (this.showExist) {
           return this.dataSource
         }
-        return this.dataSource.filter(item => !item.id)
+        return this.dataSource.filter(item => !(item.isExist && [NEW_ARRIVAL_PRODUCT_STATUS.ONSALE].includes(item.productStatus)))
       },
       isAllUnselectable () {
         return this.dataSource.every(item => this.isItemNotSeletable(item))
@@ -117,6 +120,9 @@
       ProductListFixedPage
     },
     methods: {
+      handleExistSwitch () {
+        this.showExist = !this.showExist
+      },
       findDataIndex (__id__) {
         return this.dataSource.findIndex(item => item.__id__ === __id__)
       },
@@ -125,7 +131,10 @@
         return (pageSize * (current - 1)) + this.showDataSource.findIndex(item => item.__id__ === __id__)
       },
       isItemNotSeletable (item) {
-        return !!item.id || item.isDelete || isProductQualificationNotValid(item) || isProductHasNoTagList(item)
+        // 不可勾选逻辑
+        // 门店不存在、门店存在且处于下架状态、门店存在且处于上架状态且库存=0三种状态商品 - 支持勾选
+        // 门店存在且处于上架状态且库存>0商品置灰 - 不可勾选
+        return (item.isExist && NEW_ARRIVAL_PRODUCT_STATUS.ONSALE === item.productStatus) || item.isDelete || isProductQualificationNotValid(item)
       },
       handleInvalidProduct (status, tips) {
         handleToast.call(this, status, tips)
@@ -137,7 +146,7 @@
       handleDisabled (item) {
         if (getProductQualificationStatus(item)) {
           this.handleInvalidProduct(getProductQualificationStatus(item), item.qualificationTip)
-        } else if (!item.id) {
+        } else if (!item.isExist) {
           this.handleExceedMax()
         }
       },
@@ -151,7 +160,6 @@
         return false
       },
       handleSelectAll (selection) {
-        console.log('selection', selection)
         if (selection && this.handleExceedMax()) {
           return
         }

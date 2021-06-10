@@ -11,9 +11,9 @@
 </template>
 <script>
   import TagList from '../components/tag-list'
-  import { helper } from '@/views/product-recommend/store'
+  import { helper } from '../../../store'
 
-  const { mapGetters, mapState } = helper('recommendList/tagList')
+  const { mapGetters, mapState } = helper('multiCubeList/tagList')
 
   export default {
     components: { TagList },

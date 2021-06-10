@@ -5,10 +5,8 @@
       :error="pageError"
       @refresh="handleRefresh"
     >
+      <SelectedScopeShop/>
       <ProductListFixedPage class="product-recommend-container-product">
-        <div slot="header">
-          <AlertTip :title="title" :desc="desc" class="alert" v-if="!error" />
-        </div>
         <div slot="content" class="product-recommend-container-product-content">
           <ProductListWithHeader
             :selectedIdList="selectedIdList"
@@ -27,15 +25,14 @@
 <script>
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
   import ProductListWithHeader from './container/product-list-with-header'
-  import AlertTip from './components/alert-tip'
   import { fetchUploadRecTips } from '@/data/repos/product'
-
-  import { helper } from '../../../../product-recommend/store'
+  import SelectedScopeShop from './components/selected-scope-shop'
+  import { helper } from '../../store'
 
   const { mapState, mapActions } = helper()
 
   export default {
-    name: 'cube',
+    name: 'cubeList',
     data () {
       return {
         title: '店内暂无商品',
@@ -46,8 +43,8 @@
     computed: {
       ...mapState({
         classifySelectedProducts: 'classifySelectedProducts',
-        tagListError: state => state.recommendList.tagList.error,
-        productListError: state => state.recommendList.productList.error
+        tagListError: state => state.multiCubeList.tagList.error,
+        productListError: state => state.multiCubeList.productList.error
       }),
       pageError () {
         console.log('this.tagListError', this.tagListError)
@@ -63,7 +60,7 @@
     components: {
       ProductListFixedPage,
       ProductListWithHeader,
-      AlertTip
+      SelectedScopeShop
     },
     methods: {
       ...mapActions({
@@ -71,7 +68,7 @@
         handleSelect: 'selectProduct',
         handleDeSelect: 'deSelectProduct',
         handleSetEditProduct: 'setEditProductList',
-        handleGetData: 'recommendList/getData'
+        handleGetData: 'multiCubeList/getData'
       }),
       handleRefresh () {
         this.getUploadRecTips()

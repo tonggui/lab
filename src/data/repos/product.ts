@@ -604,3 +604,14 @@ export const fetchGetUpcIsAuditProduct = (upcCode, auditStatus, poiId) => getUpc
   upcCode,
   auditStatus
 })
+
+// 获取推荐商品列表（多店魔方）
+export const fetchGetMultiRecommendProductList = (pagination: Pagination, { keyword, isProductVisible, tagId } : { keyword: string, isProductVisible: boolean, tagId: number }, poiId: number) => getRecommendProductList({
+  poiId, keyword, isProductVisible, pagination, tagId
+})
+
+export const fetchSubmitMultiCreateRecommendProduct = (product: RecommendProduct, extra, poiId) => submitSingleCreateNewArrivalProduct({
+  product,
+  extra,
+  poiId
+})

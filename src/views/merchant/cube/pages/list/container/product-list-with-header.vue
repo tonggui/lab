@@ -3,22 +3,34 @@
     <ProductListPage class="product-list-container">
       <Header slot="header">
         <div slot="left" class="header-left">
-          <CubeLogo />新店必建商品<a class="teacher" href="https://daxue.meituan.com/m/shangoushang/video/568" target="_blank">教你如何建品?</a>
+          <CubeLogo /> 上架商品推荐
         </div>
         <div slot="right" class="header-right">
-          <ProductSearch @on-search="handleSearch" :searchValue="keyword" />
-          <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
+          <SelectedProductButtonOperations
+            :total="totalSelectedCount"
+            btnText="去上架"
+            @on-click-view="drawerVisible = true"
+            @on-click-create="handleClickCreate"
+          />
         </div>
       </Header>
-      <ErrorPage slot="content" @on-retry="getData" v-if="!loading && listError" />
-      <EmptyPage slot="content" v-else-if="!loading && !listError && !list.length" desc="暂无搜索结果" tip="可更换搜索词试试～" />
+      <Header slot="header" class="header-slot-tabs">
+        <Tabs slot="left" class="header-left-with-tabs" @on-change="getData">
+          <ProductSearch @on-search="handleSearch" :searchValue="keyword" slot="tabs-extra" style="margin-right: 0" />
+        </Tabs>
+      </Header>
+      <template slot="content">
+        <ErrorPage @on-retry="getData" v-if="!loading && listError" />
+        <EmptyPage v-else-if="!loading && !listError && !list.length && !keyword" desc="暂无上架商品推荐" />
+        <EmptyPage v-else-if="!loading && !listError && !list.length && keyword" desc="暂无搜索结果" tip="可更换搜索词试试～" />
+      </template>
       <template>
         <TagList slot="tag-list" @on-select="handleChangeTag" class="content-tag" />
         <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" />
       </template>
     </ProductListPage>
     <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" :total="totalSelectedCount" @on-click-create="handleClickCreate" />
-    <DeleteProductsModal v-model="deleteVisible" :dataSource="deletedProductList" :isAllDeleted="isAllDeleted" @on-click-reselect="deleteVisible = false" @on-click-create="handleGoToRecommendEdit" />
+    <DeleteProductsModal v-model="deleteVisible" :dataSource="deletedProductList" :isAllDeleted="isAllDeleted" @on-click-reselect="deleteVisible = false" @on-click-create="handleGoToMultiCubeEdit" />
   </div>
 </template>
 <script>
@@ -31,15 +43,16 @@
   import EmptyPage from '../components/empty'
   import { fetchCheckProducts } from '@/data/repos/product'
   import TagList from './tag-list'
+  import Tabs from './product-tabs'
   import ProductTableList from './product-list'
   import ProductSelectedDrawer from './product-selected-drawer'
-  import { helper } from '@/views/product-recommend/store'
+  import { helper } from '../../../store'
   import { objToArray } from '../../../utils'
   import CubeLogo from '@/views/components/cube-logo/index'
 
   const MAX_SELECT = 100 // 最大可选数量
 
-  const { mapActions, mapState } = helper('recommendList')
+  const { mapActions, mapState } = helper('multiCubeList')
   export default {
     name: 'product-list-with-header',
     props: {
@@ -58,6 +71,7 @@
     },
     computed: {
       ...mapState({
+        currentTabId: state => state.currentTabId,
         loading: state => state.tagList.loading,
         list: state => state.tagList.list,
         listError: state => state.tagList.error,
@@ -78,10 +92,12 @@
       SelectedProductButtonOperations,
       DeleteProductsModal,
       EmptyPage,
-      ErrorPage
+      ErrorPage,
+      Tabs
     },
     methods: {
       ...mapActions({
+        getTabList: 'getTabList',
         getData: 'getData',
         search: 'search',
         handleChangeTag: 'changeTag',
@@ -96,9 +112,9 @@
       handleSearch (item) {
         this.search({ keyword: item.name })
       },
-      handleGoToRecommendEdit () {
+      handleGoToMultiCubeEdit () {
         this.$emit('set-edit-product', this.editProductList)
-        this.$router.push({ name: 'recommendEdit', query: this.$route.query })
+        this.$router.push({ name: 'multiCubeEdit', query: this.$route.query })
       },
       handleClickCreate (callback) {
         if (this.drawerVisible) this.drawerVisible = false
@@ -107,7 +123,7 @@
             this.deletedProductList = res.deletedProductList
             this.editProductList = res.editProductList
             if (!res.deletedProductList.length) {
-              this.handleGoToRecommendEdit()
+              this.handleGoToMultiCubeEdit()
             } else {
               this.isAllDeleted = res.deletedProductList.length === this.totalSelectedCount
               this.deleteVisible = true
@@ -122,8 +138,9 @@
           })
       }
     },
-    mounted () {
-      this.getData()
+    async mounted () {
+      await this.getTabList()
+      await this.getData()
     },
     beforeDestroy () {
       this.destroy()
@@ -135,10 +152,18 @@
 .product-list-container {
   margin-bottom: 0;
   height: 100%;
+  .header-slot-tabs {
+    height: auto;
+    max-height: 109px;
+    padding: 0;
+  }
   .header-left {
+    height: 100%;
     display: flex;
-    flex-direction: row;
     align-items: center;
+  }
+  .header-left-with-tabs {
+    width: 100%;
   }
   .header-left .teacher {
     line-height: 14px;
@@ -154,7 +179,7 @@
     font-family: PingFangSC-Regular;
   }
   /deep/ .product-list-page-layout-content {
-    min-height: calc(100% - 60px);
+    min-height: calc(100% - 158px);
   }
   /deep/ .product-list-page-layout-product-list {
     display: flex;
