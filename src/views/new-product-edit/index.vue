@@ -89,7 +89,7 @@
         }
       },
       auditStatus () {
-        return this.productInfo.auditState
+        return this.productInfo.auditStatus
       },
       auditBtnStatus () {
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
@@ -348,7 +348,9 @@
                 LX.mv({
                   bid: 'b_shangou_online_e_aifq7sdx_mv',
                   val: {
-                    spu_id: this.spuId || response.id || 0,
+                    // 后端数据绝对准确的情况下，无兜底逻辑
+                    // spu_id: response.id || this.spuId || 0,
+                    spu_id: response.id,
                     source_id: 0,
                     st_spu_id: this.product.spId || 0,
                     viewtime: `${SearchTime.getSearchTime() + FillTime.getFillTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,

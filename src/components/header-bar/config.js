@@ -18,6 +18,7 @@ import Video from '@/assets/icons/video.svg'
 import Clock from '@/assets/icons/clock.svg'
 import Cube from '@/assets/icons/cube.svg'
 import Audit from '@/assets/icons/audit.svg'
+import Setting from '@/assets/icons/setting.svg'
 
 import SingleCreatePage from '@sgfe/eproduct/navigator/pages/product/edit'
 import SpCreatePage from '@sgfe/eproduct/navigator/pages/product/spCreate'
@@ -29,6 +30,7 @@ import RecyclePage from '@sgfe/eproduct/navigator/pages/product/recycle'
 import ViolationPage from '@sgfe/eproduct/navigator/pages/violation/product'
 // import MonitorPage from '@sgfe/eproduct/navigator/pages/product/monitor'
 import VideoCenterPage from '@sgfe/eproduct/navigator/pages/product/videoCenter'
+
 // 样式1
 // Icon、Text、children、埋点、Link、（Count + Color）
 
@@ -160,6 +162,25 @@ export const leftMenu = [{
 }]
 
 export const rightMenu = [{
+  key: 'merchantWarehouseConfig',
+  label: '商品库设置',
+  icon: Setting,
+  children: [
+    {
+      key: 'importFromPoi',
+      label: '从分店导入商品'
+    },
+    {
+      key: 'resetMerchant',
+      label: '重置总部商品库'
+    },
+    {
+      key: 'closeMerchant',
+      label: '关闭总部商品库'
+    }
+  ],
+  bid: '' // TODO
+}, {
   key: 'productConfig',
   label: '商品配置管理',
   icon: {

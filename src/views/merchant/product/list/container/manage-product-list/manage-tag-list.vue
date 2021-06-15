@@ -14,6 +14,7 @@
       :tag-id="tagId"
       :disabled="isMedicine"
       :toolTipDisable="true"
+      :isMerchant="true"
       @change-level="handleChangeLevel"
       @open-sort="$emit('open-sort')"
       @delete="handleDelete"
@@ -22,7 +23,9 @@
       @select="handleSelect"
       @expand="handleExpand"
       support-top-time
-    />
+    >
+      <div slot="empty" class="empty-tag-list">暂无分类</div>
+    </ManageTagList>
   </ErrorBoundary>
 </template>
 <script>
@@ -64,4 +67,10 @@
   }
 </script>
 <style lang="less" scoped>
+  .empty-tag-list {
+    margin-top: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 </style>
