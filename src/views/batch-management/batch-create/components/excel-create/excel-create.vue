@@ -182,7 +182,7 @@
           lx.mc({
             bid: 'b_shangou_online_e_920d7dpf_mc',
             val: {
-              select_time: +new Date(response.serverTime),
+              select_time: +new Date(response.serverTime || Date.now()),
               trace_id: traceId
             }
           })
