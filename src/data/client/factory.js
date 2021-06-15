@@ -46,7 +46,7 @@ const combineArguments = (method, params = {}, options = {}) => {
   }
 }
 
-const defaultSuccessHandler = data => data.data
+const defaultSuccessHandler = data => ({ ...data.data, serverTime: data.serverTime })
 
 // 请求函数
 const request = (axiosInstance) => async (method = 'post', url = '', params = {}, options) => {
@@ -84,10 +84,12 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     if (!isPlainObject(response.data)) {
       throw Error(response.data)
     }
-    const { data } = response
+    const { data, headers: { Date, date } } = response
+    console.log(response, date, Date)
     const { code, message } = data
     if (code === 0) {
-      return successHandler(data)
+      console.log(data, { ...data, serverTime: (date || Date) })
+      return successHandler({ ...data, serverTime: date || Date })
     }
     if (code !== undefined) {
       throw createError({ ...data, code, message, url })
