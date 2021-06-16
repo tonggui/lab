@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :data-lx-param="param">
     <ProductListPage class="product-list-container">
       <Header slot="header">
         <div slot="left" class="header-left">
@@ -26,11 +26,28 @@
       </template>
       <template>
         <TagList slot="tag-list" @on-select="handleChangeTag" class="content-tag" />
-        <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" />
+        <ProductTableList
+          slot="product-list"
+          :maxSelect="maxSelect"
+          :selectedIdList="selectedIdList"
+          @on-select="handleSelectProduct"
+          @on-de-select="handleDeSelectProduct"
+        />
       </template>
     </ProductListPage>
-    <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" :total="totalSelectedCount" @on-click-create="handleClickCreate" />
-    <DeleteProductsModal v-model="deleteVisible" :dataSource="deletedProductList" :isAllDeleted="isAllDeleted" @on-click-reselect="deleteVisible = false" @on-click-create="handleGoToMultiCubeEdit" />
+    <ProductSelectedDrawer
+      v-model="drawerVisible"
+      :total="totalSelectedCount"
+      @on-drawer-close="drawerVisible = false"
+      @on-click-create="handleClickCreate"
+    />
+    <DeleteProductsModal
+      v-model="deleteVisible"
+      :dataSource="deletedProductList"
+      :isAllDeleted="isAllDeleted"
+      @on-click-reselect="deleteVisible = false"
+      @on-click-create="handleGoToMultiCubeEdit"
+    />
   </div>
 </template>
 <script>
@@ -41,7 +58,7 @@
   import DeleteProductsModal from '../../../components/delete-products-modal'
   import ErrorPage from '../components/error'
   import EmptyPage from '../components/empty'
-  import { fetchCheckProducts } from '@/data/repos/product'
+  import { fetchNewArrivalCheckProducts } from '@/data/repos/product'
   import TagList from './tag-list'
   import Tabs from './product-tabs'
   import ProductTableList from './product-list'
@@ -77,6 +94,11 @@
         listError: state => state.tagList.error,
         keyword: state => state.productList.filters.keyword
       }),
+      param () {
+        return JSON.stringify({
+          tab_id: this.currentTabId
+        })
+      },
       totalSelectedCount () {
         return this.selectedIdList.length
       }
@@ -98,6 +120,7 @@
     methods: {
       ...mapActions({
         getTabList: 'getTabList',
+        getScopeList: 'getScopeList',
         getData: 'getData',
         search: 'search',
         handleChangeTag: 'changeTag',
@@ -118,7 +141,7 @@
       },
       handleClickCreate (callback) {
         if (this.drawerVisible) this.drawerVisible = false
-        fetchCheckProducts(objToArray(this.classifySelectedProducts))
+        fetchNewArrivalCheckProducts(objToArray(this.classifySelectedProducts))
           .then(res => {
             this.deletedProductList = res.deletedProductList
             this.editProductList = res.editProductList
@@ -141,6 +164,7 @@
     async mounted () {
       await this.getTabList()
       await this.getData()
+      await this.getScopeList()
     },
     beforeDestroy () {
       this.destroy()

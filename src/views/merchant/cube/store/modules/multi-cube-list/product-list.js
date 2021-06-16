@@ -18,9 +18,10 @@ const initState = {
   tagId: defaultTagId, // 当前是的分类id
   tabId: '', // 选中的tabId
   scopeId: {
-    cityId: '',
-    poiId: ''
-  }
+    cityId: -1,
+    poiId: -1
+  },
+  productScope: []
 }
 
 export default (api) => {
@@ -29,8 +30,9 @@ export default (api) => {
       ...initState
     },
     mutations: {
-      setSCope (state, payload) {
-        state.tagId = payload
+      setScope (state, payload) {
+        state.scopeId.cityId = payload.cityId
+        state.scopeId.poiId = payload.poiId
       },
       setLoading (state, payload) {
         state.loading = !!payload
@@ -45,7 +47,22 @@ export default (api) => {
         state.tagId = payload
       },
       setScopeId (state, payload) {
-        state.scopeId = payload
+        state.scopeId.cityId = payload.cityId
+        state.scopeId.poiId = payload.poiId
+      },
+      setProductScope (state, payload) {
+        let productionId = payload.map(item => {
+          return {
+            id: item.id,
+            scopeId: {
+              cityId: state.scopeId.cityId,
+              poiId: state.scopeId.poiId
+            }
+          }
+        })
+        console.log('==========')
+        console.log(productionId)
+        state.productScope = payload
       },
       setPagination (state, payload) {
         state.pagination = {
@@ -110,6 +127,7 @@ export default (api) => {
             return
           }
           commit('setList', result.list || [])
+          commit('setProductScope', result.list || [])
           commit('setPagination', result.pagination)
         } catch (err) {
           console.error(err)
@@ -125,6 +143,11 @@ export default (api) => {
       },
       tagIdChange ({ commit, dispatch }, tagId) {
         commit('setTagId', tagId)
+        commit('setPagination', { current: 1 })
+        dispatch('getList')
+      },
+      scopeChange ({ commit, dispatch }, scopeId) {
+        commit('setScope', scopeId)
         commit('setPagination', { current: 1 })
         dispatch('getList')
       }

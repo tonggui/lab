@@ -3,7 +3,7 @@ import createProductListStore from './product-list'
 import api from '../../api'
 import { get } from 'lodash'
 
-const { tab, scope } = api.multiCubeList
+const { tab } = api.multiCubeList
 const tagListStoreInstance = createTagListStore(api.multiCubeList.tag)
 const productListStoreInstance = createProductListStore(api.multiCubeList.product)
 
@@ -15,8 +15,8 @@ export default {
     tabList: [],
     scopeList: [],
     currentScope: {
-      cityId: '',
-      poiId: ''
+      cityId: -1,
+      poiId: -1
     }
   },
   mutations: {
@@ -30,25 +30,52 @@ export default {
       state.tagSource = tagSource
     },
     setScopeList (state, scopeList) {
-      state.tabList = scopeList
+      state.scopeList = scopeList
     },
     setCurrentScope (state, currentScope) {
-      state.currentScope = currentScope
+      state.currentScope.cityId = currentScope.cityId
+      state.currentScope.poiId = currentScope.poiId
+      console.log(state.currentScope)
     }
   },
   actions: {
-    async getScopeList ({ dispatch, commit }) {
-      const scopeList = await scope.getList() || []
+    getScopeList ({ dispatch, commit }) {
+      let cityList = []
+      const optionsShop = [
+        { id: -1, name: 'all', cityId: -1, cityName: 'quanguo' },
+        { id: 1, name: '711', cityId: 110, cityName: 'beijing' },
+        { id: 2, name: '722', cityId: 120, cityName: 'tianjin' },
+        { id: 3, name: '733', cityId: 120, cityName: 'tianjin' }
+      ]
+      optionsShop.forEach(item => {
+        let city = cityList.some(ele => ele.cityId === item.cityId)
+        if (!city) {
+          const tmp = {
+            cityName: item.cityName,
+            cityId: item.cityId,
+            poiList: [{
+              id: item.id,
+              name: item.name
+            }]
+          }
+          cityList.push(tmp)
+        } else {
+          cityList.forEach((ele, index) => {
+            if (ele.cityId === item.cityId) {
+              ele.poiList.push({
+                id: item.id,
+                name: item.name
+              })
+            }
+          })
+        }
+      })
       const currentScope = {
         cityId: -1,
         poiId: -1
       }
-      commit('setScopeList', scopeList)
+      commit('setScopeList', cityList)
       dispatch('setCurrentScope', currentScope)
-    },
-    setCurrentScope ({ commit, dispatch }, currentScope) {
-      commit('setCurrentScope', currentScope)
-      dispatch('productList/setScope', currentScope)
     },
     async getTabList ({ dispatch, commit }) {
       const tabList = await tab.getList() || []
@@ -63,6 +90,11 @@ export default {
       const tabList = state.tabList || []
       const tagSource = tabList.find(it => it.id === tabId).tagSource
       commit('setTagSource', tagSource)
+    },
+    setCurrentScope ({ commit, dispatch }, currentScope) {
+      commit('setCurrentScope', currentScope)
+      dispatch('getTabList')
+      commit('productList/setScope', currentScope)
     },
     setCurrentTab ({ commit, dispatch }, tabId) {
       commit('setCurrentTab', tabId)
@@ -90,7 +122,7 @@ export default {
       commit('productList/setPagination', { current: 1 })
       dispatch('getProductList')
     },
-    search ({ dispatch, commit }, filters) {
+    search ({ dispatch, commit, state }, filters) {
       // 重置分类 选中到全部商品
       dispatch('tagList/resetCurrentTag')
       // 设置商品 搜索条件

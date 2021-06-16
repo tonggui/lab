@@ -1,5 +1,5 @@
 import { fetchGetProductNewArrivalTabList } from '@/data/repos/poi'
-import { fetchGetRecommendTagList } from '@/data/repos/category'
+import { fetchGetNewArrivalTagList } from '@/data/repos/category'
 import {
   fetchGetMultiRecommendProductList,
   fetchSubmitBatchCreateRecommendProduct,
@@ -12,7 +12,7 @@ export default {
       getList: fetchGetProductNewArrivalTabList
     },
     tag: {
-      getList: fetchGetRecommendTagList
+      getList: fetchGetNewArrivalTagList
     },
     product: {
       getList: fetchGetMultiRecommendProductList

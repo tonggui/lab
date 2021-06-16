@@ -22,7 +22,7 @@
           <a
             class="visible-switch"
             @click="handleExistSwitch"
-          >{{ showExist ? '隐藏' : '显示' }}售卖中商品</a>
+          >{{ showExist ? '隐藏' : '显示' }}{{displayTip}}门店已存在商品</a>
       </div>
       </Header>
       <div slot="content" class="content">
@@ -52,7 +52,8 @@
   import Header from '@/components/header-layout'
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
   import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
-
+  import { helper } from '@/views/merchant/cube/store'
+  const { mapState } = helper('multiCubeList')
   export default {
     name: 'product-table-list',
     props: {
@@ -67,10 +68,15 @@
     },
     data () {
       return {
-        showExist: true // 已隐藏商品
+        showExist: true, // 已隐藏商品
+        displayTip: ''
       }
     },
     computed: {
+      ...mapState({
+        scopeList: state => state.scopeList,
+        currentScope: state => state.currentScope
+      }),
       showDataSource () {
         if (this.showExist) {
           return this.dataSource
@@ -111,6 +117,21 @@
       },
       empty () {
         return !this.loading && this.dataSource.length === 0
+      }
+    },
+    watch: {
+      'currentScope': {
+        immediate: true,
+        handler (v) {
+          console.log(v)
+          if (v.cityId === -1 || v.cityId === '') {
+            this.displayTip = '全国'
+          } else if (v.poiId === -1 || v.poiId === '') {
+            this.displayTip = 'chengshi'
+          } else if (v.poiId !== -1) {
+            this.displayTip = 'xxshop'
+          }
+        }
       }
     },
     components: {

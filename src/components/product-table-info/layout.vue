@@ -9,11 +9,20 @@
         <slot name="description"></slot>
       </slot>
     </div>
+    <div class="product-table-info-layout-scope" v-if="scopeFlag">
+        <slot name="scope"></slot>
+    </div>
   </div>
 </template>
 <script>
   export default {
-    name: 'product-table-info-layout'
+    name: 'product-table-info-layout',
+    props: {
+      scopeFlag: {
+        type: Boolean,
+        default: false
+      }
+    }
   }
 </script>
 <style lang="less" scoped>

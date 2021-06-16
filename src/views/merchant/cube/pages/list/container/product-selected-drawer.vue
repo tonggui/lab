@@ -8,6 +8,27 @@
     class="product-selected-drawer-container"
   >
     <h2>已选商品({{ total }})</h2>
+    <div style="margin-top: 20px; font-size: 14px">
+      <span>
+        按关联分店筛选
+      </span>
+      <Select label="按关联分店筛选" style="width:200px; margin:0px 10px" line
+              v-model="formScope.city"
+              filterable clearable
+              @on-change="handleSelectedCity" placeholder="Select your city">
+        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{item.label}}</Option>
+      </Select>
+      <Select style="width:200px" v-model="formScope.shop" :disabled="formScope.city == ''" placeholder="Select your shop" filterable clearable line>
+        <Option v-for="item in shopList" :value="item.value" :key="item.value">{{item.label}}</Option>
+      </Select>
+    </div>
+    <div class="header">
+      <span class="content-span" style="width: 70%;">商品信息</span>
+      <Divider type="vertical" />
+      <span class="content-span" style="width: 20%;">关联分店</span>
+      <Divider type="vertical" />
+      <span class="content-span">操作</span>
+    </div>
     <Icon type="closed" slot="close" color="#666" />
     <ul class="classify-table-list" v-if="value && showDataSourceList.length">
       <template v-for="item in showDataSourceList">
@@ -28,7 +49,7 @@
       <a class="empty-selected" @click.prevent="handleEmptySelected"
       >清空已选</a
       >
-      <Button type="primary" @click="handleCreate">确定创建</Button>
+      <Button type="primary" @click="handleCreate" :disabled="total <= 0">确定创建</Button>
     </div>
   </Drawer>
 </template>
@@ -48,19 +69,54 @@
         default: false
       }
     },
+    data () {
+      return {
+        formScope: {
+          city: '',
+          shop: ''
+        }
+      }
+    },
     computed: {
       ...mapState({
-        dataSourceList: 'classifySelectedProducts'
+        dataSourceList: 'classifySelectedProducts',
+        cityList: 'scopeList'
       }),
       showDataSourceList () {
         return covertObjectToSequenceArr(this.dataSourceList)
+      },
+      shopList () {
+        return Array.isArray(this.cityList) && this.cityList.map(item => {
+          return {
+            id: item.id,
+            name: item.name
+          }
+        })
       }
     },
     components: {
       SelectedClassifyProductList
     },
+    watch: {
+      total (val) {
+        if (val <= 0) this.handleClose()
+      }
+    },
     methods: {
       ...mapActions(['deSelectProduct', 'clearSelected']),
+      handleSelectedCity (v) {
+        this.loading2 = true
+        setTimeout(() => {
+          this.loading2 = false
+          this.shopList = this.optionsShop.map(item => {
+            return {
+              value: item.value,
+              label: item.label
+            }
+          })
+        }, 200)
+        this.formScope.shop = '0'
+      },
       handleClose () {
         this.$emit('on-drawer-close')
       },
@@ -95,7 +151,7 @@
         })
       },
       handleCreate () {
-        this.$emit('on-click-create')
+        if (this.total > 0) this.$emit('on-click-create')
       }
     }
   }
@@ -107,9 +163,28 @@
   /deep/ .drawer-content.with-footer {
     padding-bottom: 58px;
   }
+  .header {
+    margin-top: 20px;
+    height: 42px;
+    background: #F7F8FA;
+    border: 1px solid #E9EAF2;
+    font-size: 14px;
+    color: #A2A4B3;
+    letter-spacing: 0;
+    line-height: 42px;
+    padding-left: 14px;
+    font-family: PingFangSC-Regular;
+    .content-span{
+      display: inline-block;
+    }
+    .boo-divider, .boo-divider-vertical {
+      display: inline-block;
+      height: 3.1em;
+      margin: 0;
+    }
+  }
   .classify-table-list {
     list-style: none;
-    margin-top: 20px;
     border-top: 1px solid #e9eaf2;
     height: calc(100% - 49px);
     overflow: auto;

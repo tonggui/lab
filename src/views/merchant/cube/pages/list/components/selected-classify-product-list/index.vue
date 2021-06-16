@@ -3,7 +3,9 @@
     <h2 class="header">{{title}}({{children.length}})</h2>
     <ul class="product-list">
       <li v-for="item in children" :key="item.__id__">
-        <ProductInfo :product="item" />
+        <ProductInfo style="width: 80%;" :product="item" />
+        <PoiSelect v-model="poiIdList" />
+        <Divider type="vertical" />
         <a href="" @click.prevent="$emit('on-unselect', title, item)">取消选择</a>
       </li>
     </ul>
@@ -12,7 +14,7 @@
 
 <script>
   import ProductInfo from '../product-info'
-
+  import PoiSelect from '../poi-select'
   export default {
     name: 'selected-classify-product-list',
     props: {
@@ -25,8 +27,22 @@
         default: () => ([])
       }
     },
+    data () {
+      return {
+        poiIdList: [1, 2]
+      }
+    },
     components: {
-      ProductInfo
+      ProductInfo,
+      PoiSelect
+    },
+    watch: {
+      'value': {
+        immediate: true,
+        handler (v) {
+          console.log(v)
+        }
+      }
     }
   }
 </script>
@@ -53,12 +69,16 @@
     .product-list {
       background: #FFFFFF;
       list-style: none;
+      .boo-divider, .boo-divider-vertical {
+        display: inline-block;
+        height: 3.1em;
+        margin: 0;
+      }
       > li {
         min-height: 112px;
         border: 1px solid #E9EAF2;
         border-top: none;
         display: flex;
-        padding: 17px;
         align-items: center;
         > a {
           flex-shrink: 0;

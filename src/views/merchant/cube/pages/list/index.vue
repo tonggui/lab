@@ -28,6 +28,7 @@
   import { fetchUploadRecTips } from '@/data/repos/product'
   import SelectedScopeShop from './components/selected-scope-shop'
   import { helper } from '../../store'
+  import { get } from 'lodash'
 
   const { mapState, mapActions } = helper()
 
@@ -40,12 +41,40 @@
         error: false
       }
     },
+    watch: {
+      'currentScope': {
+        immediate: true,
+        handler (v) {
+          console.log(this.scopeList)
+          if (v !== '' && typeof this.scopeList === 'undefined') {
+            console.log(v)
+            const scope = this.scopeList && this.scopeList.find(item => item.id === this.currentScope.poiId)
+            console.log(scope)
+            this.scope = {
+              cityName: get(scope, 'cityName') || '',
+              poiName: get(scope, 'poiName') || ''
+            }
+          }
+        }
+      }
+    },
     computed: {
       ...mapState({
+        currentScope: 'currentScope',
+        scopeList: 'scopeList',
         classifySelectedProducts: 'classifySelectedProducts',
         tagListError: state => state.multiCubeList.tagList.error,
         productListError: state => state.multiCubeList.productList.error
       }),
+      operationInfo () {
+        // console.log(this.currentScope)
+        const scope = this.scopeList && this.scopeList.find(item => item.id === this.currentScope.poiId)
+        // console.log(scope)
+        return {
+          cityName: get(scope, 'cityName') || '',
+          poiName: get(scope, 'poiName') || ''
+        }
+      },
       pageError () {
         console.log('this.tagListError', this.tagListError)
         return this.error && this.tagListError && this.productListError
@@ -68,11 +97,16 @@
         handleSelect: 'selectProduct',
         handleDeSelect: 'deSelectProduct',
         handleSetEditProduct: 'setEditProductList',
-        handleGetData: 'multiCubeList/getData'
+        handleGetData: 'multiCubeList/getData',
+        handleGetScopeData: 'multiCubeList/getScopeList'
       }),
+      handleClick (mao) {
+        console.log(this.scopeList)
+      },
       handleRefresh () {
         this.getUploadRecTips()
         this.handleGetData()
+        this.handleGetScopeData()
       },
       handleGoBack () {
         this.handleDestroyStatus()
@@ -92,6 +126,7 @@
     },
     mounted () {
       this.getUploadRecTips()
+      this.handleGetScopeData()
     }
   }
 </script>
@@ -125,6 +160,23 @@
         height: calc(100% - 8px);
         margin-top: 8px;
       }
+    }
+  }
+  .operation-info-tip {
+    height: 40px;
+    line-height: 40px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+    font-weight: 500;
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #36394D;
+    padding: 0 20px 0 41px;
+    border: 1px solid rgba(248, 181, 0, 0.2);
+    background-color: rgba(248, 181, 0, 0.1);
+    .icon {
+      margin-right: 9px;
     }
   }
 }
