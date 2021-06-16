@@ -29,7 +29,6 @@
       <slot name="after"></slot>
     </div>
     <PictureChooseModal
-      v-mt="{ key: 'picture', visible: modalVisible }"
       :score="score"
       :keywords="keywords"
       :poiIds="poiIds"
@@ -49,6 +48,7 @@
   import PictureBox from './picture-box'
   import PictureChooseModal from './picture-choose-modal'
   import lx from '@/common/lx/lxReport'
+  import TimeCounters from '@/common/lx/lxReport/lxTime'
   import ImgZoomIn from '@sfe/components-img-zoom-in'
   const previewSize = 480
 
@@ -162,6 +162,10 @@
         type: String,
         default: ''
       },
+      isTimeConsuming: {
+        type: Boolean,
+        default: () => false
+      },
       score: Boolean,
       preview: Boolean,
       poiIds: {
@@ -249,6 +253,7 @@
       },
       handleModalHide () {
         this.modalVisible = false
+        TimeCounters.stopTime('picture')
       },
       handleModalConfirm (src) {
         this.changePictures(this.curIndex, src)
@@ -317,7 +322,9 @@
             footerHide: true
           })
         }
-        console.log(item)
+        if (this.isTimeConsuming) {
+          TimeCounters.setTime('picture', +new Date(), 's2e')
+        }
         if (this.selected !== index) {
           this.triggerSelectedChanged(index)
         }
