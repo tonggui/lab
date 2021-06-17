@@ -301,6 +301,7 @@
             disabled={this.disabled || disabled}
             style="width:100%"
             min={1}
+            max={50}
             vOn:on-focus={() => TimeCounters.setTime('minCount', +new Date(), 's2e')}
             vOn:on-blur={() => TimeCounters.stopTime('minCount')}
             vOn:on-change={() => TimeCounters.setEndTime('minCount', +new Date()) }

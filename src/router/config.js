@@ -27,6 +27,30 @@ import { getIsSinglePoi } from '@/views/batch-management/helper'
 
 const routeList = [
   {
+    name: 'merchantReset',
+    path: 'reset',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_reset" */ '../views/merchant-status-page/reset'
+        )
+  },
+  {
+    name: 'merchantResetSelect',
+    path: 'resetSelect',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_reset_select" */ '../views/merchant-status-page/reset-select'
+        )
+  },
+  {
+    name: 'merchantClose',
+    path: 'close',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_close" */ '../views/merchant-status-page/close'
+        )
+  },
+  {
     /* 商品上新推荐 */
     name: 'newArrival',
     path: '/product/newArrival',

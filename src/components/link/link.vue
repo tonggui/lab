@@ -2,6 +2,7 @@
   import { parse } from 'qs'
   import jumpTo from './jumpTo'
   import { isPageName } from '@sgfe/eproduct/navigator/pages/page'
+  import { getMerchantId } from '@/common/constants'
 
   export default {
     name: 'Link',
@@ -57,6 +58,7 @@
       jumpTo () {
         const router = this.$router
         const name = this.to && this.to.name
+        console.log('router', router)
         if (isPageName(name)) {
           const { search, query = {}, state = {} } = this.to
           jumpTo(
@@ -74,6 +76,10 @@
           )
         } else if (this.to) {
           // 本地路由 matched 才做resolve 否则不处理
+          if (this.to.path === '/merchant/product/setting') {
+            this.to.query = this.to.query || {}
+            this.to.query.merchantId = getMerchantId()
+          }
           const { matched } = router.match(this.to)
           let href = this.to
           if (matched && matched.length > 0) {

@@ -90,7 +90,13 @@ export const convertProductDetail = data => {
     auditStatus: data.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT,
     upcImage: data.upcImage,
     sellStatus: defaultTo(data.sellStatus, PRODUCT_SELL_STATUS.OFF),
-    isMissingInfo: !!data.missingRequiredInfo
+    isMissingInfo: !!data.missingRequiredInfo,
+    spPictureContentList: trimSplit(data.spPicContent),
+    spPictureContentSwitch: data.spPicContentSwitch === 1,
+    preSale: {
+      saleType: data.saleType,
+      deliveryTime: data.deliveryTime
+    }
   }
   return node
 }
@@ -110,7 +116,8 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     sellStatus,
     merchantDelStatus,
     skuVoList,
-    tagList
+    tagList,
+    limitRuleId
   } = product
   const node: MerchantProduct = {
     id: spuId,
@@ -124,7 +131,8 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     isMerchantDelete: merchantDelStatus === 1,
     isMissingInfo: !!product.missingRequiredInfo,
     skuList: convertProductSkuList(skuVoList),
-    tagList: tagList || []
+    tagList: tagList || [],
+    limitRuleId
   }
   return node
 }

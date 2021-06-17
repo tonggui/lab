@@ -40,6 +40,7 @@
     },
     methods: {
       handleDownload () {
+        if (!this.resultUrl) return
         location.href = this.resultUrl
       },
       handleRelate () {

@@ -11,11 +11,13 @@
       :dataSource="list"
       :pagination="pagination"
       :loading="loading"
+      :tag-list="tagList"
       @page-change="handlePageChange"
       @delete="handleDelete"
       @edit="handleModify"
       @edit-sku="handleModifySku"
       @refresh="handleRefresh"
+      @batch="handleBatchOperation"
     >
       <template slot="empty">
         <span v-if="!loading">没有搜索结果，换个词试试吧!</span>
@@ -31,11 +33,15 @@
   import { helper } from '../store'
 
   const { mapActions, mapState } = helper('product')
+  const { mapGetters } = helper('tag')
 
   export default {
     name: 'merchant-search-list-product-container',
     computed: {
-      ...mapState(['error', 'loading', 'list', 'pagination', 'tagId'])
+      ...mapState(['error', 'loading', 'list', 'pagination', 'tagId']),
+      ...mapGetters({
+        tagList: 'fullTagList'
+      })
     },
     components: {
       ProductTableList: withPromiseEmit(ProductTableList)
@@ -46,7 +52,8 @@
         handleDelete: 'delete',
         handleModify: 'modify',
         handleModifySku: 'modifySkuList',
-        handleRefresh: 'getList'
+        handleRefresh: 'getList',
+        handleBatchOperation: 'batch'
       })
     }
   }

@@ -103,7 +103,7 @@ export const convertProductDetail = (product: Product, { showLimitSale = true })
     name: product.name,
     description: product.description,
     picContent: (product.pictureContentList || []).join(','),
-    spPicContentSwitch: (product.pictureContentList && product.pictureContentList.length) ? Number(product.spPictureContentSwitch) : 1, // 如果图片详情为空，则默认打开给买家展示品牌商图片详情的开关
+    spPicContentSwitch: Number(product.spPictureContentSwitch),
     shippingTimeX: convertSellTime(product.shippingTime, product),
     skus: JSON.stringify(convertProductSkuList(product.skuList.filter(sku => sku.editable), spuSaleAttrMap)),
     attrList: JSON.stringify(convertAttributeList(product.attributeList || [], product.id)),
@@ -121,7 +121,10 @@ export const convertProductDetail = (product: Product, { showLimitSale = true })
     sellStatus: product.sellStatus,
     marketingPicture: (product.marketingPicture || []).join(','),
     shippingTemplateId: product.shippingTemplateId,
-    video: JSON.stringify(convertProductVideoToServer(product.video as ProductVideo))
+    video: JSON.stringify(convertProductVideoToServer(product.video as ProductVideo)),
+    saleType: product.preSale && product.preSale.saleType,
+    deliveryTime: product.preSale && product.preSale.deliveryTime
+
   }
   return node
 }

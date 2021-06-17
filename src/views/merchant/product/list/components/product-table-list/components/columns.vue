@@ -64,6 +64,7 @@
           renderHeader: (h, { column }) => {
             return (
               <Tooltip
+                disabled={true} // 优化 - 取消此提示
                 type="guide"
                 content="有此商品的分店数量，点击数字可查看门店详情"
                 placement="top"
@@ -77,12 +78,14 @@
           },
           render: (h, { row }) => {
             return (
-              <AssociatedPoi
-                id={row.id}
-                vMc={{ bid: 'b_shangou_online_e_t4mnknun_mc' }}
-              >
-                {row.poiCount}
-              </AssociatedPoi>
+              <div class="associatedPoi">
+                <AssociatedPoi
+                  id={row.id}
+                  vMc={{ bid: 'b_shangou_online_e_t4mnknun_mc' }}
+                >
+                  {row.poiCount}
+                </AssociatedPoi>
+              </div>
             )
           }
         }, {

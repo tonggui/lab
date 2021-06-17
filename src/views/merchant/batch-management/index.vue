@@ -10,13 +10,14 @@
             商品中心批量管理
           </BreadcrumbItem>
         </Breadcrumb>
-        <div>
-          旧版批量功能
-          <span class="line" />
-          <NamedLink tag="a" :name="batchPage" :query="{ routerTagId }" v-mc="{ bid: 'b_shangou_online_e_act4ikmb_mc' }">
-            点击进入<Icon type="keyboard-arrow-right" size="18"/>
-          </NamedLink>
-        </div>
+        <MerchantUserGuide />
+<!--        <div>-->
+<!--          旧版批量功能-->
+<!--          <span class="line" />-->
+<!--          <NamedLink tag="a" :name="batchPage" :query="{ routerTagId }" v-mc="{ bid: 'b_shangou_online_e_act4ikmb_mc' }">-->
+<!--            点击进入<Icon type="keyboard-arrow-right" size="18"/>-->
+<!--          </NamedLink>-->
+<!--        </div>-->
       </div>
       <div class="batch-management-header">
         <Tabs :value="currentTab" name="batch-management">
@@ -33,9 +34,10 @@
 <script>
   import RouteLink from '@components/link/link'
   import getMenus, { KEYS } from './menus'
-  import NamedLink from '@components/link/named-link'
+  // import NamedLink from '@components/link/named-link'
   import BatchPage from '@sgfe/eproduct/navigator/pages/batch/create'
   import { isAssociateMedicineMerchant } from '@/module/helper/utils'
+  import MerchantUserGuide from '@components/merchant-user-guide'
 
   export default {
     name: 'merchant-batch-management',
@@ -69,7 +71,7 @@
     },
     components: {
       RouteLink,
-      NamedLink
+      MerchantUserGuide
     },
     methods: {
       async isMedicineMerchant () {

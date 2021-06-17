@@ -298,6 +298,21 @@ export default () => ([{
     key: FIELD.PICTURE_CONTENT,
     label: '图片详情',
     type: 'PicDetails',
+    options: {
+      needSync: false
+    },
+    rules: {
+      result: {
+        'options.needSync' () {
+          return !!this.getContext('features').needPicSync
+        }
+      }
+    },
+    events: {
+      'change-sync' (val) {
+        this.setData('picContentSyncPoi', val)
+      }
+    },
     binding: {
       event: 'change'
     }
@@ -323,8 +338,8 @@ export default () => ([{
           return list.length > 0
         },
         'options.description' () {
-          const pictureContentList = this.getData('pictureContentList')
-          return (pictureContentList && pictureContentList.length) ? '勾选“展示给买家”，可在用户端的商品详情页中展示品牌商图片详情；' : ''
+          const spPictureContentList = this.getData('spPictureContentList')
+          return (spPictureContentList && spPictureContentList.length) ? '勾选“展示给买家”，可在用户端的商品详情页中展示品牌商图片详情；' : ''
         },
         'options.pictureList' () {
           return this.getData('spPictureContentList')
@@ -381,34 +396,36 @@ export default () => ([{
     binding: {
       event: 'on-change'
     }
-  }, {
-    key: FIELD.LIMIT_SALE,
-    label: '限购规则',
-    type: 'PurchaseLimitation',
-    options: {
-      minCount: 1,
-      supportMultiPoi: false
-    },
-    binding: {
-      event: 'change'
-    },
-    rules: [{
-      result: {
-        'options.supportMultiPoi' () {
-          // 此参数，商家商品中心专属
-          return !!this.getContext('features').supportLimitSaleMultiPoi
-        },
-        'options.minCount' () {
-          let minCount = 1
-          const skuList = this.getData('skuList') || []
-          skuList.forEach(sku => {
-            minCount = Math.max(minCount, sku.minOrderCount || 0)
-          })
-          return minCount
-        }
-      }
-    }]
-  }, {
+  },
+  // , {
+  //   key: FIELD.LIMIT_SALE,
+  //   label: '限购规则',
+  //   type: 'PurchaseLimitation',
+  //   options: {
+  //     minCount: 1,
+  //     supportMultiPoi: false
+  //   },
+  //   binding: {
+  //     event: 'change'
+  //   },
+  //   rules: [{
+  //     result: {
+  //       'options.supportMultiPoi' () {
+  //         // 此参数，商家商品中心专属
+  //         return !!this.getContext('features').supportLimitSaleMultiPoi
+  //       },
+  //       'options.minCount' () {
+  //         let minCount = 1
+  //         const skuList = this.getData('skuList') || []
+  //         skuList.forEach(sku => {
+  //           minCount = Math.max(minCount, sku.minOrderCount || 0)
+  //         })
+  //         return minCount
+  //       }
+  //     }
+  //   }]
+  // }
+  {
     key: FIELD.ATTRIBUTE_LIST,
     label: '商品属性',
     type: 'ProductAttributes',
@@ -444,6 +461,14 @@ export default () => ([{
     key: FIELD.SELL_STATUS,
     label: '上/下架',
     type: 'SellStatus',
+    binding: {
+      event: 'change'
+    }
+  },
+  {
+    key: FIELD.SALE_TYPE,
+    label: '售卖方式',
+    type: 'SaleType',
     binding: {
       event: 'change'
     }

@@ -1,13 +1,16 @@
 <template>
   <div class="new-batch-rel-container">
-    <Breadcrumb separator=">" class="breadcrumb">
-      <BreadcrumbItem>
-        <RouteLink to="/merchant/product/list" tag="a">总部商品列表</RouteLink>
-      </BreadcrumbItem>
-      <BreadcrumbItem>
-        批量关联
-      </BreadcrumbItem>
-    </Breadcrumb>
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <Breadcrumb separator=">" class="breadcrumb">
+        <BreadcrumbItem>
+          <RouteLink to="/merchant/product/list" tag="a">总部商品列表</RouteLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          批量关联
+        </BreadcrumbItem>
+      </Breadcrumb>
+      <MerchantUserGuide />
+    </div>
     <div class="new-batch-rel-content">
       <h3 class="header">
         <span>批量关联</span>
@@ -25,12 +28,15 @@
   import RouteLink from '@components/link/link'
   import Description from './components/description'
   import Steps from './container/steps'
+  import MerchantUserGuide from '@components/merchant-user-guide'
+
   export default {
     name: 'new-batch-rel',
     components: {
       RouteLink,
       Description,
-      Steps
+      Steps,
+      MerchantUserGuide
     }
   }
 </script>

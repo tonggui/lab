@@ -45,10 +45,11 @@ export enum TEMPLATE_TYPE {
   BUSINESS = 1, // B端
   CLIENT = 2 // C端
 }
-// 1-删除分类中的商品及二级分类；2-仅删除分类
+// 1-删除分类中的商品及二级分类；2-仅删除分类；3-删除总部分类和商品
 export enum TAG_DELETE_TYPE {
   TAG = 2,
-  PRODUCT = 1
+  PRODUCT = 1,
+  MERCHAHT_TAG = 3
 }
 // 店内分类管理 操作类型
 export enum TAG_OPERATION_TYPE {

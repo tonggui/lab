@@ -185,3 +185,18 @@ export enum TAG_SOURCE {
   SYSTEM = 0,
   CUSTOM = 1
 }
+
+/**
+ * 商品中心开通状态
+ */
+export enum MERCHANT_OPEN_STATUS {
+  DEFAULT = 0,
+  OPEN = 1,
+  CLOSE = 2
+}
+
+// 售卖方式， 1 正常售卖，2 预售
+export enum PRODUCT_SALE_TYPE {
+  NORMAL = 1,
+  PRE = 2
+}
