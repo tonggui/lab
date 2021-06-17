@@ -285,7 +285,7 @@ export const convertSugCategoryList = (list: any[], attr?): CategoryAttrValue[] 
         node = {
           id: attrValue.valueId || `${attrValuePrefix}${attrValue.value}`,
           name: attrValue.value,
-          text: attrValue.text || attrValue.value + '111',
+          text: attrValue.text || attrValue.value,
           textEffected: true,
           isCustomized: !attrValue.valueId,
           namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],
