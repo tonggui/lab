@@ -216,7 +216,7 @@
 </style>
 <style lang='less' scoped>
 .pic-details {
-  display: inline-block;
+  display: block;
   width: 750px;
   height: 500px;
   padding: 0;
