@@ -140,7 +140,8 @@ export default () => ([{
       preview: true,
       autoCropArea: 1,
       poorList: [],
-      keywords: ''
+      keywords: '',
+      isTimeConsuming: true
     },
     binding: {
       event: 'change'
