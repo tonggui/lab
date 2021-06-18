@@ -3,7 +3,7 @@ import createProductListStore from './product-list'
 import api from '../../api'
 import { get } from 'lodash'
 
-const { tab } = api.multiCubeList
+const { tab, scope } = api.multiCubeList
 const tagListStoreInstance = createTagListStore(api.multiCubeList.tag)
 const productListStoreInstance = createProductListStore(api.multiCubeList.product)
 
@@ -14,6 +14,7 @@ export default {
     tagSource: 0,
     tabList: [],
     scopeList: [],
+    rowScopeList: [],
     currentScope: {
       cityId: -1,
       poiId: -1
@@ -32,21 +33,19 @@ export default {
     setScopeList (state, scopeList) {
       state.scopeList = scopeList
     },
+    setRowScopeList (state, rowScopeList) {
+      state.rowScopeList = rowScopeList
+    },
     setCurrentScope (state, currentScope) {
-      state.currentScope.cityId = currentScope.cityId
-      state.currentScope.poiId = currentScope.poiId
-      console.log(state.currentScope)
+      let data = Object.assign({}, state.currentScope, currentScope)
+      state.currentScope = data
     }
   },
   actions: {
-    getScopeList ({ dispatch, commit }) {
+    async getScopeList ({ dispatch, commit }) {
       let cityList = []
-      const optionsShop = [
-        { id: -1, name: 'all', cityId: -1, cityName: 'quanguo' },
-        { id: 1, name: '711', cityId: 110, cityName: 'beijing' },
-        { id: 2, name: '722', cityId: 120, cityName: 'tianjin' },
-        { id: 3, name: '733', cityId: 120, cityName: 'tianjin' }
-      ]
+      const optionsShop = await scope.getList() || []
+      optionsShop.unshift({ id: -1, name: 'all', cityId: -1, cityName: 'quanguo' })
       optionsShop.forEach(item => {
         let city = cityList.some(ele => ele.cityId === item.cityId)
         if (!city) {
@@ -74,6 +73,7 @@ export default {
         cityId: -1,
         poiId: -1
       }
+      commit('setRowScopeList', optionsShop)
       commit('setScopeList', cityList)
       dispatch('setCurrentScope', currentScope)
     },

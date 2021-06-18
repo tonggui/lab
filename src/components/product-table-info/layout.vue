@@ -8,9 +8,9 @@
         <slot name="name"></slot>
         <slot name="description"></slot>
       </slot>
-    </div>
-    <div class="product-table-info-layout-scope" v-if="scopeFlag">
+      <div class="product-table-info-layout-scope" v-if="scopeFlag">
         <slot name="scope"></slot>
+      </div>
     </div>
   </div>
 </template>

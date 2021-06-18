@@ -154,6 +154,13 @@
       handleStatusChange (scope) {
         if (this.scope === 1) {
           this.scopeVisible = true
+        } else {
+          this.currentScope = {
+            scopeStatus: 0,
+            cityId: '',
+            poiId: ''
+          }
+          this.setCurrentScope({ cityId: -1, poiId: -1 })
         }
         // this.$emit('change', Boolean(status), status ? this.value : {})
       },
@@ -163,8 +170,12 @@
         }
       },
       ok () {
-        if (this.scope === 1 && this.currentScope.poiId !== '') {
+        if (this.scope === 1 && typeof this.currentScope.poiId !== 'undefined') {
           this.contentScope = true
+          let tmp = {
+            poiId: this.currentScope.poiId,
+            cityId: this.currentScope.cityId
+          }
           if (this.currentScope.scopeStatus === 0) {
             let tmp = this.scopeList.filter(item => {
               return item.cityId === this.currentScope.cityId
@@ -176,7 +187,7 @@
           } else {
             this.displayShop = this.shopList.filter(item => item.id === this.currentScope.poiId)[0]
           }
-          this.setCurrentScope(this.currentScope)
+          this.setCurrentScope(tmp)
           this.getData()
         }
         this.$Message.info('ok')

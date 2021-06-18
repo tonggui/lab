@@ -31,8 +31,8 @@ export default (api) => {
     },
     mutations: {
       setScope (state, payload) {
-        state.scopeId.cityId = payload.cityId
-        state.scopeId.poiId = payload.poiId
+        let data = Object.assign({}, state.scopeId, payload)
+        state.scopeId = data
       },
       setLoading (state, payload) {
         state.loading = !!payload
@@ -51,17 +51,17 @@ export default (api) => {
         state.scopeId.poiId = payload.poiId
       },
       setProductScope (state, payload) {
-        let productionId = payload.map(item => {
-          return {
-            id: item.id,
-            scopeId: {
-              cityId: state.scopeId.cityId,
-              poiId: state.scopeId.poiId
-            }
-          }
-        })
-        console.log('==========')
-        console.log(productionId)
+        // let productionId = payload.map(item => {
+        //   return {
+        //     id: item.id,
+        //     scopeId: {
+        //       cityId: state.scopeId.cityId,
+        //       poiId: state.scopeId.poiId
+        //     }
+        //   }
+        // })
+        // console.log('==========')
+        // console.log(productionId)
         state.productScope = payload
       },
       setPagination (state, payload) {
@@ -100,17 +100,19 @@ export default (api) => {
           const params = {
             tagId: state.tagId,
             tabId: state.tabId,
+            cityId: state.scopeId.cityId,
+            poiId: state.scopeId.poiId,
             tagSource: get(rootState, 'productMultiCubeRecommend.multiCubeList.tagSource'),
             ...state.filters
           }
-          const params1 = {
-            tagId: state.tagId,
-            tabId: state.tabId,
-            cityId: state.scopeId.cityId,
-            poiId: state.scopeId.poiId,
-            ...state.filters
-          }
-          console.log(params1)
+          // const params1 = {
+          //   tagId: state.tagId,
+          //   tabId: state.tabId,
+          //   cityId: state.scopeId.cityId,
+          //   poiId: state.scopeId.poiId,
+          //   ...state.filters
+          // }
+          // console.log(params1)
           const result = await api.getList(state.pagination, params)
           const { pageSize, current } = state.pagination
           const { total } = result.pagination
@@ -126,6 +128,7 @@ export default (api) => {
             dispatch('getList')
             return
           }
+          console.log(result.list)
           commit('setList', result.list || [])
           commit('setProductScope', result.list || [])
           commit('setPagination', result.pagination)

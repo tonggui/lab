@@ -1,8 +1,8 @@
-import { fetchGetProductNewArrivalTabList } from '@/data/repos/poi'
+import { fetchGetProductNewArrivalTabList, fetchGetPoiScopeList } from '@/data/repos/poi'
 import { fetchGetNewArrivalTagList } from '@/data/repos/category'
 import {
   fetchGetMultiRecommendProductList,
-  fetchSubmitBatchCreateRecommendProduct,
+  // fetchSubmitBatchCreateRecommendProduct,
   fetchSubmitMultiCreateRecommendProduct
 } from '@/data/repos/product'
 
@@ -18,11 +18,11 @@ export default {
       getList: fetchGetMultiRecommendProductList
     },
     scope: {
-      getList: fetchGetProductNewArrivalTabList
+      getList: fetchGetPoiScopeList
     }
   },
   multiCubeEdit: {
-    batchCreate: fetchSubmitBatchCreateRecommendProduct,
+    // batchCreate: fetchSubmitBatchCreateRecommendProduct,
     singleCreate: fetchSubmitMultiCreateRecommendProduct
   }
 }

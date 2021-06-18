@@ -47,6 +47,9 @@ import {
   convertNewArrivalEditProductList as convertNewArrivalEditProductListFromServer
 } from '../helper/product/newArrivalProduct/convertFromServer'
 import {
+  convertMultiCubeProductList
+} from '../helper/product/multiCube/convertFromServer'
+import {
   convertNewArrivalProduct as convertNewArrivalProductToServer,
   convertNewArrivalProductList as convertNewArrivalProductListToServer
 } from '../helper/product/newArrivalProduct/convertToServer'
@@ -937,4 +940,28 @@ export const getUpcIsAuditProduct = ({ upcCode, poiId, auditStatus }: { upcCode:
 export const getProductPermissionId = ({ appId = 1000 }: { appId: number }) => httpClient.get('permission/r/getProductPermissionId', {
   accountId: getCookie('acctId'),
   appId
+})
+
+/**
+ * 获取商品上新推荐数据 (魔方二期)
+ */
+export const getMultiCubeProductList = ({ cityId, poiId, keyword, isProductVisible, pagination, tagId, tabId, tagSource } : { cityId: number, poiId: number, tabId: string, pagination: Pagination, isProductVisible: boolean, keyword: string, tagId: number, tagSource: number }) => httpClient.post('hqcc/cube/r/cubeProductList', {
+  cityId: cityId,
+  wmPoiId: poiId,
+  secondCategoryId: tagId,
+  switch: isProductVisible ? 1 : 0,
+  keyword,
+  tabId,
+  tagSource,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize
+}).then(data => {
+  const { totalCount, recProducts } = (data || {}) as any
+  return {
+    list: convertMultiCubeProductList(recProducts, tabId, tagSource),
+    pagination: {
+      ...pagination,
+      total: totalCount
+    }
+  }
 })

@@ -51,7 +51,6 @@
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
-  import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
   import { helper } from '@/views/merchant/cube/store'
   const { mapState } = helper('multiCubeList')
   export default {
@@ -81,7 +80,7 @@
         if (this.showExist) {
           return this.dataSource
         }
-        return this.dataSource.filter(item => !(item.isExist && [NEW_ARRIVAL_PRODUCT_STATUS.ONSALE].includes(item.productStatus)))
+        return this.dataSource.filter(item => !(item.isExist))
       },
       isAllUnselectable () {
         return this.dataSource.every(item => this.isItemNotSeletable(item))
@@ -123,7 +122,6 @@
       'currentScope': {
         immediate: true,
         handler (v) {
-          console.log(v)
           if (v.cityId === -1 || v.cityId === '') {
             this.displayTip = '全国'
           } else if (v.poiId === -1 || v.poiId === '') {
@@ -155,7 +153,7 @@
         // 不可勾选逻辑
         // 门店不存在、门店存在且处于下架状态、门店存在且处于上架状态且库存=0三种状态商品 - 支持勾选
         // 门店存在且处于上架状态且库存>0商品置灰 - 不可勾选
-        return (item.isExist && NEW_ARRIVAL_PRODUCT_STATUS.ONSALE === item.productStatus) || item.isDelete || isProductQualificationNotValid(item)
+        return item.isExist || item.isDelete || isProductQualificationNotValid(item)
       },
       handleInvalidProduct (status, tips) {
         handleToast.call(this, status, tips)

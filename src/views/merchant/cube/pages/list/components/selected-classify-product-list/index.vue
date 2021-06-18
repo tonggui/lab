@@ -3,7 +3,7 @@
     <h2 class="header">{{title}}({{children.length}})</h2>
     <ul class="product-list">
       <li v-for="item in children" :key="item.__id__">
-        <ProductInfo style="width: 80%;" :product="item" />
+        <ProductInfo style="width: 80%;" :product="item" :isSelected="true" :itemscope="false" :currentScope="currentScope" :rowScopeList ="rowScopeList"/>
         <PoiSelect v-model="poiIdList" />
         <Divider type="vertical" />
         <a href="" @click.prevent="$emit('on-unselect', title, item)">取消选择</a>
@@ -15,6 +15,8 @@
 <script>
   import ProductInfo from '../product-info'
   import PoiSelect from '../poi-select'
+  import { helper } from '@/views/merchant/cube/store'
+  const { mapState } = helper('multiCubeList')
   export default {
     name: 'selected-classify-product-list',
     props: {
@@ -36,13 +38,11 @@
       ProductInfo,
       PoiSelect
     },
-    watch: {
-      'value': {
-        immediate: true,
-        handler (v) {
-          console.log(v)
-        }
-      }
+    computed: {
+      ...mapState({
+        currentScope: 'currentScope',
+        rowScopeList: 'rowScopeList'
+      })
     }
   }
 </script>

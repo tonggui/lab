@@ -527,3 +527,11 @@ export const getBrandProductPromotionGray = ({ poiId }: { poiId: number }) => ht
   const { gray = false } = data || {}
   return !!gray
 })
+/**
+ * 商品上新推荐tabList (魔方二期)
+ * @param poiId
+ */
+export const getMultiCubeScopeList = () => httpClient.post('hqcc/r/getAllPoiInfo').then(data => {
+  data = data['poiDetails'] || []
+  return data
+})

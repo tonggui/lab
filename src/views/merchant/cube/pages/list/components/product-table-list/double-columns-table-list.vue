@@ -6,7 +6,7 @@
         <li :key="item.__id__" :class="{ 'disable': disableItem(item) }" v-ms="{ active: true, callback: (e) => viewHandler(e, item, index), observeOption: { root, rootMargin: '0px', threshold: 0.01 } }">
           <div v-if="disableItem(item)" class="disableMask" @click="handleDisabledClick(item)" />
           <Checkbox :value="isSelected(item)" :disabled="disableItem(item)" class="item-checkout" @on-change="handleSelectChange($event, item)" />
-          <ProductInfo :product="item" />
+          <ProductInfo :product="item" :scopeFlag="true" :isSelected="isSelected(item)" :currentScope="currentScope" :rowScopeList ="rowScopeList"/>
         </li>
       </template>
     </ul>
@@ -18,7 +18,8 @@
 
 <script>
   import ProductInfo from '../product-info'
-
+  import { helper } from '@/views/merchant/cube/store'
+  const { mapState } = helper('multiCubeList')
   export default {
     name: 'double-columns-table-list',
     props: {
@@ -27,7 +28,6 @@
         default: () => ([])
       },
       selectedIdList: Array,
-      disabled: Boolean,
       findDataIndex: Function,
       findDataRealIndex: Function,
       isItemNotSeletable: Function
@@ -40,6 +40,12 @@
     },
     components: {
       ProductInfo
+    },
+    computed: {
+      ...mapState({
+        currentScope: 'currentScope',
+        rowScopeList: 'rowScopeList'
+      })
     },
     methods: {
       viewHandler ({ going }, item, index) {

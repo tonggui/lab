@@ -45,7 +45,6 @@
       'currentScope': {
         immediate: true,
         handler (v) {
-          console.log(this.scopeList)
           if (v !== '' && typeof this.scopeList === 'undefined') {
             console.log(v)
             const scope = this.scopeList && this.scopeList.find(item => item.id === this.currentScope.poiId)
@@ -60,8 +59,8 @@
     },
     computed: {
       ...mapState({
-        currentScope: 'currentScope',
-        scopeList: 'scopeList',
+        currentScope: state => state.multiCubeList.productList.scopeId,
+        scopeList: state => state.multiCubeList.scopeList,
         classifySelectedProducts: 'classifySelectedProducts',
         tagListError: state => state.multiCubeList.tagList.error,
         productListError: state => state.multiCubeList.productList.error
@@ -100,9 +99,6 @@
         handleGetData: 'multiCubeList/getData',
         handleGetScopeData: 'multiCubeList/getScopeList'
       }),
-      handleClick (mao) {
-        console.log(this.scopeList)
-      },
       handleRefresh () {
         this.getUploadRecTips()
         this.handleGetData()

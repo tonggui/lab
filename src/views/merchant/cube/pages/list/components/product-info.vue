@@ -1,5 +1,5 @@
 <template>
-  <Layout class="recommend-product-info" :scope-flag="true">
+  <Layout class="recommend-product-info" :scope-flag="scopeFlag">
     <ProductInfoImage
       slot="image"
       :product="product"
@@ -24,14 +24,14 @@
         <QualificationTip lackQuaText="该商品需补充资质方可售卖" lackCateText="该商品需申请对应营业资质方可售卖" :product="product" />
       </div>
       <div class="recommend-product-info-hot-data">
-        <template v-if="hotValue.type === 1">推荐指数 <Rate allow-half disabled v-model="starValue" icon="star" class="rate" /></template>
+        <template v-if="hotValue.type === 1">平台热销：近30天销量XXXX</template>
         <div v-else-if="hotValue.type === 0 && labelInfo.value" class="tab-hot"><span class="value">{{labelInfo.value}}</span> {{labelInfo.desc}}</div>
       </div>
     </template>
     <template slot="scope">
-<!--      <div class="scope-content">-->
-<!--        ssssss-->
-<!--      </div>-->
+      <div class="scope-content">
+        {{ scopeDisplay }}
+      </div>
     </template>
   </Layout>
 </template>
@@ -50,6 +50,20 @@
       product: {
         type: Object,
         required: true
+      },
+      scopeFlag: {
+        type: Boolean,
+        default: false
+      },
+      isSelected: {
+        type: Boolean,
+        default: false
+      },
+      currentScope: {
+        type: Object
+      },
+      rowScopeList: {
+        type: Array
       }
     },
     components: {
@@ -98,9 +112,41 @@
         // TODO 商品信息展示
         const isExist = this.product.isExist
         const skuList = this.product.skuList || []
-        const mapFunc = isExist ? item => `月售 ${item.monthSale} 库存 ${item.stock} 价格 ${item.price.value}`
+        const mapFunc = isExist ? item => ``
           : item => `规格 ${item.specName || '--'} 重量 ${item.weight.value || '--'}${item.weight.unit || ''}`
         return skuList.length ? skuList.map(mapFunc).slice(0, 1) : []
+      },
+      getHqExist () {
+        const isHqExist = this.product.isHqExist
+        return isHqExist
+      },
+      scopeDisplay () {
+        if (!this.isSelected) {
+          if (this.currentScope.cityId !== -1) {
+            if (this.currentScope.poiId !== -1) {
+              let poiName = this.rowScopeList.find(item => item.id === this.currentScope.poiId).name
+              let s = this.product.relatedPoiIds.indexOf(this.currentScope.poiId) === -1 ? '已关联' : '未关联'
+              return s + `${poiName}`
+            } else {
+              let cityName = this.rowScopeList.find(item => item.cityId === this.currentScope.cityId).cityName
+              return `已关联${cityName + this.product.relatedPoiIds.length}个门店/${cityName}共${this.product.totalPoiIds.length}个门店`
+            }
+          } else {
+            return `已关联全国${this.product.relatedPoiIds.length}个门店/全国共${this.product.totalPoiIds.length}个门店`
+          }
+        } else {
+          if (this.currentScope.cityId !== -1) {
+            if (this.currentScope.poiId !== -1) {
+              let poiName = this.rowScopeList.find(item => item.id === this.currentScope.poiId).name
+              return `默认关联${poiName}`
+            } else {
+              let cityName = this.rowScopeList.find(item => item.cityId === this.currentScope.cityId).cityName
+              return `默认关联${cityName + this.product.totalPoiIds.length}个门店`
+            }
+          } else {
+            return '默认关联全国所有门店'
+          }
+        }
       }
     }
   }

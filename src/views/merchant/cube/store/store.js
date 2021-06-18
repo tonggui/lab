@@ -5,8 +5,7 @@ import {
   arrayUniquePop,
   arrayToMap
 } from '../utils'
-import { TAG_SOURCE } from '@/data/enums/product'
-import { get } from 'lodash'
+import { getPriorityTag, isEmptyArray } from '@/views/product-recommend/utils'
 
 export default {
   namespaced: true,
@@ -23,14 +22,13 @@ export default {
       const map = { ...state.classifySelectedProducts }
 
       productList.forEach(product => {
-        const { category, tagSource = 0 } = product
-        const [firstCategory = { id: '', name: '' }] = category[tagSource]
-        const thirdCategoryId = get(category[TAG_SOURCE.SYSTEM], '[2].id')
-        if (!thirdCategoryId) return
-        const { id = '', name = '' } = firstCategory
-        const { sequence, customSequence } = product
+        const { tagList } = product
+        if (isEmptyArray(tagList)) {
+          return
+        }
+        const { id, name, sequence } = getPriorityTag(tagList)
         if (!map[id]) {
-          map[id] = { name, sequence: tagSource === TAG_SOURCE.SYSTEM ? sequence : customSequence, productList: [] }
+          map[id] = { name, sequence, productList: [] }
         }
         const productList = [...map[id].productList]
         if (selected) {

@@ -71,6 +71,7 @@ import {
   getProductDetailAndMedicine,
   submitEditProductUniSave,
   getNewArrivalProductList,
+  getMultiCubeProductList,
   newArrivalCheckProducts,
   submitSingleCreateNewArrivalProduct,
   getUpcIsAuditProduct
@@ -608,8 +609,8 @@ export const fetchGetUpcIsAuditProduct = (upcCode, auditStatus, poiId) => getUpc
 // 获取推荐商品列表（多店魔方）
 export const fetchGetMultiRecommendProductList =
   (pagination: Pagination, { keyword, isProductVisible, tagId, tabId, tagSource } :
-    { tabId: string, keyword: string, isProductVisible: boolean, tagId: number, tagSource: number }, poiId: number) => getNewArrivalProductList({
-    poiId, keyword, isProductVisible, pagination, tagId, tabId, tagSource
+    { tabId: string, keyword: string, isProductVisible: boolean, tagId: number, tagSource: number }, cityId: number, poiId: number) => getMultiCubeProductList({
+    cityId, poiId, keyword, isProductVisible, pagination, tagId, tabId, tagSource
   })
 
 export const fetchSubmitMultiCreateRecommendProduct = (product: RecommendProduct, extra, poiId) => submitSingleCreateNewArrivalProduct({
