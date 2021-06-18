@@ -37,7 +37,6 @@
   // TODO 药品兼容 后期优化
   import { mapModule } from '@/module/module-manage/vue'
   import { BUSINESS_MEDICINE } from '@/module/moduleTypes'
-  import lx from '@/common/lx/lxReport'
   import { uuid } from '@utiljs/guid'
 
   const { mapState, mapActions } = helper()
@@ -74,13 +73,6 @@
       },
       handleConfirm (list) {
         const traceId = uuid()
-        lx.mc({
-          bid: 'b_shangou_online_e_y80tyqr3_mc',
-          val: {
-            select_time: new Date().getTime(),
-            trace_id: traceId
-          }
-        })
         this.handleAddPoi({ list, traceId })
       }
     },
