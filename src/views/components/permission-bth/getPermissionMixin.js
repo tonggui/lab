@@ -10,9 +10,7 @@ export const getPermissions = (...types) => ({
     console.log(types, this.needPermission)
     for (let i = 0; i < types.length; i++) {
       this.permissions[types[i]] = true
-      const permission = await getPermission(types[i])
       this.permissions[types[i]] = !this.needPermission || await getPermission(types[i])
-      console.log(types[i], permission, this.permissions[types[i]])
     }
   }
 })
