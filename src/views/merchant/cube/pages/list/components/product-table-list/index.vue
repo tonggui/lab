@@ -46,7 +46,7 @@
 
 <script>
   import DoubleColumnsTableList from './double-columns-table-list'
-  import { isProductQualificationNotValid, getProductQualificationStatus } from '@/views/product-recommend/utils'
+  import { getProductQualificationStatus } from '@/views/product-recommend/utils'
   import { handleToast } from '@/views/product-recommend/pages/product-recommend-list/components/qualification-tip'
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
@@ -151,9 +151,7 @@
       },
       isItemNotSeletable (item) {
         // 不可勾选逻辑
-        // 门店不存在、门店存在且处于下架状态、门店存在且处于上架状态且库存=0三种状态商品 - 支持勾选
-        // 门店存在且处于上架状态且库存>0商品置灰 - 不可勾选
-        return item.isExist || item.isDelete || isProductQualificationNotValid(item)
+        return item.relatedPoiIds.length === item.totalPoiIds.length
       },
       handleInvalidProduct (status, tips) {
         handleToast.call(this, status, tips)

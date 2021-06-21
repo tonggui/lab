@@ -9,7 +9,8 @@
         <span class="recommend-product-info-no-sp-marker">非标品</span>
       </template>
       <template slot="bottom-marker">
-        <component :is="productTagComponent" />
+        <span v-if="product.isHqExist" class="recommend-product-info-bottom-marker">总部已创建</span>
+        <span v-else />
       </template>
     </ProductInfoImage>
     <template slot="info">
@@ -36,13 +37,10 @@
   </Layout>
 </template>
 <script>
-  import Vue from 'vue'
   import ProductInfoImage from '@/components/product-table-info/product-info-image'
   import Layout from '@/components/product-table-info/layout'
   import QualificationTip from '@/views/product-recommend/pages/product-recommend-list/components/qualification-tip'
-  import { NEW_ARRIVAL_PRODUCT_STATUS_TEXT } from '@/data/constants/product'
   import { get } from 'lodash'
-  import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
 
   export default {
     name: 'product-info',
@@ -72,30 +70,6 @@
       QualificationTip
     },
     computed: {
-      productTagComponent () {
-        const { isExist, productStatus, isDelete } = this.product
-        let text = ''
-        let className = ''
-        if (isExist && productStatus) {
-          text = NEW_ARRIVAL_PRODUCT_STATUS_TEXT[productStatus]
-          className = 'recommend-product-info-bottom-marker'
-          if (productStatus === NEW_ARRIVAL_PRODUCT_STATUS.SOLDOUT) className += ' danger'
-        } else if (isDelete) {
-          text = '已删除'
-          className += 'recommend-product-info-bottom-marker delete'
-        }
-        // 引入的vue版本无法使用这种方式
-        // return Vue.component('tag-component', {
-        //   template: `<span class="${className}">${text}</span>`
-        // })
-        return Vue.component('tag-component', {
-          render: (h) => {
-            return h('span', {
-              class: className
-            }, text)
-          }
-        })
-      },
       hotValue () {
         return this.product.hotValueInfo || {}
       },

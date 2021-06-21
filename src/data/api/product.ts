@@ -47,7 +47,7 @@ import {
   convertNewArrivalEditProductList as convertNewArrivalEditProductListFromServer
 } from '../helper/product/newArrivalProduct/convertFromServer'
 import {
-  convertMultiCubeProductList
+  convertMultiCubeProductList as convertMultiCubeProductListFromServer
 } from '../helper/product/multiCube/convertFromServer'
 import {
   convertNewArrivalProduct as convertNewArrivalProductToServer,
@@ -958,7 +958,7 @@ export const getMultiCubeProductList = ({ cityId, poiId, keyword, isProductVisib
 }).then(data => {
   const { totalCount, recProducts } = (data || {}) as any
   return {
-    list: convertMultiCubeProductList(recProducts, tabId, tagSource),
+    list: convertMultiCubeProductListFromServer(recProducts, tabId, tagSource),
     pagination: {
       ...pagination,
       total: totalCount
