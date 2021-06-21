@@ -24,7 +24,7 @@
     },
     props: {
       source: Array,
-      value: [Array, Object],
+      value: [Array, Object, String],
       cascader: Boolean,
       separator: String,
       onSearch: {

@@ -15,6 +15,7 @@
       :skuCount="value.length"
       :fieldStatus="fieldStatus"
       :disabled="disabled"
+      need-permission
       :disabledExistSkuColumnMap="disabledExistSkuColumnMap"
       :extra-column-config="columnConfig"
       @on-delete="handleDeleteSku"

@@ -27,7 +27,7 @@
       AuditFieldTip
     },
     props: {
-      value: [Array, Object],
+      value: [Array, Object, String],
       auditTips: Array,
       width: [Number, String],
       multiple: Boolean,
