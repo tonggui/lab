@@ -46,7 +46,14 @@ const combineArguments = (method, params = {}, options = {}) => {
   }
 }
 
-const defaultSuccessHandler = data => ({ ...data.data, serverTime: data.serverTime })
+// const defaultSuccessHandler = data => ({ ...data.data, serverTime: data.serverTime })
+const defaultSuccessHandler = data => {
+  if (typeof data.data === 'object') {
+    return { ...data.data, serverTime: data.serverTime }
+  } else {
+    return data.data
+  }
+}
 
 // 请求函数
 const request = (axiosInstance) => async (method = 'post', url = '', params = {}, options) => {
