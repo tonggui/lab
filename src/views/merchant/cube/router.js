@@ -1,29 +1,87 @@
-import { PLATFORM } from '@/data/enums/common'
+import { getCubeTaskStatus } from '@/data/repos/merchantCube'
+import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
 
 export default [
   {
+    name: 'merchantCubeList',
+    path: 'list',
+    components: {
+      default: () => import(
+        /* webpackChunkName: "merchant-cube-list" */ './pages/list'
+        ),
+      breadCrumb: () => import(
+        /* webpackChunkName: "cube-breadcrumb-center" */ './components/cube-breadcrumb-center'
+        )
+    },
+    meta: {
+      id: 'merchantCubeList',
+      title: '选择商品',
+      pv: {
+        cid: ''
+      }
+    },
+    beforeEnter: async (to, from, next) => {
+      const { id, status } = await getCubeTaskStatus()
+      if (id < 0) next()
+      else if ([BATCH_REL_TASK_STATUS.IN_PROCESS, BATCH_REL_TASK_STATUS.INLINE].includes(status)) {
+        next({ name: 'merchantCubeProcessStatus' })
+      } else {
+        next({ name: 'merchantCubeProcessResult' })
+      }
+    }
+  },
+  {
     name: 'merchantCubeEdit',
     path: 'edit',
-    component: () => import(
-      /* webpackChunkName: "merchant-batch-management-batch-rel" */ './pages/edit'
-      ),
+    components: {
+      default: () => import(
+        /* webpackChunkName: "merchant-cube-edit" */ './pages/edit'
+        ),
+      breadCrumb: () => import(
+        /* webpackChunkName: "cube-breadcrumb-back" */ './components/cube-breadcrumb-back'
+        )
+    },
     meta: {
-      platform: PLATFORM.MERCHANT,
-      title: '',
+      id: 'merchantCubeEdit',
+      title: '完善商品信息',
       pv: {
         cid: ''
       }
     }
   },
   {
-    name: 'merchantCubeList',
-    path: 'list',
-    component: () => import(
-      /* webpackChunkName: "merchant-batch-management-batch-rel" */ './pages/list'
-      ),
+    name: 'merchantCubeProcessStatus',
+    path: 'status',
+    components: {
+      default: () => import(
+        /* webpackChunkName: "merchant-cube-list" */ './pages/status'
+        ),
+      breadCrumb: () => import(
+        /* webpackChunkName: "cube-breadcrumb-center" */ './components/cube-breadcrumb-center'
+      )
+    },
     meta: {
-      platform: PLATFORM.MERCHANT,
-      title: '',
+      id: 'merchantCubeProcessStatus',
+      title: '创建中',
+      pv: {
+        cid: ''
+      }
+    }
+  },
+  {
+    name: 'merchantCubeProcessResult',
+    path: 'result',
+    components: {
+      default: () => import(
+        /* webpackChunkName: "merchant-cube-list" */ './pages/result'
+        ),
+      breadCrumb: () => import(
+        /* webpackChunkName: "cube-breadcrumb-center" */ './components/cube-breadcrumb-center'
+        )
+    },
+    meta: {
+      id: 'merchantCubeProcessResult',
+      title: '创建结果',
       pv: {
         cid: ''
       }
