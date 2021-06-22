@@ -360,6 +360,7 @@ declare interface Product extends BaseProduct {
     timeZone: TimeZone,
   }; // 商品可售时间
   pictureContentList?: string[]; // 图文详情
+  picContentSyncPoi?: boolean; // 商品图片同步门店
   spPictureContentList?: string[]; // 品牌商图片详情
   spPictureContentSwitch?: boolean; // 品牌商图片详情是否展示给买家
   video?: ProductVideo; // 商品视频

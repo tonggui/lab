@@ -399,7 +399,7 @@
                 val: {
                   spu_id: this.spu_id || response.id || 0,
                   list: getProductChangInfo(this.product, this.originalFormData),
-                  select_time: +new Date()
+                  select_time: +new Date(response.serverTime || Date.now())
                 }
               })
             } else {
@@ -426,7 +426,7 @@
                     viewtime: `${SearchTime.getSearchTime() + FillTime.getFillTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
                     list: TimeCounters.getResult(),
                     trace_id: response.traceId,
-                    select_time: +new Date()
+                    select_time: +new Date(response.serverTime || Date.now())
                   }
                 })
               }

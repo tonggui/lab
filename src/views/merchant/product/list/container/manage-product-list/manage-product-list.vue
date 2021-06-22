@@ -14,11 +14,13 @@
         :dataSource="list"
         :pagination="pagination"
         :loading="loading"
+        :tag-list="tagList"
         @page-change="handlePageChange"
         @delete="handleDelete"
         @edit="handleModify"
         @edit-sku="handleModifySku"
         @refresh="handleRefresh"
+        @batch="handleBatchOperation"
       >
         <div slot="tabs-extra" class="search-wrapper">
           <ProductSearch @search="handleSearch" />
@@ -44,6 +46,7 @@
   import { triggerProductOperation } from '../../merchant-tour'
 
   const { mapState, mapActions } = helper('product')
+  const { mapGetters } = helper()
 
   export default {
     name: 'merchant-product-manage-product-list-container',
@@ -56,7 +59,8 @@
         'pagination',
         'tagId',
         'error'
-      ])
+      ]),
+      ...mapGetters(['tagList'])
     },
     watch: {
       list (val) {
@@ -76,7 +80,8 @@
         handleModify: 'modify',
         handleModifySku: 'modifySkuList',
         handleRefresh: 'getList',
-        handleDelete: 'delete'
+        handleDelete: 'delete',
+        handleBatchOperation: 'batch'
       }),
       handleBatchCreate () {
         this.$router.push({ name: KEYS.CREATE })

@@ -41,7 +41,9 @@
             id,
             idPath,
             namePath,
-            isLeaf
+            isLeaf,
+            text,
+            textEffected
           } = item
           const path = idPath.map((v, i) => ({
             id: v,
@@ -51,7 +53,9 @@
             id,
             name: namePath.join(this.separator),
             path,
-            isLeaf
+            isLeaf,
+            text,
+            textEffected
           }
         })
         return { data: result, total }
