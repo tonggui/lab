@@ -48,7 +48,7 @@ const combineArguments = (method, params = {}, options = {}) => {
 
 // const defaultSuccessHandler = data => ({ ...data.data, serverTime: data.serverTime })
 const defaultSuccessHandler = data => {
-  if (typeof data.data === 'object') {
+  if (isPlainObject(data.data)) {
     return { ...data.data, serverTime: data.serverTime }
   } else {
     return data.data
