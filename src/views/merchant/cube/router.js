@@ -21,8 +21,8 @@ export default [
       }
     },
     beforeEnter: async (to, from, next) => {
-      const { id, status } = await getCubeTaskStatus()
-      if (id < 0) next()
+      const { taskId, status } = await getCubeTaskStatus()
+      if (taskId < 0) next()
       else if ([BATCH_REL_TASK_STATUS.IN_PROCESS, BATCH_REL_TASK_STATUS.INLINE].includes(status)) {
         next({ name: 'merchantCubeProcessStatus' })
       } else {

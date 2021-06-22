@@ -1,6 +1,8 @@
 import {
-  apiCubeTaskStatus
+  apiCubeTaskStatus,
+  apiCubeTaskConfirm
 } from '@/data/merchantApi/cube'
-// import { BATCH_REL_TASK_STATUS, BATCH_REL_TASK_RESULT_STATUS } from '@/data/enums/batch'
 
-export const getCubeTaskStatus = (taskType) => apiCubeTaskStatus(taskType)
+export const getCubeTaskStatus = (taskType) => apiCubeTaskStatus({ taskType })
+
+export const getCubeTaskConfirm = (taskId) => apiCubeTaskConfirm({ taskId })

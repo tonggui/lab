@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="merchant-cube-container">
     <router-view name="breadCrumb"></router-view>
     <CubeSteps />
-    <router-view></router-view>
+    <router-view class="content"></router-view>
   </div>
 </template>
 
@@ -17,6 +17,13 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+  .merchant-cube-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    .content {
+      flex: 1;
+    }
+  }
 </style>
