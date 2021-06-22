@@ -47,6 +47,14 @@
         rowScopeList: 'rowScopeList'
       })
     },
+    watch: {
+      'selectedIdList': {
+        immediate: true,
+        handler (v) {
+          console.log(v)
+        }
+      }
+    },
     methods: {
       viewHandler ({ going }, item, index) {
         try {
@@ -58,7 +66,7 @@
         }
       },
       isSelected (item) {
-        return this.selectedIdList.some(id => id === item.__id__)
+        return this.selectedIdList.some(ele => ele.__id__ === item.__id__)
       },
       disableItem (item) {
         if (this.isItemNotSeletable(item)) return true

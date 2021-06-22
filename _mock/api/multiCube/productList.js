@@ -129,8 +129,8 @@ let data = [
       }
     ],
     "isHqExist" : Math.random() * 10 > 5 ? 0 : 1,
-    "relatedPoiIds" : [1,3,5],
-    "totalPoiIds" : [1,2,3,4,5,6,7,8,9,10],
+    "relatedPoiIds" : [1],
+    "totalPoiIds" : [1,2],
     "isSp": 2,
     "spId": "Fdc6A2f0-4AB4-973e-9431-87cDB9cA535D",
     "picture": "http://p0.meituan.net/xianfu/5272bfc0a117e2ccea48efc06b79768e67245.jpg",

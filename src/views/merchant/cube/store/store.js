@@ -43,7 +43,7 @@ export default {
           } else {
             let canRelatePoiIds = product.totalPoiIds.filter(item => product['relatedPoiIds'].indexOf(item) === -1)
             canRelatePoiIds.forEach(item => {
-              if (poiIds.indexOf(item) !== -1) {
+              if (poiIds.indexOf(item) !== -1 && product['relatingPoiIds'].indexOf(item) === -1) {
                 product['relatingPoiIds'].push(item)
               }
             })
@@ -58,6 +58,7 @@ export default {
           }
         }
       })
+      console.log(map)
       commit('setClassifySelectedProducts', map)
     },
     selectProduct ({ dispatch }, productList) {

@@ -8,7 +8,7 @@ import {
   ApiAnomalyType,
   CellularProduct,
   AuditProductInfo,
-  RecommendProduct
+  RecommendProduct, MultiCubeProduct
 } from '../interface/product'
 import {
   BaseCategory
@@ -47,8 +47,13 @@ import {
   convertNewArrivalEditProductList as convertNewArrivalEditProductListFromServer
 } from '../helper/product/newArrivalProduct/convertFromServer'
 import {
-  convertMultiCubeProductList as convertMultiCubeProductListFromServer
+  convertMultiCubeProductList as convertMultiCubeProductListFromServer,
+  // convertMultiCubeEditProduct as convertMultiCubeEditProductFromServer,
+  convertMultiCubeEditProductList as convertMultiCubeEditProductListFromServer
 } from '../helper/product/multiCube/convertFromServer'
+import {
+  convertMultiCubeProductList as convertMultiCubeProductListToServer
+} from '../helper/product/multiCube/convertToServer'
 import {
   convertNewArrivalProduct as convertNewArrivalProductToServer,
   convertNewArrivalProductList as convertNewArrivalProductListToServer
@@ -965,3 +970,25 @@ export const getMultiCubeProductList = ({ cityId, poiId, keyword, isProductVisib
     }
   }
 })
+
+/**
+ * 创建商品前校验
+ * @param wmPoiId 门店id
+ * @param productCubeVos 商品创建信息
+ * 后端接口参数：
+ * wmPoiId: poiId
+ * productCubeVos
+ */
+export const multiCubeCheckProducts = ({ productList }: { productList: MultiCubeProduct[]}) => {
+  const list = convertMultiCubeProductListToServer(productList) // TODO
+  return httpClient.post('hqcc/cube/w/cubeProductValidate', {
+    productCubeVos: JSON.stringify(list)
+  }).then(data => {
+    data = data || {}
+    const { deleteSpuList, editSpuList } = data
+    return {
+      deletedProductList: convertMultiCubeEditProductListFromServer(deleteSpuList),
+      editProductList: convertMultiCubeEditProductListFromServer(editSpuList)
+    }
+  })
+}
