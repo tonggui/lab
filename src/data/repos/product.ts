@@ -4,7 +4,7 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product, ProductInfo, ApiAnomalyType, CellularProduct, RecommendProduct
+  Product, ProductInfo, ApiAnomalyType, CellularProduct, RecommendProduct, MultiCubeProduct
 } from '../interface/product'
 import {
   PRODUCT_STATUS,
@@ -74,7 +74,7 @@ import {
   getMultiCubeProductList,
   newArrivalCheckProducts,
   submitSingleCreateNewArrivalProduct,
-  getUpcIsAuditProduct
+  getUpcIsAuditProduct, multiCubeCheckProducts
 } from '../api/product'
 import {
   fetchTaskList
@@ -618,3 +618,7 @@ export const fetchSubmitMultiCreateRecommendProduct = (product: RecommendProduct
   extra,
   poiId
 })
+
+// 创建商品前校验 (魔方二期)
+// eslint-disable-next-line standard/object-curly-even-spacing
+export const fetchMultiCubeCheckProducts = (productList: MultiCubeProduct[]) => multiCubeCheckProducts({ productList })

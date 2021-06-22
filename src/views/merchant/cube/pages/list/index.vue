@@ -80,19 +80,19 @@
         return this.error && this.tagListError && this.productListError
       },
       selectedIdList () {
-        let self = this
-        // console.log(this.classifySelectedProducts)
+        console.log(this.classifySelectedProducts)
         return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
-          productList.forEach(({ __id__, relatedPoiIds, relatingPoiIds }) => {
+          productList.forEach(({ __id__, relatedPoiIds, relatingPoiIds, totalPoiIds }) => {
             // 当前范围所有门店是否在当前商品的待关联门店范围内
-            let flag = self.currentPoiIds.every(item => {
+            let flag = totalPoiIds.every(item => {
               return relatingPoiIds.indexOf(item) > -1 || relatedPoiIds.indexOf(item) > -1
             })
+            // console.log(flag)
             if (flag) {
               prev.push({ __id__, relatedPoiIds, relatingPoiIds })
             }
           })
-          // console.log(prev)
+          console.log(prev)
           return prev
         }, [])
       }

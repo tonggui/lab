@@ -52,7 +52,7 @@
   import Header from '@/components/header-layout'
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
   import { helper } from '@/views/merchant/cube/store'
-  const { mapState } = helper('multiCubeList')
+  const { mapState } = helper()
   export default {
     name: 'product-table-list',
     props: {
@@ -73,15 +73,26 @@
     },
     computed: {
       ...mapState({
-        rowScopeList: state => state.rowScopeList,
-        scopeList: state => state.scopeList,
-        currentScope: state => state.currentScope
+        rowScopeList: state => state.multiCubeList.rowScopeList,
+        scopeList: state => state.multiCubeList.scopeList,
+        currentScope: state => state.multiCubeList.currentScope,
+        classifySelectedProducts: 'classifySelectedProducts'
       }),
+      displayContent () {
+        return ''
+      },
+      displayContentScope () {
+        if (this.currentScope.poiId !== -1 || this.currentScope.poiId !== '') {
+          return '选择'
+        } else if (this.currentScope.cityId !== '' || this.currentScope.cityId !== -1) {
+          return '选择城市下所有'
+        } else return '全国所有'
+      },
       showDataSource () {
         if (this.showExist) {
           return this.dataSource
         }
-        return this.dataSource.filter(item => !(item.isExist))
+        return this.dataSource.filter(item => !(item.isHqExist))
       },
       isAllUnselectable () {
         return this.dataSource.every(item => this.isItemNotSeletable(item))
@@ -92,11 +103,12 @@
         }
         let value = true
         let indeterminate = false
+        let selectedIds = this.selectedIdList.map(item => item.__id__)
         this.dataSource.forEach(item => {
           if (this.isItemNotSeletable(item)) {
             return
           }
-          const include = this.selectedIdList.includes(item.__id__)
+          const include = selectedIds.includes(item.__id__)
           if (include) {
             indeterminate = true
           } else {
@@ -165,7 +177,7 @@
       handleDisabled (item) {
         if (getProductQualificationStatus(item)) {
           this.handleInvalidProduct(getProductQualificationStatus(item), item.qualificationTip)
-        } else if (!item.isExist) {
+        } else if (!item.isHqExist) {
           this.handleExceedMax()
         }
       },
@@ -186,7 +198,7 @@
           if (this.isItemNotSeletable(item)) {
             return false
           }
-          const include = this.selectedIdList.some(id => id === item.__id__)
+          const include = this.selectedIdList.some(ele => ele.__id__ === item.__id__)
           return selection ? !include : include
         })
         if (selection) {
@@ -205,6 +217,24 @@
           })
           items = items.slice(0, this.maxSelected)
         }
+        let flag = false
+        if (Object.values(this.classifySelectedProducts).length > 0) {
+          console.log('===o')
+          items.forEach(item => {
+            Object.values(this.classifySelectedProducts).forEach(({ productList }) => {
+              flag = productList.some(({ __id__ }) => {
+                return items.id === __id__
+              })
+              if (!flag) {
+                this.$Message.info({
+                  content: `已选列表存在该商品，该商品关联门店范围将修改为${this.displayContent}，且商品关联门店自动变更为${this.displayContentScope}门店`
+                })
+              }
+              return flag
+            })
+          })
+        }
+        console.log(flag)
         this.$emit('on-select', items)
       },
       handleDeSelect (deSelectItem) {

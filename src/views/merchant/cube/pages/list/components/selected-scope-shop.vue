@@ -148,9 +148,6 @@
     // },
     methods: {
       ...mapActions(['setCurrentScope', 'getData']),
-      handleClick () {
-        console.log(this.scopeList)
-      },
       handleStatusChange (scope) {
         if (this.scope === 1) {
           this.scopeVisible = true
@@ -160,6 +157,7 @@
             cityId: '',
             poiId: ''
           }
+          this.contentScope = false
           this.setCurrentScope({ cityId: -1, poiId: -1 })
         }
         // this.$emit('change', Boolean(status), status ? this.value : {})

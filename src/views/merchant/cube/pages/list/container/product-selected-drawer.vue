@@ -13,13 +13,13 @@
         按关联分店筛选
       </span>
       <Select label="按关联分店筛选" style="width:200px; margin:0px 10px" line
-              v-model="formScope.city"
+              v-model="currentScope.cityId"
               filterable clearable
               @on-change="handleSelectedCity" placeholder="Select your city">
-        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{item.label}}</Option>
+        <Option v-for="item in scopeList" :value="item.cityId" :key="item.cityId" >{{item.cityName}}</Option>
       </Select>
-      <Select style="width:200px" v-model="formScope.shop" :disabled="formScope.city == ''" placeholder="Select your shop" filterable clearable line>
-        <Option v-for="item in shopList" :value="item.value" :key="item.value">{{item.label}}</Option>
+      <Select style="width:200px" v-model="currentScope.poiId" :disabled="shopDisabled" placeholder="Select your shop" filterable clearable line>
+        <Option v-for="item in shopList" :value="item.id" :key="item.id">{{item.name}}</Option>
       </Select>
     </div>
     <div class="header">
@@ -71,27 +71,30 @@
     },
     data () {
       return {
-        formScope: {
-          city: '',
-          shop: ''
+        shopDisabled: false,
+        currentScope: {
+          cityId: '',
+          poiId: ''
         }
       }
     },
     computed: {
       ...mapState({
-        dataSourceList: 'classifySelectedProducts',
-        cityList: 'scopeList'
+        currentScopeId: state => state.multiCubeList.currentScope,
+        scopeList: state => state.multiCubeList.scopeList,
+        currentPoiIds: state => state.multiCubeList.currentPoiIds,
+        dataSourceList: 'classifySelectedProducts'
       }),
       showDataSourceList () {
         return covertObjectToSequenceArr(this.dataSourceList)
       },
       shopList () {
-        return Array.isArray(this.cityList) && this.cityList.map(item => {
-          return {
-            id: item.id,
-            name: item.name
+        let tmp = this.scopeList.filter(item => {
+          if (item.cityId === this.currentScope.cityId) {
+            return item.poiList
           }
         })
+        return tmp && tmp[0] ? tmp[0].poiList : []
       }
     },
     components: {
@@ -100,22 +103,31 @@
     watch: {
       total (val) {
         if (val <= 0) this.handleClose()
+      },
+      'currentScope.cityId': {
+        immediate: true,
+        handler (v) {
+          if (typeof v === 'undefined') {
+            this.shopDisabled = true
+          } else this.shopDisabled = false
+        }
+      },
+      'currentScopeId.cityId': {
+        immediate: true,
+        handler (v) {
+          if (v !== '' && typeof v !== 'undefined') {
+            this.currentScope = {
+              cityId: this.currentScopeId.cityId,
+              poiId: this.currentScopeId.poiId
+            }
+          }
+        }
       }
     },
     methods: {
       ...mapActions(['deSelectProduct', 'clearSelected']),
       handleSelectedCity (v) {
-        this.loading2 = true
-        setTimeout(() => {
-          this.loading2 = false
-          this.shopList = this.optionsShop.map(item => {
-            return {
-              value: item.value,
-              label: item.label
-            }
-          })
-        }, 200)
-        this.formScope.shop = '0'
+        console.log(v)
       },
       handleClose () {
         this.$emit('on-drawer-close')

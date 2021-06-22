@@ -58,7 +58,7 @@
   import DeleteProductsModal from '../../../components/delete-products-modal'
   import ErrorPage from '../components/error'
   import EmptyPage from '../components/empty'
-  import { fetchNewArrivalCheckProducts } from '@/data/repos/product'
+  import { fetchMultiCubeCheckProducts } from '@/data/repos/product'
   import TagList from './tag-list'
   import Tabs from './product-tabs'
   import ProductTableList from './product-list'
@@ -141,7 +141,7 @@
       },
       handleClickCreate (callback) {
         if (this.drawerVisible) this.drawerVisible = false
-        fetchNewArrivalCheckProducts(objToArray(this.classifySelectedProducts))
+        fetchMultiCubeCheckProducts(objToArray(this.classifySelectedProducts))
           .then(res => {
             this.deletedProductList = res.deletedProductList
             this.editProductList = res.editProductList
