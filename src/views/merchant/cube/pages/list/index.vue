@@ -61,6 +61,7 @@
       ...mapState({
         currentScope: state => state.multiCubeList.productList.scopeId,
         scopeList: state => state.multiCubeList.scopeList,
+        currentPoiIds: state => state.multiCubeList.currentPoiIds,
         classifySelectedProducts: 'classifySelectedProducts',
         tagListError: state => state.multiCubeList.tagList.error,
         productListError: state => state.multiCubeList.productList.error
@@ -79,8 +80,19 @@
         return this.error && this.tagListError && this.productListError
       },
       selectedIdList () {
+        let self = this
+        // console.log(this.classifySelectedProducts)
         return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
-          productList.forEach(({ __id__ }) => prev.push(__id__))
+          productList.forEach(({ __id__, relatedPoiIds, relatingPoiIds }) => {
+            // 当前范围所有门店是否在当前商品的待关联门店范围内
+            let flag = self.currentPoiIds.every(item => {
+              return relatingPoiIds.indexOf(item) > -1 || relatedPoiIds.indexOf(item) > -1
+            })
+            if (flag) {
+              prev.push({ __id__, relatedPoiIds, relatingPoiIds })
+            }
+          })
+          // console.log(prev)
           return prev
         }, [])
       }

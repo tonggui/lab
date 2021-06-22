@@ -73,6 +73,7 @@
     },
     computed: {
       ...mapState({
+        rowScopeList: state => state.rowScopeList,
         scopeList: state => state.scopeList,
         currentScope: state => state.currentScope
       }),
@@ -125,9 +126,10 @@
           if (v.cityId === -1 || v.cityId === '') {
             this.displayTip = '全国'
           } else if (v.poiId === -1 || v.poiId === '') {
-            this.displayTip = 'chengshi'
+            let cityName = this.rowScopeList && this.rowScopeList.find(item => item.cityId === v.cityId).cityName
+            this.displayTip = cityName + '所有'
           } else if (v.poiId !== -1) {
-            this.displayTip = 'xxshop'
+            this.displayTip = ''
           }
         }
       }

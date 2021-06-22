@@ -10,15 +10,15 @@
       </RadioGroup>
       <span v-if="contentScope">所选分店为: {{ displayShop.name }}</span>
     </Card>
-    <Anchor :container="'.doc-container-content'">
-      <div type="warning" class="operation-info2-tip">
-      <span>
-        <Icon type="info" color="#F89800" class="icon" />dddd
-        {{operationInfo.cityName}}{{operationInfo.poiName}}
-      </span>
-        <AnchorLink href="#basic_usage" title="更换推荐范围按钮" />
-      </div>
-    </Anchor>
+<!--    <Anchor :container="'.doc-container-content'">-->
+<!--      <div type="warning" class="operation-info2-tip">-->
+<!--      <span>-->
+<!--        <Icon type="info" color="#F89800" class="icon" />dddd-->
+<!--        {{operationInfo.cityName}}{{operationInfo.poiName}}-->
+<!--      </span>-->
+<!--        <AnchorLink href="#basic_usage" title="更换推荐范围按钮" />-->
+<!--      </div>-->
+<!--    </Anchor>-->
     <Modal
       v-model="scopeVisible"
       title="选择一个指定城市或分店"
