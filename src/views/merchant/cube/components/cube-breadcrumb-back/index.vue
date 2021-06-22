@@ -1,7 +1,7 @@
 <template>
   <div class="merchant-cube-breadcrumb">
-    <div>
-      <Icon style="margin-top: -3px" size="20" type="keyboard-arrow-left" @click="handleGoBack" />魔方快捷创建
+    <div @click="handleGoBack">
+      <Icon style="margin-top: -3px" size="20" type="keyboard-arrow-left" />魔方快捷创建
     </div>
   </div>
 </template>

@@ -35,7 +35,7 @@
   import { mapModule } from '@/module/module-manage/vue'
   import { PRODUCT_TAG_COUNT } from '@/module/subModule/product/moduleTypes'
 
-  const { mapState, mapActions } = helper('newArrivalEdit')
+  const { mapState, mapActions } = helper('multiCubeEdit')
 
   export default {
     name: 'product-recommend-edit-list-container',

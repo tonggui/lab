@@ -137,7 +137,7 @@
       },
       handleGoToMultiCubeEdit () {
         this.$emit('set-edit-product', this.editProductList)
-        this.$router.push({ name: 'multiCubeEdit', query: this.$route.query })
+        this.$router.push({ name: 'merchantCubeEdit', query: this.$route.query })
       },
       handleClickCreate (callback) {
         if (this.drawerVisible) this.drawerVisible = false

@@ -6,7 +6,7 @@ module.exports = {
   msg: '',
   data: {
     cubeTaskStatus: {
-      taskId: 23,
+      taskId: -1,
       taskName: '212',
       status: 60,
       runningStatusVo: {
