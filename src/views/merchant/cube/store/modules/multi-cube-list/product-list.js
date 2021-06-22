@@ -128,7 +128,6 @@ export default (api) => {
             dispatch('getList')
             return
           }
-          console.log(result.list)
           commit('setList', result.list || [])
           commit('setProductScope', result.list || [])
           commit('setPagination', result.pagination)

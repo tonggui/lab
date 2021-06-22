@@ -96,17 +96,21 @@
       },
       scopeDisplay () {
         if (!this.isSelected) {
-          if (this.currentScope.cityId !== -1) {
-            if (this.currentScope.poiId !== -1) {
-              let poiName = this.rowScopeList.find(item => item.id === this.currentScope.poiId).name
-              let s = this.product.relatedPoiIds.indexOf(this.currentScope.poiId) === -1 ? '已关联' : '未关联'
-              return s + `${poiName}`
+          if (this.product.isHqExist) {
+            if (this.currentScope.cityId !== -1) {
+              if (this.currentScope.poiId !== -1) {
+                let poiName = this.rowScopeList.find(item => item.id === this.currentScope.poiId).name
+                let s = this.product.relatedPoiIds.indexOf(this.currentScope.poiId) === -1 ? '已关联' : '未关联'
+                return s + `${poiName}`
+              } else {
+                let cityName = this.rowScopeList.find(item => item.cityId === this.currentScope.cityId).cityName
+                return `已关联${cityName + this.product.relatedPoiIds.length}个门店/${cityName}共${this.product.totalPoiIds.length}个门店`
+              }
             } else {
-              let cityName = this.rowScopeList.find(item => item.cityId === this.currentScope.cityId).cityName
-              return `已关联${cityName + this.product.relatedPoiIds.length}个门店/${cityName}共${this.product.totalPoiIds.length}个门店`
+              return `已关联全国${this.product.relatedPoiIds.length}个门店/全国共${this.product.totalPoiIds.length}个门店`
             }
           } else {
-            return `已关联全国${this.product.relatedPoiIds.length}个门店/全国共${this.product.totalPoiIds.length}个门店`
+            return ''
           }
         } else {
           if (this.currentScope.cityId !== -1) {

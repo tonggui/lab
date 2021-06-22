@@ -15,6 +15,7 @@ export default {
     tabList: [],
     scopeList: [],
     rowScopeList: [],
+    currentPoiIds: [],
     currentScope: {
       cityId: -1,
       poiId: -1
@@ -39,6 +40,9 @@ export default {
     setCurrentScope (state, currentScope) {
       let data = Object.assign({}, state.currentScope, currentScope)
       state.currentScope = data
+    },
+    setCurrentPoiIds (state, poiIds) {
+      state.currentPoiIds = poiIds
     }
   },
   actions: {
@@ -91,8 +95,23 @@ export default {
       const tagSource = tabList.find(it => it.id === tabId).tagSource
       commit('setTagSource', tagSource)
     },
-    setCurrentScope ({ commit, dispatch }, currentScope) {
+    setCurrentScope ({ state, commit, dispatch }, currentScope) {
       commit('setCurrentScope', currentScope)
+      let poiIds = []
+      // 当前所选范围对应的门店id
+      if (currentScope.poiId !== -1) {
+        poiIds.push(currentScope.poiId)
+      } else if (currentScope.cityId !== -1) {
+        let cityItem = state.scopeList.find(item => item.cityId === currentScope.cityId)
+        cityItem.poiList.forEach(item => {
+          if (item.id !== -1) poiIds.push(item.id)
+        })
+      } else {
+        state.rowScopeList.forEach(item => {
+          if (item.id !== -1) poiIds.push(item.id)
+        })
+      }
+      commit('setCurrentPoiIds', poiIds)
       dispatch('getTabList')
       commit('productList/setScope', currentScope)
     },

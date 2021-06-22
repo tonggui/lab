@@ -4,7 +4,8 @@
     <PoiSelectDrawer
       title="关联门店"
       v-model="show"
-      :poiIdList="value"
+      :poiIdList="poiIds.concat(disabledIds)"
+      :disabledIdList="disabledIds"
       :queryPoiList="fetchGetPoiList"
       :fetch-poi-list-by-ids="fetchPoiListByIdList"
       @on-confirm="handleConfirm"
@@ -25,6 +26,10 @@
         type: Array,
         default: () => ([])
       },
+      disabledIds: {
+        type: Array,
+        default: () => ([])
+      },
       disabled: Boolean
     },
     data () {
@@ -35,6 +40,11 @@
     components: {
       PoiSelectDrawer,
       Trigger
+    },
+    computed: {
+      poiIds () {
+        return this.value
+      }
     },
     methods: {
       triggerChange (poiIdList) {
@@ -48,7 +58,12 @@
         this.triggerChange([])
       },
       handleConfirm (poiList) {
-        const poiIdList = poiList.map(poi => poi.id)
+        let tmp = poiList.filter(item => {
+          if (this.poiIds.indexOf(item.id) !== -1) {
+            return item
+          }
+        })
+        const poiIdList = tmp.map(poi => poi.id)
         this.triggerChange(poiIdList)
       },
       fetchGetPoiList (params) {

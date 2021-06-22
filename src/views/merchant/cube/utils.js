@@ -207,3 +207,12 @@ export const findProductListInTagGroupProductById = (groupData, idList, getProdu
   }
   return result
 }
+export const arrayRemoveItem = (arr, item) => {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === item) {
+      arr.splice(i, 1)
+      i--
+    }
+  }
+  return arr
+}

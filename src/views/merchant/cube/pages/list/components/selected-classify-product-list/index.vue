@@ -2,9 +2,9 @@
   <div class="selected-classify-product-list">
     <h2 class="header">{{title}}({{children.length}})</h2>
     <ul class="product-list">
-      <li v-for="item in children" :key="item.__id__">
+      <li v-for="(item, index) in children" :key="item.__id__">
         <ProductInfo style="width: 80%;" :product="item" :isSelected="true" :itemscope="false" :currentScope="currentScope" :rowScopeList ="rowScopeList"/>
-        <PoiSelect v-model="poiIdList" />
+        <PoiSelect v-model="children[index].relatingPoiIds" :disabledIds = "children[index].relatedPoiIds" />
         <Divider type="vertical" />
         <a href="" @click.prevent="$emit('on-unselect', title, item)">取消选择</a>
       </li>
@@ -27,11 +27,6 @@
       children: {
         type: Array,
         default: () => ([])
-      }
-    },
-    data () {
-      return {
-        poiIdList: [1, 2]
       }
     },
     components: {
