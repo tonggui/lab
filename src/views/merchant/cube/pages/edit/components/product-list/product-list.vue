@@ -55,6 +55,7 @@
   import { isIncompleteProductInfo, getLxParams, listParams } from '@/views/product-new-arrival/utils'
   import lx from '@/common/lx/lxReport'
   import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
+  import PoiSelect from '../../../list/components/poi-select'
 
   export default {
     name: 'product-recommend-edit-table',
@@ -125,6 +126,20 @@
             return h(Tag, { props: { maxCount: this.maxTagCount || 1, tagList: row.tagList, source: this.source }, on: { change: handleChange } })
           }
         }, {
+          title: '关联分店',
+          dimension: 'spu',
+          align: 'center',
+          width: 192,
+          required: true,
+          render: (h, { row, skuIndex }) => {
+            console.log('wqwqw', row)
+            const handleChange = (poiIds) => this.handleModifyProduct({ params: { relatingPoiIds: poiIds }, product: row })
+            return h(PoiSelect, {
+              props: { value: row.relatingPoiIds, disabledIds: row.relatedPoiIds },
+              on: { change: handleChange }
+            })
+          }
+        }, {
           title: '操作',
           dimension: 'spu',
           align: 'center',
@@ -137,8 +152,8 @@
             return h(Operation, {
               attrs: { product, isIncompleteCheck: isIncompleteProductInfo },
               on: {
-                delete: this.handleSingleDelete,
-                create: this.handleSingleCreate
+                delete: this.handleSingleDelete
+                // create: this.handleSingleCreate
               }
             })
           }

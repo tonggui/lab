@@ -1,6 +1,6 @@
 <template>
   <div class="product-recommend-edit-table-operation">
-    <Button type="primary" @click="handleCreate" :disabled="disabled" :loading="submitting">上架</Button>
+<!--    <Button type="primary" @click="handleCreate" :disabled="disabled" :loading="submitting">上架</Button>-->
     <span class="operation-delete" :class="{ deleting }" @click="handleDelete">
       <Icon type="loading" v-if="deleting" />删除
     </span>

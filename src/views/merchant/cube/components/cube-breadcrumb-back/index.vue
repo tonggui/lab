@@ -20,5 +20,6 @@
 <style lang="less" scoped>
   .merchant-cube-breadcrumb {
     margin-bottom: 10px;
+    cursor: pointer;
   }
 </style>
