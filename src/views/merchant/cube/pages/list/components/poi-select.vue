@@ -59,7 +59,7 @@
       },
       handleConfirm (poiList) {
         let tmp = poiList.filter(item => {
-          if (this.poiIds.indexOf(item.id) !== -1) {
+          if (this.disabledIds.indexOf(item.id) === -1) {
             return item
           }
         })
