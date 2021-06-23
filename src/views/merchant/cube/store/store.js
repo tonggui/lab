@@ -21,7 +21,7 @@ export default {
   actions: {
     toggleSelectProduct ({ commit, state, rootState }, { productList, selected }) {
       const map = { ...state.classifySelectedProducts }
-      console.log(state.classifySelectedProducts)
+      console.log('productList', productList, state.classifySelectedProducts)
       productList.forEach(product => {
         if (!product.hasOwnProperty('relatingPoiIds')) {
           product['relatingPoiIds'] = []
@@ -59,6 +59,24 @@ export default {
         }
       })
       console.log(map)
+      commit('setClassifySelectedProducts', map)
+    },
+    poiRelatingRangeChange ({ state, commit }, productList) {
+      const map = { ...state.classifySelectedProducts }
+      productList.forEach((product) => {
+        const { tagList } = product
+        if (isEmptyArray(tagList)) {
+          return
+        }
+        const { id } = getPriorityTag(tagList)
+        if (map[id] && map[id].productList) {
+          map[id].productList.forEach(item => {
+            if (item.__id__ === product.__id__) {
+              if (item.relatingPoiIds) item.relatingPoiIds = product.relatingPoiIds
+            }
+          })
+        }
+      })
       commit('setClassifySelectedProducts', map)
     },
     selectProduct ({ dispatch }, productList) {

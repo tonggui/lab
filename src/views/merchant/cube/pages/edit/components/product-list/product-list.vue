@@ -51,7 +51,7 @@
     arrayUniquePop,
     getUniqueId,
     findProductListInTagGroupProductById
-  } from '@/views/product-recommend/utils'
+  } from '../../../../utils'
   import { isIncompleteProductInfo, getLxParams, listParams } from '@/views/product-new-arrival/utils'
   import lx from '@/common/lx/lxReport'
   import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
@@ -131,9 +131,12 @@
           align: 'center',
           width: 192,
           required: true,
-          render: (h, { row, skuIndex }) => {
-            console.log('wqwqw', row)
-            const handleChange = (poiIds) => this.handleModifyProduct({ params: { relatingPoiIds: poiIds }, product: row })
+          render: (h, { row }) => {
+            console.log('row', row)
+            const handleChange = (poiIds) => {
+              this.handleModifyProduct({ params: { relatingPoiIds: poiIds }, product: row })
+              this.handleModifyRelatingRange([{ ...row, relatingPoiIds: poiIds }])
+            }
             return h(PoiSelect, {
               props: { value: row.relatingPoiIds, disabledIds: row.relatedPoiIds },
               on: { change: handleChange }
@@ -176,10 +179,15 @@
         return getCheckboxSelectStatus(list, this.selectIdList)
       },
       showGroupData () {
-        return splitTagGroupProductByPagination(this.groupList, this.pagination)
+        const data = splitTagGroupProductByPagination(this.groupList, this.pagination)
+        console.log('darta', data)
+        return data
       }
     },
     methods: {
+      handleModifyRelatingRange (productList) {
+        this.$emit('modify-range', productList)
+      },
       getProduct (product) {
         const id = getUniqueId(product)
         const cache = this.cacheProduct[id] || {}

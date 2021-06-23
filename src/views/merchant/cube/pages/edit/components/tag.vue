@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-  import { isEmptyArray } from '@/views/product-recommend/utils'
+  import { isEmptyArray } from '../../../utils'
   import TagList from '@/components/taglist'
 
   export default {

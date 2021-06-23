@@ -22,6 +22,7 @@
         @single-create="handleSingleCreate"
         @delete="handleDelete"
         @modify-product="handleModifyProduct"
+        @modify-range="handleRangeChange"
         @modify-sku="handleModifySku"
       />
     </div>
@@ -30,12 +31,13 @@
 <script>
   import ProductList from '../components/product-list'
   import { helper } from '../../../store'
-  import { getUniqueId } from '@/views/product-recommend/utils'
+  import { getUniqueId } from '../../../utils'
   import lx from '@/common/lx/lxReport'
   import { mapModule } from '@/module/module-manage/vue'
   import { PRODUCT_TAG_COUNT } from '@/module/subModule/product/moduleTypes'
 
   const { mapState, mapActions } = helper('multiCubeEdit')
+  const { mapActions: mapRootActions } = helper()
 
   export default {
     name: 'product-recommend-edit-list-container',
@@ -85,7 +87,13 @@
               }).map((product) => {
                 const id = getUniqueId(product)
                 // tabId 特殊处理，从之前缓存中匹配
-                return { tabId: product.tabId, ...(this.productInfoMap[id] || product), productLabelIdList: (product.productLabelIdList || this.productInfoMap[id].productLabelIdList) }
+                console.log('product', product, this.productInfoMap)
+                return {
+                  tabId: product.tabId,
+                  ...(this.productInfoMap[id] || product),
+                  relatingPoiIds: product.relatingPoiIds || this.productInfoMap[id].relatingPoiIds,
+                  productLabelIdList: product.productLabelIdList || this.productInfoMap[id].productLabelIdList
+                }
               })
             }))
           }
@@ -98,6 +106,9 @@
       }
     },
     methods: {
+      ...mapRootActions({
+        handleRangeChange: 'poiRelatingRangeChange'
+      }),
       ...mapActions({
         handleModifyProduct: 'modifyProduct',
         handleModifySku: 'modifySku',
