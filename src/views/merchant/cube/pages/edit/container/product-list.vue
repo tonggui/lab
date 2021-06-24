@@ -1,10 +1,10 @@
 <template>
-  <div class="product-recommend-edit-list">
-    <div class="product-recommend-edit-list-title">
+  <div class="merchant-cube-edit-list">
+    <div class="merchant-cube-edit-list-title">
       完善商品信息
-      <small>本次已上架<span class="product-recommend-edit-list-title-num">{{ createdProductCount }}</span>个商品，剩余<span class="product-recommend-edit-list-title-num">{{ remainingProductCount }}</span>个商品待上架</small>
+      <small>本次已上架<span class="merchant-cube-edit-list-title-num">{{ createdProductCount }}</span>个商品，剩余<span class="merchant-cube-edit-list-title-num">{{ remainingProductCount }}</span>个商品待上架</small>
     </div>
-    <div class="product-recommend-edit-list-content">
+    <div class="merchant-cube-edit-list-content">
       <ProductEmpty v-if="empty">
         <p slot="description">本次所选商品已全部上架</p>
         <template slot="operation">
@@ -14,18 +14,46 @@
       </ProductEmpty>
       <ProductList
         v-else
-        class="product-recommend-edit-list-table"
+        class="merchant-cube-edit-list-table"
         :cache-product-default-value="cacheProductDefaultValue"
         :cache-product="cacheProduct"
         :group-list="groupList"
         :maxTagCount="maxTagCount"
-        @single-create="handleSingleCreate"
+        :autoSetting="autoSetting"
+        :relInfo="relInfoDesc"
+        @rel-modal="(val) => relModalVisible = val"
+        @batch-create="handleBatchCreateConfirm"
         @delete="handleDelete"
         @modify-product="handleModifyProduct"
         @modify-range="handleRangeChange"
         @modify-sku="handleModifySku"
       />
     </div>
+    <Modal
+      :closable="false"
+      :width="800"
+      :value="relModalVisible"
+      @on-cancel="() => handleModalVisible(false)"
+      @on-ok="() => handleModalVisible(true)"
+      class-name="merchant-cube-edit-setting-modal"
+    >
+      <div slot="header">
+        <div class="header">请确认关联后商品信息更新范围</div>
+      </div>
+      <RadioGroup v-model="type">
+        <Radio label="all">
+          <span>全部信息</span>
+        </Radio>
+        <Radio label="exclude">
+          <span>除价格、库存的信息</span>
+        </Radio>
+        <Radio label="only">
+          <span>仅关联门店商品，不更新商品信息</span>
+        </Radio>
+      </RadioGroup>
+      <RelSample :type="type" class="sample" />
+      <Checkbox v-model="autoSettingEnable">开启默认设置</Checkbox>
+    </Modal>
   </div>
 </template>
 <script>
@@ -35,20 +63,44 @@
   import lx from '@/common/lx/lxReport'
   import { mapModule } from '@/module/module-manage/vue'
   import { PRODUCT_TAG_COUNT } from '@/module/subModule/product/moduleTypes'
+  import RelSample from '@/views/merchant/batch-management/new-batch-rel/components/rel-sample'
+  import LocalStorage, { KEYS } from '@/common/local-storage'
 
   const { mapState, mapActions } = helper('multiCubeEdit')
   const { mapActions: mapRootActions } = helper()
 
+  const REL_INFO = {
+    'all': '全部信息',
+    'exclude': '除价格、库存的信息',
+    'only': '仅关联门店商品，不更新商品信息'
+  }
+
   export default {
-    name: 'product-recommend-edit-list-container',
+    name: 'merchant-cube-edit-list-container',
+    data () {
+      return {
+        relInfo: REL_INFO,
+        relModalVisible: false,
+        type: 'all',
+        autoSettingEnable: LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING]
+      }
+    },
     props: {
       tagGroupProduct: {
         type: Object,
         required: true
       }
     },
+    watch: {
+      relModalVisible (val) {
+        if (val) {
+          this.autoSettingEnable = this.autoSetting
+        }
+      }
+    },
     components: {
-      ProductList
+      ProductList,
+      RelSample
     },
     computed: {
       ...mapState({
@@ -98,11 +150,16 @@
             }))
           }
         })
-        console.log('list', list)
         return list
       },
       empty () {
         return !this.groupList || this.groupList.length <= 0
+      },
+      autoSetting () {
+        return LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING]
+      },
+      relInfoDesc () {
+        return REL_INFO[this.type]
       }
     },
     methods: {
@@ -114,9 +171,32 @@
         handleModifySku: 'modifySku',
         resetCreatedProductCount: 'resetCreatedProductCount',
         resetCreatedProductIdList: 'resetCreatedProductIdList',
-        handleSingleCreate: 'singleCreate',
+        // handleSingleCreate: 'singleCreate',
+        handleBatchCreate: 'batchCreate',
         destroy: 'destroy'
       }),
+      handleRequest (val) {
+        const params = {}
+        if (this.type === 'all') {
+          params.syncType = 1
+        } else if (this.type === 'exclude') {
+          params.syncType = 1
+          params.excludeSyncContent = [8, 9]
+        } else {
+          params.syncType = 10
+        }
+        this.handleBatchCreate(params)
+      },
+      handleModalVisible (visble) {
+        if (visble) LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING] = this.autoSettingEnable
+        this.relModalVisible = false
+        this.handleRequest()
+      },
+      handleBatchCreateConfirm (val) {
+        console.log('val', val)
+        if (!LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING]) this.relModalVisible = true
+        else this.handleRequest()
+      },
       handleDelete (productList) {
         this.$emit('delete', productList)
       },
@@ -165,7 +245,7 @@
   }
 </script>
 <style lang="less">
-  .product-recommend-edit-list {
+  .merchant-cube-edit-list {
     background: @component-bg;
     display: flex;
     flex-direction: column;
@@ -197,6 +277,28 @@
       flex-direction: column;
       justify-content: center;
     }
+    &-footer {
+      height: 72px;
+      padding: 16px 30px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      box-shadow: 0 0 6px 0 rgba(0,0,0,0.08);
+      .create-btn {
+        height: 40px;
+        line-height: 40px;
+        width: 96px;
+        text-align: center;
+        font-size: 14px;
+        color: #222222;
+        cursor: pointer;
+        font-weight: 500;
+        font-family: PingFangSC-Medium;
+        margin-left: 24px;
+        background-image: linear-gradient(-45deg, #FFC34D 0%, #FFE14D 100%);
+        border-radius: 25px;
+      }
+    }
     &-table {
       flex: 1;
       overflow: hidden;
@@ -205,6 +307,16 @@
       .quick-edit-product-table-container {
         flex: 1;
       }
+    }
+  }
+  .merchant-cube-edit-setting-modal {
+    .header {
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .sample {
+      margin: 10px 0;
     }
   }
 </style>

@@ -5,6 +5,9 @@ import {
   // fetchSubmitBatchCreateRecommendProduct,
   fetchSubmitMultiCreateRecommendProduct
 } from '@/data/repos/product'
+import {
+  getCubeBatchSaveProduct
+} from '@/data/repos/merchantCube'
 
 export default {
   multiCubeList: {
@@ -22,7 +25,7 @@ export default {
     }
   },
   multiCubeEdit: {
-    // batchCreate: fetchSubmitBatchCreateRecommendProduct,
+    batchCreate: getCubeBatchSaveProduct,
     singleCreate: fetchSubmitMultiCreateRecommendProduct
   }
 }

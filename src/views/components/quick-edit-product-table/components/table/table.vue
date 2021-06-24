@@ -47,6 +47,7 @@
         ref="pagination"
       />
     </div>
+    <slot name="footer"></slot>
     <Loading v-if="loading" />
   </div>
 </template>

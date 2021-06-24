@@ -33,6 +33,15 @@
       @delete="handleBatchDelete"
       @select-all="handleSelectAll"
     />
+    <template slot="footer">
+      <div class="merchant-cube-edit-list-footer">
+        <template v-if="autoSetting">
+          关联商品信息默认更新范围"{{relInfo}}"&nbsp;
+          <Icon local="set" size="14" style="color: #ff6a00" @click="$emit('rel-modal', true)" />
+        </template>
+        <div class="create-btn" @click="handleBatchCreate">确定创建</div>
+      </div>
+    </template>
   </QuickEditProductTable>
 </template>
 <script>
@@ -40,7 +49,7 @@
   import { TYPE } from '@/views/components/quick-edit-product-table/constants'
   import Tag from '../tag'
   import Operation from '../operation'
-  import BatchOperation from '@/views/product-recommend/pages/product-recommend-edit/components/batch-operation'
+  import BatchOperation from '../batch-operation'
   import GroupHeader from '@/views/product-recommend/pages/product-recommend-edit/components/group-header'
   import Error from '@/views/product-recommend/pages/product-recommend-edit/components/product-list/error'
   import { defaultPagination } from '@/data/constants/common'
@@ -56,6 +65,7 @@
   import lx from '@/common/lx/lxReport'
   import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
   import PoiSelect from '../../../list/components/poi-select'
+  import validate from './validate'
 
   export default {
     name: 'product-recommend-edit-table',
@@ -66,6 +76,8 @@
       Error
     },
     props: {
+      autoSetting: Boolean,
+      relInfo: String,
       source: Array,
       groupList: Array,
       cacheProduct: Object,
@@ -180,7 +192,6 @@
       },
       showGroupData () {
         const data = splitTagGroupProductByPagination(this.groupList, this.pagination)
-        console.log('darta', data)
         return data
       }
     },
@@ -279,6 +290,57 @@
           }
         })
         this.triggerDelete(productList)
+      },
+      handleBatchCreate () {
+        this.loading = true
+        let errorInfo = {}
+        const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList, (row) => {
+          const id = getUniqueId(row)
+          const cache = this.cacheProduct[id] || {}
+          const cacheDefault = this.cacheProductDefaultValue[id] || {}
+          return mergeProduct(row, cacheDefault, cache)
+        })
+        // 商品信息是否完整校验
+        errorInfo = validate(productList) || {}
+        const errorCount = Object.keys(errorInfo).length
+        const createTotal = productList.length
+        if (errorCount > 0) {
+          this.errorInfo = errorInfo
+          this.loading = false
+          if (errorCount === createTotal) {
+            this.$Message.warning('你选择的全部商品信息未填充完整，请完善后再创建。')
+          } else {
+            this.$Message.warning(`你选择的${errorCount}个商品信息未填充完整，请完善后再创建。`)
+          }
+          return
+        }
+        this.$emit('batch-create', productList, this.createCallback((error) => {
+          errorInfo = error || {}
+          const errorCount = Object.keys(errorInfo).length
+          if (errorCount === createTotal) {
+            this.$Message.warning('选择商品全部创建失败')
+          } else {
+            const successCount = createTotal - errorCount
+            const successProductList = productList.filter(p => {
+              const id = getUniqueId(p)
+              return !errorInfo[id]
+            })
+            if (successCount === createTotal) {
+              this.$Message.success(`已成功创建${productList.length}个商品`)
+            } else {
+              this.$Message.warning(`已成功创建${successCount}个商品，其余${errorCount}个创建失败`)
+            }
+            // 是否全部创建成功
+            this.triggerCreateCallback(this.total === successCount)
+            this.deleteCallback(successProductList)
+          }
+          this.errorInfo = errorInfo
+          this.loading = false
+        }, (err) => {
+          console.error(err)
+          this.loading = false
+          this.$Message.error(err.message)
+        }))
       },
       async handleSingleCreate (product) {
         return new Promise((resolve) => {

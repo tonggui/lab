@@ -61,3 +61,13 @@ export const apiCubeTaskStatus = ({ taskType = 203 } : { taskType: number }) => 
  * @param taskId
  */
 export const apiCubeTaskConfirm = ({ taskId } : { taskId: number }) => httpClient.post('/hqcc/r/cubeRunningTaskConfirm', { taskId })
+
+/**
+ * 魔方商品批量创建
+ * @param taskId
+ */
+export const apiCubeBatchSaveProduct = ({
+  params
+}) => httpClient.post('/hqcc/cube/w/batchSaveProduct', {
+  ...params
+})
