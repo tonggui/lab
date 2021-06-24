@@ -45,15 +45,7 @@
       'currentScope': {
         immediate: true,
         handler (v) {
-          if (v !== '' && typeof this.scopeList === 'undefined') {
-            console.log(v)
-            const scope = this.scopeList && this.scopeList.find(item => item.id === this.currentScope.poiId)
-            console.log(scope)
-            this.scope = {
-              cityName: get(scope, 'cityName') || '',
-              poiName: get(scope, 'poiName') || ''
-            }
-          }
+          this.selection(true)
         }
       }
     },
@@ -67,9 +59,7 @@
         productListError: state => state.multiCubeList.productList.error
       }),
       operationInfo () {
-        // console.log(this.currentScope)
         const scope = this.scopeList && this.scopeList.find(item => item.id === this.currentScope.poiId)
-        // console.log(scope)
         return {
           cityName: get(scope, 'cityName') || '',
           poiName: get(scope, 'poiName') || ''
@@ -81,20 +71,7 @@
       },
       selectedIdList () {
         console.log(this.classifySelectedProducts)
-        return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
-          productList.forEach(({ __id__, relatedPoiIds, relatingPoiIds, totalPoiIds }) => {
-            // 当前范围所有门店是否在当前商品的待关联门店范围内
-            let flag = totalPoiIds.every(item => {
-              return relatingPoiIds.indexOf(item) > -1 || relatedPoiIds.indexOf(item) > -1
-            })
-            // console.log(flag)
-            if (flag) {
-              prev.push({ __id__, relatedPoiIds, relatingPoiIds })
-            }
-          })
-          console.log(prev)
-          return prev
-        }, [])
+        return this.selection()
       }
     },
     components: {
@@ -130,6 +107,29 @@
           this.error = true
           this.$Message.error(err.message || err)
         })
+      },
+      selection (type = false) {
+        if (type) {
+          return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
+            productList.forEach(({ __id__, relatedPoiIds, relatingPoiIds, totalPoiIds }) => {
+              // 当前范围所有门店是否在当前商品的待关联门店范围内
+              let flag = totalPoiIds.every(item => {
+                return relatingPoiIds.indexOf(item) > -1 || relatedPoiIds.indexOf(item) > -1
+              })
+              console.log(flag)
+              if (flag) {
+                prev.push({ __id__, relatedPoiIds, relatingPoiIds })
+              }
+            })
+            console.log(prev)
+            return prev
+          }, [])
+        } else {
+          return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
+            productList.forEach(({ __id__, relatedPoiIds, relatingPoiIds, totalPoiIds }) => prev.push({ __id__, relatedPoiIds, relatingPoiIds }))
+            return prev
+          }, [])
+        }
       }
     },
     mounted () {
