@@ -212,3 +212,23 @@ export const submitBatchUploadImg = (params: {
     v2: 1
   })
 }
+
+/**
+ * 批量新建查询
+ * @param poiId
+ */
+export const getRetailBatchInsertTask = (poiId: number) => {
+  return httpClient.post('task/r/getRetailBatchInsertTask', {
+    wmPoiId: poiId
+  })
+}
+
+/**
+ * 批量新建查询
+ * @param poiId
+ */
+export const finishBatchInsertNew = (taskId: number) => {
+  return httpClient.post('task/w/finishBatchInsertNew', {
+    taskId
+  })
+}
