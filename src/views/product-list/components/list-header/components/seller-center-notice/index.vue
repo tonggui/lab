@@ -228,6 +228,8 @@
       > div {
         display: inline-block;
         margin-left: 12px;
+        height: 28px;
+        line-height: 28px;
       }
     }
 
