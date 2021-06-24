@@ -218,7 +218,7 @@
           })
           items = items.slice(0, this.maxSelected)
         }
-        if (this.classifySelectedProductsInfo > 0) {
+        if (this.classifySelectedProductsInfo.length > 0) {
           items.forEach(item => {
             this.displayTips(item, true)
           })
@@ -230,53 +230,62 @@
         this.displayTips(deSelectItem, false)
       },
       displayTips (item, type) {
-        console.log('===o')
-        let ele = {}
+        // console.log('===o')
+        let target = {}
         this.classifySelectedProductsInfo.forEach(({ productList }) => {
-          ele = productList.find(({ __id__ }) => {
+          target = productList.find(({ __id__ }) => {
             return item.id === __id__
           })
         })
-        console.log(ele)
-        console.log('=====')
-        console.log(this.rowScopeList)
-        const cityIds = new Map()
-        if (JSON.stringify(ele) !== '{}') {
-          let pois = type === true ? ele['relatingPoiIds'].concat(ele['relatedPoiIds']) : ele['relatingPoiIds']
-          let tmp = {}
-          pois.forEach(item => {
-            tmp = this.rowScopeList.find(i => i.id === item)
-            if (JSON.stringify(tmp) !== '{}') {
-              cityIds.has(tmp.cityName) ? cityIds.set(tmp.cityName, [].push(tmp.cityId)) : cityIds.set(tmp.cityName, cityIds.get(tmp.cityName).push(tmp.cityId))
-            }
-          })
-          if (cityIds.size === this.scopeList.length && type === true) {
+        // console.log(target)
+        // console.log(this.rowScopeList)
+        if (target) {
+          // console.log('=====')
+          let pois = type === true ? target['relatingPoiIds'].concat(target['relatedPoiIds']) : target['relatingPoiIds']
+          const alreadyCities = this.getCitiesList(pois)
+          const totalCities = this.getCitiesList(target.totalPoiIds)
+          if (alreadyCities.size === totalCities.size && pois.length === item.totalPoiIds.length && type === true) {
             this.displayContent = '全国所有门店'
           } else {
             let cityCount = 0
             let poiCount = 0
             let cityName = ''
-            for (let key in cityIds) {
-              if (cityCount < 3) {
+            for (let key of alreadyCities.keys()) {
+              cityName += cityCount > 0 ? '、' : ''
+              if (cityCount <= 3) {
                 cityName += key
                 cityCount++
-                poiCount += cityIds[key].size()
+                poiCount += Array.isArray(alreadyCities.get(key)) ? alreadyCities.get(key).length : 1
               } else break
-              cityName += '、'
             }
-            if (cityIds.size === 1) {
+            if (alreadyCities.size === 1) {
               if (poiCount === 1) {
-                let poiName = this.rowScopeList.find(i => i.id === item).name
+                let poiName = this.rowScopeList.find(i => i.id === item.id).name
                 this.displayContent = `${poiName}`
               } else this.displayContent = `${cityName}${poiCount}个门店`
             } else this.displayContent = `${cityName}等${cityCount}个城市共${poiCount}个门店`
           }
           let selContent = `已选列表存在该商品，该商品关联门店范围将修改为${this.displayContent}，且商品关联门店自动变更为${this.displayContentScope}门店`
-          let deselContent = `由于该商品在${this.displayContent}待创建，已选列表仍然保留该商品`
+          let deSelContent = `由于该商品在${this.displayContent}待创建，已选列表仍然保留该商品`
           this.$Message.info({
-            content: type === true ? selContent : deselContent
+            content: type === true ? selContent : deSelContent
           })
         }
+      },
+      getCitiesList (pois) {
+        const cityIds = new Map()
+        let tmp = {}
+        pois.forEach(item => {
+          tmp = this.rowScopeList.find(i => i.id === item)
+          if (!cityIds.has(tmp.cityName)) {
+            cityIds.set(tmp.cityName, [].push(item))
+          } else {
+            let arr = Array.isArray(cityIds.get(tmp.cityName)) ? cityIds.get(tmp.cityName) : []
+            arr.push(item)
+            cityIds.set(tmp.cityName, arr)
+          }
+        })
+        return cityIds
       }
     }
   }

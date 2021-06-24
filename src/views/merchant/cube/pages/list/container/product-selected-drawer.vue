@@ -12,15 +12,14 @@
       <span>
         按关联分店筛选
       </span>
-      <Select label="按关联分店筛选" style="width:200px; margin:0px 10px" line
-              v-model="currentScope.cityId"
-              filterable clearable
-              @on-change="handleSelectedCity" placeholder="Select your city">
+      <Select label="按关联分店筛选" style="width:150px; margin:0px 10px" line
+              v-model="selectScope.cityId" filterable placeholder="Select your city">
         <Option v-for="item in scopeList" :value="item.cityId" :key="item.cityId" >{{item.cityName}}</Option>
       </Select>
-      <Select style="width:200px" v-model="currentScope.poiId" :disabled="shopDisabled" placeholder="Select your shop" filterable clearable line>
+      <Select style="width:150px" v-model="selectScope.poiId" :disabled="selectScope.cityId === -1" placeholder="Select your shop" filterable line>
         <Option v-for="item in shopList" :value="item.id" :key="item.id">{{item.name}}</Option>
       </Select>
+<!--      <Button type="primary" style="margin:0px 10px" @click="handleFilterScope">筛选</Button>-->
     </div>
     <div class="header">
       <span class="content-span" style="width: 70%;">商品信息</span>
@@ -38,6 +37,7 @@
           :key="item[0]"
           :title="item[1].name"
           :children="item[1].productList"
+          :curScopePoiIdMap = "curScopePoiIdMap"
           @on-unselect="handleItemUnselect"
         />
       </template>
@@ -71,26 +71,26 @@
     },
     data () {
       return {
-        shopDisabled: false,
-        currentScope: {
-          cityId: '',
-          poiId: ''
-        }
+        selectScope: {
+          cityId: -1,
+          poiId: -1
+        },
+        curScopePoiIdMap: {}
       }
     },
     computed: {
       ...mapState({
-        currentScopeId: state => state.multiCubeList.currentScope,
         scopeList: state => state.multiCubeList.scopeList,
         currentPoiIds: state => state.multiCubeList.currentPoiIds,
         dataSourceList: 'classifySelectedProducts'
       }),
       showDataSourceList () {
+        this.handleFilterScope()
         return covertObjectToSequenceArr(this.dataSourceList)
       },
       shopList () {
         let tmp = this.scopeList.filter(item => {
-          if (item.cityId === this.currentScope.cityId) {
+          if (item.cityId === this.selectScope.cityId) {
             return item.poiList
           }
         })
@@ -103,32 +103,10 @@
     watch: {
       total (val) {
         if (val <= 0) this.handleClose()
-      },
-      'currentScope.cityId': {
-        immediate: true,
-        handler (v) {
-          if (typeof v === 'undefined') {
-            this.shopDisabled = true
-          } else this.shopDisabled = false
-        }
-      },
-      'currentScopeId.cityId': {
-        immediate: true,
-        handler (v) {
-          if (v !== '' && typeof v !== 'undefined') {
-            this.currentScope = {
-              cityId: this.currentScopeId.cityId,
-              poiId: this.currentScopeId.poiId
-            }
-          }
-        }
       }
     },
     methods: {
       ...mapActions(['deSelectProduct', 'clearSelected']),
-      handleSelectedCity (v) {
-        console.log(v)
-      },
       handleClose () {
         this.$emit('on-drawer-close')
       },
@@ -164,6 +142,43 @@
       },
       handleCreate () {
         if (this.total > 0) this.$emit('on-click-create')
+      },
+      handleFilterScope () {
+        let self = this
+        this.curScopePoiIdMap = {}
+        let choosePoiList = this.choosePoiList()
+        const map = {}
+        for (let key in this.dataSourceList) {
+          let dataItem = this.dataSourceList[key].productList
+          dataItem.forEach(item => {
+            let poiIds = item.relatedPoiIds.slice().concat(item.relatingPoiIds.slice())
+            poiIds.forEach(ele => {
+              // 不是全国范围则筛选
+              if (self.selectScope.cityId !== -1 && self.selectScope.cityId !== undefined) {
+                if (choosePoiList.indexOf(ele) !== -1) {
+                  map[item.id] = 1
+                }
+              } else {
+                map[item.id] = 1
+              }
+            })
+          })
+        }
+        this.curScopePoiIdMap = map
+      },
+      choosePoiList () {
+        if (this.selectScope.cityId !== -1 && this.selectScope.cityId !== undefined) {
+          let poiList = []
+          if (this.selectScope.poiId === -1 || this.selectScope.poiId === undefined) {
+            poiList = this.scopeList.find(item => {
+              return item.cityId === this.selectScope.cityId
+            }).poiList || []
+            return poiList.map(item => item.id)
+          } else {
+            poiList.push(this.selectScope.poiId)
+            return poiList
+          }
+        } else return []
       }
     }
   }

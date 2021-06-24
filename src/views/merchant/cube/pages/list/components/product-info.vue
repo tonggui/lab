@@ -76,6 +76,11 @@
       starValue () {
         return get(this.hotValue, 'star')
       },
+      // hotSaleDetailsInfo () {
+      //   for (let item in this.product.hotSaleDetailsMap) {
+      //
+      //   }
+      // },
       labelInfo () {
         return {
           value: get(this.hotValue, 'dataValue'),
