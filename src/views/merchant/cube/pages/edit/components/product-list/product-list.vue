@@ -150,7 +150,7 @@
               this.handleModifyRelatingRange([{ ...row, relatingPoiIds: poiIds }])
             }
             return h(PoiSelect, {
-              props: { value: row.relatingPoiIds, disabledIds: row.relatedPoiIds },
+              props: { product: row, value: row.relatingPoiIds, disabledIds: row.relatedPoiIds },
               on: { change: handleChange }
             })
           }
