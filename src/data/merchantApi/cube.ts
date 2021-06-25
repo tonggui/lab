@@ -82,3 +82,9 @@ export const apiCubeBatchSaveProduct = ({
     excludeSyncContent
   })
 }
+
+/**
+ * 魔方商品批量创建
+ * @param taskId
+ */
+export const apiCubeSwitch = () => httpClient.post('/hqcc/cube/r/cubeSwitch')

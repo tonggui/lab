@@ -18,7 +18,7 @@
   const { mapState, mapActions } = helper()
 
   export default {
-    name: 'product-recommend-edit-page',
+    name: 'merchant-cube-edit-page',
     components: {
       ProductList
     },
