@@ -94,7 +94,7 @@
               st_spu_id: this.product.spId || 0,
               source_id: 1,
               viewtime: `${(SearchTime.getSearchTime() + FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}, ${SearchTime.getSearchTime()}, ${(FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}`,
-              select_time: +new Date(response.serverTime || Date.now()),
+              select_time: +new Date(response.serverTime || Date.now()).getTime(),
               list: TimeCounters.getResult(),
               trace_id: traceId
             }

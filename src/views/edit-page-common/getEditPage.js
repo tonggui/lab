@@ -9,6 +9,7 @@ import { isEditLimit } from '@/common/product/editLimit'
 import AuditMixinFn from '@/views/components/configurable-form/plugins/audit/auditMixin'
 import { uuid } from '@utiljs/guid'
 import { SKU_FIELD, SPU_FIELD } from '@/views/components/configurable-form/field'
+import { SearchTime } from '@/common/lx/lxReport/lxTime'
 
 const DETAIL_ATTR_MAP = {
   10: SPU_FIELD.NAME,
@@ -115,7 +116,7 @@ export default ({ Component }) => (Api) => {
         const traceId = uuid()
         const others = {
           traceId,
-          biz: get(this, '$route.query.spId') ? '从商品库新建（单店）' : (window.page_source === 3 ? '经营分析商家体检新建（单店）' : (product.spId ? '单个商品搜索新建（单店）' : '单个商品手动新建（单店）')),
+          biz: get(this, '$route.query.spId') ? '从商品库新建（单店）' : (window.page_source === 3 ? '经营分析商家体检新建（单店）' : (SearchTime.getSearchTime() ? '单个商品搜索新建（单店）' : '单个商品手动新建（单店）')),
           ext: get(window, 'page_source_param.task_id')
         }
         // 活动卡控
