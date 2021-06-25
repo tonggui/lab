@@ -48,7 +48,7 @@
         } = processStatus || {}
         this.status = status
 
-        if (taskId < 0) this.$router.push({ name: 'merchantCubeList' })
+        if (taskId <= 0) this.$router.push({ name: 'merchantCubeList' })
         if (status === BATCH_REL_TASK_STATUS.FINISH) this.$router.push({ name: 'merchantCubeProcessResult' })
 
         if (runningStatus === RUNNING_STATUS.PRODUCT_CREATE) {

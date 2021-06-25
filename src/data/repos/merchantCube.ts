@@ -5,7 +5,7 @@ import {
   apiCubeSwitch
 } from '@/data/merchantApi/cube'
 
-export const getCubeTaskStatus = (taskType) => apiCubeTaskStatus({ taskType })
+export const getCubeTaskStatus = () => apiCubeTaskStatus()
 
 export const getCubeTaskConfirm = (taskId) => apiCubeTaskConfirm({ taskId })
 

@@ -5,9 +5,7 @@ import { convertMultiCubeProductList } from '../helper/product/multiCube/convert
  * 魔方创建任务进度
  * @param taskType
  */
-export const apiCubeTaskStatus = ({ taskType = 203 } : { taskType: number }) => httpClient.post('/hqcc/r/cubeRunningTask', {
-  taskType
-}).then(({ cubeTaskStatus }) => {
+export const apiCubeTaskStatus = () => httpClient.post('/hqcc/r/cubeRunningTask').then(({ cubeTaskStatus }) => {
   const {
     taskId,
     status,
@@ -61,7 +59,7 @@ export const apiCubeTaskStatus = ({ taskType = 203 } : { taskType: number }) => 
  * 确认魔方创建任务
  * @param taskId
  */
-export const apiCubeTaskConfirm = ({ taskId } : { taskId: number }) => httpClient.post('/hqcc/r/cubeRunningTaskConfirm', { taskId })
+export const apiCubeTaskConfirm = ({ taskId } : { taskId: number }) => httpClient.post('/hqcc/w/cubeRunningTaskConfirm', { taskId })
 
 /**
  * 魔方商品批量创建

@@ -48,7 +48,7 @@
           failedUrl
         } = processResult || {}
 
-        if (taskId < 0) this.$router.push({ name: 'merchantCubeList' })
+        if (taskId <= 0) this.$router.push({ name: 'merchantCubeList' })
         this.taskId = taskId
         this.type = resultStatus === BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS ? 'success' : 'fail'
         this.part = resultStatus === BATCH_REL_TASK_RESULT_STATUS.PART_SUCCESS
@@ -57,7 +57,14 @@
       },
       async jumpToCube () {
         await getCubeTaskConfirm(this.taskId)
-        this.$router.push({ name: 'merchantCubeList' })
+        // TODO 首次
+        this.$Modal.info({
+          title: '温馨提示',
+          content: '若您后续还想查看失败商品&分店明细，可通过"商品首页-任务进度"查看',
+          onOk: () => {
+            this.$router.push({ name: 'merchantCubeList' })
+          }
+        })
       },
       async jumpToCenter () {
         await getCubeTaskConfirm(this.taskId)
