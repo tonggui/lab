@@ -225,10 +225,20 @@ export const getRetailBatchInsertTask = (poiId: number) => {
 
 /**
  * 批量新建查询
- * @param poiId
+ * @param taskId
  */
 export const finishBatchInsertNew = (taskId: number) => {
   return httpClient.post('task/w/finishBatchInsertNew', {
     taskId
+  })
+}
+
+/**
+ * 新版批量新建灰度
+ * @param poiId
+ */
+export const inBatchInsertNewGrey = (poiId: number) => {
+  return httpClient.post('retail/r/inBatchInsertNewGrey', {
+    wmPoiId: poiId
   })
 }
