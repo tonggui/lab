@@ -142,9 +142,7 @@
           dimension: 'spu',
           align: 'center',
           width: 192,
-          required: true,
           render: (h, { row }) => {
-            console.log('row', row)
             const handleChange = (poiIds) => {
               this.handleModifyProduct({ params: { relatingPoiIds: poiIds }, product: row })
               this.handleModifyRelatingRange([{ ...row, relatingPoiIds: poiIds }])

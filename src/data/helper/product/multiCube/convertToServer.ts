@@ -1,6 +1,7 @@
 import { MultiCubeProduct } from '@/data/interface/product'
 import { convertCategoryTemplateTag } from '../../category/convertToServer'
 import { convertProductSkuList } from '../withCategoryAttr/convertToServer'
+
 /**
  * TODO
  */
@@ -22,8 +23,11 @@ export const convertMultiCubeProduct = (product: MultiCubeProduct) => {
     isExist: product.isExist ? 1 : 0,
     isHqExist: product.isHqExist,
     relatedPoiIds: product.relatedPoiIds,
-    totalPoiIds: product.totalPoiIds
+    totalPoiIds: product.totalPoiIds,
+    addedPoiIds: product.relatingPoiIds
   }
 }
 
 export const convertMultiCubeProductList = (list) => (list || []).map((item) => convertMultiCubeProduct(item))
+
+export const convertSaveCubeProductList = (list) => (list || []).map((item) => convertMultiCubeProduct(item))

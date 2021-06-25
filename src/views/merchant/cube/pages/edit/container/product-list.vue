@@ -82,7 +82,8 @@
         relInfo: REL_INFO,
         relModalVisible: false,
         type: 'all',
-        autoSettingEnable: LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING]
+        autoSettingEnable: LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING],
+        createProduct: []
       }
     },
     props: {
@@ -193,7 +194,7 @@
         this.handleRequest()
       },
       handleBatchCreateConfirm (val) {
-        console.log('val', val)
+        this.createProduct = val
         if (!LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING]) this.relModalVisible = true
         else this.handleRequest()
       },
