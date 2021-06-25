@@ -2,7 +2,8 @@
   import { isPlainObject, merge, defaultTo, cloneDeep } from 'lodash'
   import HeaderBar from './components/header-bar'
   import { leftMenu, rightMenu } from './config'
-
+  import { poiId } from '@/common/constants'
+  import { inBatchInsertNewGrey } from '@/data/api/batch'
   export default {
     name: 'header-bar-container',
     props: {
@@ -12,6 +13,11 @@
       },
       disabled: Boolean,
       needPermission: Boolean
+    },
+    data () {
+      return {
+        isNewBatchCreate: false
+      }
     },
     components: {
       HeaderBar
@@ -43,6 +49,11 @@
             show = children.length > 0 && (key in moduleMap ? show : true)
           }
           if (show) {
+            if (item.key === 'batchCreate') {
+              item.link = !window.isNewBatchCreate ? {
+                path: '/batchManagement/batchCreate'
+              } : '/reuse/sc/product/views/seller/center/new/create'
+            }
             result.push(item)
           }
         })
@@ -60,6 +71,14 @@
             return menu
           })
       }
+    },
+    mounted () {
+      inBatchInsertNewGrey(poiId).then(data => {
+        if (data.inGrey) {
+          window.isNewBatchCreate = true
+          this.leftMenu = this.reorder(this.filterMenu(cloneDeep(leftMenu), this.moduleMap))
+        }
+      })
     },
     render (h) {
       return h(HeaderBar, {

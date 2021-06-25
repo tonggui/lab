@@ -59,9 +59,9 @@ export const leftMenu = [{
 {
   key: 'batchCreate',
   label: '批量新建',
-  link: !window.isNewBatchCreate ? {
+  link: {
     path: '/batchManagement/batchCreate'
-  } : '/reuse/sc/product/views/seller/center/new/create',
+  },
   icon: BatchCreate,
   bid: 'b_1xrhzpqn',
   description: '通过表格批量新建多个'
