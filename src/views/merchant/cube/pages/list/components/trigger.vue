@@ -1,8 +1,11 @@
 <template>
   <div class="trigger-display">
     <div :class="{'trigger-display-content': true, 'is-disabled': disabled }" @click="$emit('show')">
-      <div class="trigger-display-text">
+      <div v-if="size" class="trigger-display-text">
         <span>{{displayContent}}</span>
+      </div>
+      <div v-else class="trigger-display-empty">
+        请选择关联门店
       </div>
     </div>
   </div>
@@ -15,7 +18,6 @@
     name: 'trigger-display',
     props: {
       allowClear: Boolean,
-      size: Number,
       productId: Number,
       totalPoiIds: Array,
       relatedPoiIds: Array,
@@ -36,6 +38,9 @@
       }),
       classifySelectedProductsInfo () {
         return Object.values(this.classifySelectedProducts)
+      },
+      size () {
+        return this.relatedPoiIds.length + this.relatingPoiIds.length
       }
     },
     watch: {
