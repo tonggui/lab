@@ -1,5 +1,5 @@
 /**
- * @url reuse/sc/product/shangou/cube/r/v2/getRecTabInfo
+ * @url reuse/sc/product/hqcc/cube/r/tabList
  */
 module.exports = {
   code: 0,

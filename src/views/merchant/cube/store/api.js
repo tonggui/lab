@@ -1,21 +1,19 @@
-import { fetchGetProductNewArrivalTabList, fetchGetPoiScopeList } from '@/data/repos/poi'
-import { fetchGetNewArrivalTagList } from '@/data/repos/category'
 import {
+  fetchGetPoiScopeList,
+  fetchSubmitMultiCreateRecommendProduct,
   fetchGetMultiRecommendProductList,
-  // fetchSubmitBatchCreateRecommendProduct,
-  fetchSubmitMultiCreateRecommendProduct
-} from '@/data/repos/product'
-import {
-  getCubeBatchSaveProduct
+  getCubeBatchSaveProduct,
+  fetchGetProductMultiCubeTabList,
+  fetchGetMultiCubeTagList
 } from '@/data/repos/merchantCube'
 
 export default {
   multiCubeList: {
     tab: {
-      getList: fetchGetProductNewArrivalTabList
+      getList: fetchGetProductMultiCubeTabList
     },
     tag: {
-      getList: fetchGetNewArrivalTagList
+      getList: fetchGetMultiCubeTagList
     },
     product: {
       getList: fetchGetMultiRecommendProductList

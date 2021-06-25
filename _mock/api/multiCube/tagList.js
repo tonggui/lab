@@ -1,5 +1,5 @@
 /**
- * @url reuse/sc/product/shangou/cube/r/v2/getRecCategoryInfo
+ * @url reuse/sc/product/hqcc/cube/r/tagList
  */
 const tagList = [{
   id: '1',

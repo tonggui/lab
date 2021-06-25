@@ -8,7 +8,7 @@ import {
   ApiAnomalyType,
   CellularProduct,
   AuditProductInfo,
-  RecommendProduct, MultiCubeProduct
+  RecommendProduct
 } from '../interface/product'
 import {
   BaseCategory
@@ -46,14 +46,7 @@ import {
   convertNewArrivalEditProduct as convertNewArrivalEditProductFromServer,
   convertNewArrivalEditProductList as convertNewArrivalEditProductListFromServer
 } from '../helper/product/newArrivalProduct/convertFromServer'
-import {
-  convertMultiCubeProductList as convertMultiCubeProductListFromServer,
-  // convertMultiCubeEditProduct as convertMultiCubeEditProductFromServer,
-  convertMultiCubeEditProductList as convertMultiCubeEditProductListFromServer
-} from '../helper/product/multiCube/convertFromServer'
-import {
-  convertMultiCubeProductList as convertMultiCubeProductListToServer
-} from '../helper/product/multiCube/convertToServer'
+
 import {
   convertNewArrivalProduct as convertNewArrivalProductToServer,
   convertNewArrivalProductList as convertNewArrivalProductListToServer
@@ -946,49 +939,3 @@ export const getProductPermissionId = ({ appId = 1000 }: { appId: number }) => h
   accountId: getCookie('acctId'),
   appId
 })
-
-/**
- * 获取商品上新推荐数据 (魔方二期)
- */
-export const getMultiCubeProductList = ({ cityId, poiId, keyword, isProductVisible, pagination, tagId, tabId, tagSource } : { cityId: number, poiId: number, tabId: string, pagination: Pagination, isProductVisible: boolean, keyword: string, tagId: number, tagSource: number }) => httpClient.post('hqcc/cube/r/cubeProductList', {
-  cityId: cityId,
-  wmPoiId: poiId,
-  secondCategoryId: tagId,
-  switch: isProductVisible ? 1 : 0,
-  keyword,
-  tabId,
-  tagSource,
-  pageNum: pagination.current,
-  pageSize: pagination.pageSize
-}).then(data => {
-  const { totalCount, recProducts } = (data || {}) as any
-  return {
-    list: convertMultiCubeProductListFromServer(recProducts, tabId, tagSource),
-    pagination: {
-      ...pagination,
-      total: totalCount
-    }
-  }
-})
-
-/**
- * 创建商品前校验
- * @param wmPoiId 门店id
- * @param productCubeVos 商品创建信息
- * 后端接口参数：
- * wmPoiId: poiId
- * productCubeVos
- */
-export const multiCubeCheckProducts = ({ productList }: { productList: MultiCubeProduct[]}) => {
-  const list = convertMultiCubeProductListToServer(productList) // TODO
-  return httpClient.post('hqcc/cube/w/cubeProductValidate', {
-    productCubeVos: JSON.stringify(list)
-  }).then(data => {
-    data = data || {}
-    const { deleteSpuList, editSpuList } = data
-    return {
-      deletedProductList: convertMultiCubeEditProductListFromServer(deleteSpuList),
-      editProductList: convertMultiCubeEditProductListFromServer(editSpuList)
-    }
-  })
-}

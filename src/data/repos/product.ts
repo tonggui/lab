@@ -4,7 +4,7 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product, ProductInfo, ApiAnomalyType, CellularProduct, RecommendProduct, MultiCubeProduct
+  Product, ProductInfo, ApiAnomalyType, CellularProduct, RecommendProduct
 } from '../interface/product'
 import {
   PRODUCT_STATUS,
@@ -71,10 +71,9 @@ import {
   getProductDetailAndMedicine,
   submitEditProductUniSave,
   getNewArrivalProductList,
-  getMultiCubeProductList,
   newArrivalCheckProducts,
   submitSingleCreateNewArrivalProduct,
-  getUpcIsAuditProduct, multiCubeCheckProducts
+  getUpcIsAuditProduct
 } from '../api/product'
 import {
   fetchTaskList
@@ -605,20 +604,3 @@ export const fetchGetUpcIsAuditProduct = (upcCode, auditStatus, poiId) => getUpc
   upcCode,
   auditStatus
 })
-
-// 获取推荐商品列表（多店魔方）
-export const fetchGetMultiRecommendProductList =
-  (pagination: Pagination, { keyword, isProductVisible, tagId, tabId, tagSource } :
-    { tabId: string, keyword: string, isProductVisible: boolean, tagId: number, tagSource: number }, cityId: number, poiId: number) => getMultiCubeProductList({
-    cityId, poiId, keyword, isProductVisible, pagination, tagId, tabId, tagSource
-  })
-
-export const fetchSubmitMultiCreateRecommendProduct = (product: RecommendProduct, extra, poiId) => submitSingleCreateNewArrivalProduct({
-  product,
-  extra,
-  poiId
-})
-
-// 创建商品前校验 (魔方二期)
-// eslint-disable-next-line standard/object-curly-even-spacing
-export const fetchMultiCubeCheckProducts = (productList: MultiCubeProduct[]) => multiCubeCheckProducts({ productList })

@@ -36,7 +36,6 @@ import {
   getPoiConfig,
   getProductNewArrivalSwitch,
   getNewArrivalTabList,
-  getMultiCubeScopeList,
   getBrandProductPromotionGray
 } from '../api/poi'
 
@@ -145,8 +144,3 @@ export const fetchGetProductNewArrivalTabList = (poiId: number) => getNewArrival
  * @param poiId
  */
 export const fetchSettingBrandProductPromotionGray = (poiId) => getBrandProductPromotionGray({ poiId })
-/**
- * 商品上新tab列表(魔方二期)
- * @param poiId
- */
-export const fetchGetPoiScopeList = () => getMultiCubeScopeList()

@@ -58,7 +58,7 @@
   import DeleteProductsModal from '../../../components/delete-products-modal'
   import ErrorPage from '../components/error'
   import EmptyPage from '../components/empty'
-  import { fetchMultiCubeCheckProducts } from '@/data/repos/product'
+  import { fetchMultiCubeCheckProducts } from '@/data/repos/merchantCube'
   import TagList from './tag-list'
   import Tabs from './product-tabs'
   import ProductTableList from './product-list'

@@ -1,11 +1,19 @@
 import httpClient from '@/data/client/instance/merchant'
 import { convertMultiCubeProductList } from '../helper/product/multiCube/convertToServer'
-
+import { MultiCubeProduct } from '../interface/product'
+import {
+  convertMultiCubeProductList as convertMultiCubeProductListFromServer,
+  // convertMultiCubeEditProduct as convertMultiCubeEditProductFromServer,
+  convertMultiCubeEditProductList as convertMultiCubeEditProductListFromServer
+} from '../helper/product/multiCube/convertFromServer'
+import { Pagination } from '@/data/interface/common'
+import { getNewArrivalTagList } from '@/data/api/category'
+import { convertCategoryToTagList } from '@/data/helper/category/convertFromServer'
 /**
  * 魔方创建任务进度
  * @param taskType
  */
-export const apiCubeTaskStatus = () => httpClient.post('/hqcc/r/cubeRunningTask').then(({ cubeTaskStatus }) => {
+export const apiCubeTaskStatus = () => httpClient.post('/hqcc/cube/r/cubeRunningTask').then(({ cubeTaskStatus }) => {
   const {
     taskId,
     status,
@@ -86,3 +94,91 @@ export const apiCubeBatchSaveProduct = ({
  * @param taskId
  */
 export const apiCubeSwitch = () => httpClient.post('/hqcc/cube/r/cubeSwitch')
+
+/**
+ * 商品上新推荐tabList (魔方二期)
+ * @param poiId
+ */
+export const getMultiCubeTabList = ({ poiId } : { poiId: number, }) => httpClient.post('/hqcc/cube/r/tabList', {
+  wmPoiId: poiId
+}).then(data => {
+  data = data['cubeTabInfoVoList'] || []
+  return data.map(tab => { tab.id = `${tab.id}`; return tab })
+})
+/**
+ * 获取上新推荐数据店内分类
+ */
+export const getMultiCubeTagList = ({ poiId, tabId, keyword, tagSource } : { poiId: number, keyword: string, tabId: string, tagSource: number }) => httpClient.post('/hqcc/cube/r/tagList', {
+  wmPoiId: poiId,
+  keyword,
+  tabId,
+  tagSource
+}).then(data => {
+  const {
+    recCategoryList,
+    totalProductCount
+  } = (data || {}) as any
+  return {
+    tagList: convertCategoryToTagList(recCategoryList),
+    tagInfo: {
+      productTotal: totalProductCount || 0
+    }
+  }
+})
+
+export const fetchGetMultiCubeTagList = ({ keyword, tabId, tagSource } : { keyword: string, tabId: string, tagSource: number }, poiId: number) => getNewArrivalTagList({ tabId, keyword, poiId, tagSource })
+
+/**
+ * 商品上新推荐tabList (魔方二期)
+ * @param poiId
+ */
+export const getMultiCubeScopeList = () => httpClient.post('hqcc/r/getAllPoiInfo').then(data => {
+  data = data['poiDetails'] || []
+  return data
+})
+
+/**
+ * 获取商品上新推荐数据 (魔方二期)
+ */
+export const getMultiCubeProductList = ({ cityId, poiId, keyword, isProductVisible, pagination, tagId, tabId, tagSource } : { cityId: number, poiId: number, tabId: string, pagination: Pagination, isProductVisible: boolean, keyword: string, tagId: number, tagSource: number }) => httpClient.post('hqcc/cube/r/cubeProductList', {
+  cityId: cityId,
+  wmPoiId: poiId,
+  secondCategoryId: tagId,
+  switch: isProductVisible ? 1 : 0,
+  keyword,
+  tabId,
+  tagSource,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize
+}).then(data => {
+  const { totalCount, recProducts } = (data || {}) as any
+  return {
+    list: convertMultiCubeProductListFromServer(recProducts, tabId, tagSource),
+    pagination: {
+      ...pagination,
+      total: totalCount
+    }
+  }
+})
+
+/**
+ * 创建商品前校验
+ * @param wmPoiId 门店id
+ * @param productCubeVos 商品创建信息
+ * 后端接口参数：
+ * wmPoiId: poiId
+ * productCubeVos
+ */
+export const multiCubeCheckProducts = ({ productList }: { productList: MultiCubeProduct[]}) => {
+  const list = convertMultiCubeProductList(productList) // TODO
+  return httpClient.post('hqcc/cube/w/cubeProductValidate', {
+    productCubeVos: JSON.stringify(list)
+  }).then(data => {
+    data = data || {}
+    const { deleteSpuList, editSpuList } = data
+    return {
+      deletedProductList: convertMultiCubeEditProductListFromServer(deleteSpuList),
+      editProductList: convertMultiCubeEditProductListFromServer(editSpuList)
+    }
+  })
+}
