@@ -3508,6 +3508,7 @@ data = data.map((item, index) => {
     relatedPoiIds,
     totalPoiIds,
     isDelete: 0,
+    hotSaleDetailsMap:{'近期热销':222},
     ...item,
     ...category,
     labelVo,

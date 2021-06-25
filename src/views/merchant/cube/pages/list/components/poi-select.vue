@@ -1,6 +1,7 @@
 <template>
   <section>
-    <Trigger label="关联门店" :disabled="disabled" @show="handleShowDrawer" @clear="handleClear" :product="product" :size="value.length" allowClear />
+    <Trigger label="关联门店" :disabled="disabled" @show="handleShowDrawer" @clear="handleClear" :productId="productId"
+             :relatedPoiIds="disabledIds" :totalPoiIds="totalPoiIds" :relatingPoiIds="value" :size="value.length" allowClear />
     <PoiSelectDrawer
       title="关联门店"
       v-model="show"
@@ -22,10 +23,8 @@
 
   export default {
     props: {
-      product: {
-        type: Object,
-        required: true
-      },
+      productId: Number,
+      totalPoiIds: Array,
       value: {
         type: Array,
         default: () => ([])

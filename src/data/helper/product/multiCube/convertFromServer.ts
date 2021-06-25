@@ -68,7 +68,7 @@ export const convertMultiCubeEditProduct = (product): MultiCubeProduct => {
     upcCode,
     productLabelIdList: sourceLabelIds || [sourceLabel],
     isDelete: isDelete === 1,
-    hotValueInfo: labelVo,
+    hotSaleDetailsMap: labelVo,
     isExist: Number(isExist) === 1,
     isHqExist: isHqExist === 1,
     relatedPoiIds,

@@ -1,7 +1,7 @@
 <template>
   <div class="trigger-display">
     <div :class="{'trigger-display-content': true, 'is-disabled': disabled }" @click="$emit('show')">
-      <div v-if="size" class="trigger-display-text">
+      <div class="trigger-display-text">
         <span>{{displayContent}}</span>
       </div>
     </div>
@@ -16,12 +16,17 @@
     props: {
       allowClear: Boolean,
       size: Number,
-      product: {
-        type: Object,
-        required: true
-      },
+      productId: Number,
+      totalPoiIds: Array,
+      relatedPoiIds: Array,
+      relatingPoiIds: Array,
       label: String,
       disabled: Boolean
+    },
+    data () {
+      return {
+        displayContent: ''
+      }
     },
     computed: {
       ...mapState({
@@ -31,10 +36,17 @@
       }),
       classifySelectedProductsInfo () {
         return Object.values(this.classifySelectedProducts)
-      },
-      displayContent () {
-        return this.getScopeTips()
       }
+    },
+    watch: {
+      relatingPoiIds (v) {
+        if (v) {
+          this.getScopeTips()
+        }
+      }
+    },
+    mounted () {
+      this.getScopeTips()
     },
     methods: {
       getCitiesList (pois) {
@@ -53,32 +65,37 @@
         return cityIds
       },
       getScopeTips () {
-        let content = ''
-        let pois = this.product['relatingPoiIds'].concat(this.product['relatedPoiIds'])
+        let pois = this.relatingPoiIds.concat(this.relatedPoiIds)
         const alreadyCities = this.getCitiesList(pois)
-        const totalCities = this.getCitiesList(this.product.totalPoiIds)
-        if (alreadyCities.size === totalCities.size && pois.length === this.product.totalPoiIds.length) {
-          content = '全国所有门店'
+        const totalCities = this.getCitiesList(this.totalPoiIds)
+        if (alreadyCities.size === totalCities.size && pois.length === this.totalPoiIds.length) {
+          this.displayContent = '全国所有门店'
         } else {
           let cityCount = 0
           let poiCount = 0
           let cityName = ''
+          let firstPoiId = ''
           for (let key of alreadyCities.keys()) {
-            cityName += cityCount > 0 ? '、' : ''
             if (cityCount <= 3) {
+              cityName += cityCount > 0 ? '、' : ''
               cityName += key
-              cityCount++
-              poiCount += Array.isArray(alreadyCities.get(key)) ? alreadyCities.get(key).length : 1
-            } else break
+            }
+            cityCount++
+            poiCount += Array.isArray(alreadyCities.get(key)) ? alreadyCities.get(key).length : 1
           }
           if (alreadyCities.size === 1) {
             if (poiCount === 1) {
-              let poiName = this.rowScopeList.find(i => i.id === this.product.id).name
-              content = `${poiName}`
-            } else content = `${cityName}${poiCount}个门店`
-          } else content = `${cityName}等${cityCount}个城市共${poiCount}个门店`
+              for (let key of alreadyCities.keys()) {
+                firstPoiId = alreadyCities.get(key)
+                break
+              }
+              let poiName = this.rowScopeList.find(ele => {
+                return ele.id === firstPoiId
+              }).name
+              this.displayContent = `${poiName}`
+            } else this.displayContent = `${cityName}${poiCount}个门店`
+          } else this.displayContent = `${cityName}等${cityCount}个城市共${poiCount}个门店`
         }
-        return content
       }
     }
   }

@@ -25,8 +25,7 @@
         <QualificationTip lackQuaText="该商品需补充资质方可售卖" lackCateText="该商品需申请对应营业资质方可售卖" :product="product" />
       </div>
       <div class="recommend-product-info-hot-data">
-        <template v-if="hotValue.type === 1">平台热销：近30天销量XXXX</template>
-        <div v-else-if="hotValue.type === 0 && labelInfo.value" class="tab-hot"><span class="value">{{labelInfo.value}}</span> {{labelInfo.desc}}</div>
+        <template>{{hotSaleTabInfo}}{{hotSaleValue}}</template>
       </div>
     </template>
     <template slot="scope">
@@ -40,7 +39,6 @@
   import ProductInfoImage from '@/components/product-table-info/product-info-image'
   import Layout from '@/components/product-table-info/layout'
   import QualificationTip from '@/views/product-recommend/pages/product-recommend-list/components/qualification-tip'
-  import { get } from 'lodash'
 
   export default {
     name: 'product-info',
@@ -70,22 +68,14 @@
       QualificationTip
     },
     computed: {
-      hotValue () {
-        return this.product.hotValueInfo || {}
-      },
-      starValue () {
-        return get(this.hotValue, 'star')
-      },
-      // hotSaleDetailsInfo () {
-      //   for (let item in this.product.hotSaleDetailsMap) {
-      //
-      //   }
+      // hotValue () {
+      //   return this.product.hotSaleDetailsMap || {}
       // },
-      labelInfo () {
-        return {
-          value: get(this.hotValue, 'dataValue'),
-          desc: get(this.hotValue, 'dataDesc')
-        }
+      hotSaleTabInfo () {
+        return '近三十天热销'
+      },
+      hotSaleValue () {
+        return 22222
       },
       getSkus () {
         // TODO 商品信息展示

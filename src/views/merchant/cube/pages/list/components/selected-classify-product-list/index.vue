@@ -4,7 +4,7 @@
     <ul class="product-list">
       <li v-for="(item, index) in activeItemList" :key="item.__id__">
         <ProductInfo style="width: 80%;" :product="item" :isSelected="true" :itemscope="false" :currentScope="currentScope" :rowScopeList ="rowScopeList"/>
-        <PoiSelect :product="item" v-model="activeItemList[index].relatingPoiIds" :disabledIds = "activeItemList[index].relatedPoiIds" />
+        <PoiSelect :productId="item.id" :totalPoiIds="item.totalPoiIds" v-model="activeItemList[index].relatingPoiIds" :disabledIds = "activeItemList[index].relatedPoiIds" />
         <Divider type="vertical" />
         <a href="" @click.prevent="$emit('on-unselect', title, item)">取消选择</a>
       </li>

@@ -543,7 +543,7 @@ declare interface MultiCubeProduct {
   productLabelIdList: number[];
   isDelete?: boolean;
   category?: Category;
-  hotValueInfo?: HotValueInfo;
+  hotSaleDetailsMap?: object;
   isExist?: boolean;
   tabId?: string;
   productStatus?: number; // 1-下架，2-售罄，3-售卖中
