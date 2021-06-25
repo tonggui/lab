@@ -1,5 +1,20 @@
 import { getPermission } from '@/views/components/permission-bth/util'
 
+export const getPermissions = (...types) => ({
+  data () {
+    return {
+      permissions: {}
+    }
+  },
+  async created () {
+    console.log(types, this.needPermission)
+    for (let i = 0; i < types.length; i++) {
+      this.permissions[types[i]] = true
+      this.permissions[types[i]] = !this.needPermission || await getPermission(types[i])
+    }
+  }
+})
+
 export const forceGetPermission = (btnType) => ({
   data () {
     return {

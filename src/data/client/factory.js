@@ -92,10 +92,8 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
       throw Error(response.data)
     }
     const { data, headers: { Date, date } } = response
-    console.log(response, date, Date)
     const { code, message } = data
     if (code === 0) {
-      console.log(data, { ...data, serverTime: (date || Date) })
       return successHandler({ ...data, serverTime: date || Date })
     }
     if (code !== undefined) {
