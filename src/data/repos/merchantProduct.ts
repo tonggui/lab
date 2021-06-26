@@ -32,7 +32,7 @@ import {
   getCloseMerchant,
   getRunningTaskStatus,
   getTaskFinish,
-  getUnRelatedProductCount,
+  // getUnRelatedProductCount,
   apiBatchModifyTag
 } from '../merchantApi/product'
 import { getProductList as getMedicineProductList } from '../api/medicineMerchantApi/product'
