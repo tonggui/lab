@@ -113,6 +113,7 @@ export default ({ Component }) => (Api) => {
           usedSuggestCategory
         }
         const extra = poiId
+        // 埋点信息
         const traceId = uuid()
         const others = {
           traceId,
@@ -122,7 +123,7 @@ export default ({ Component }) => (Api) => {
         // 活动卡控
         const res = await isEditLimit(fetchSubmitProduct, { product, params: { ...params, checkActivitySkuModify: true }, extra, others })
         if (typeof res === 'boolean' && res) {
-          const response = fetchSubmitProduct(product, params, extra, others)
+          const response = await fetchSubmitProduct(product, params, extra, others)
           return {
             ...response,
             traceId
@@ -167,15 +168,29 @@ export default ({ Component }) => (Api) => {
         }
       },
       async handleSubmit (product, context, cb, config = {}) {
+        let response = null
         try {
           this.product = product
-          // 透传参数加入兜底逻辑
-          const { noMessage } = config
-          const response = await this.fetchSubmitEditProduct(context)
-          response && !noMessage && this.$Message.success('编辑商品信息成功')
+          /**
+           * 加入兜底逻辑
+           * TODO 由于数据分析发现接口请求已上报埋点，但是前端漏报，猜测是否因为（response后cb前）报错，导致未上报前端埋点
+            */
+          let noMessage = false
+          if (config && typeof config === 'object') {
+            noMessage = config.noMessage
+          }
+          response = await this.fetchSubmitEditProduct(context)
+          if (response && !noMessage) this.$Message.success('编辑商品信息成功')
           cb(response)
         } catch (err) {
-          cb(null, err)
+          /**
+           * TODO 如果response存在，则判定接口请求成功，保证前后端埋点一致性，判断为返回结果正确，允许走入后续流程，保证前端埋点正常上报
+           */
+          if (response && response.traceId) {
+            cb(response)
+          } else {
+            cb(null, err)
+          }
         }
       },
       async handleRevocation (product, cb) {
