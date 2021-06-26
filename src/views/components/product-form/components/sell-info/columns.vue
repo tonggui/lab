@@ -3,7 +3,7 @@
     <slot :columns="columns" />
   </div>
 </template>
-<script>
+<script lang="jsx">
   import {
     PRODUCT_MAX_STOCK,
     ProductUnit,
@@ -20,6 +20,7 @@
   import ValidateInput from '@/components/input/ValidateInput'
   import WithNoUpcSwitch from '@/hoc/withNoUpcSwitch'
   import TimeCounters from '@/common/lx/lxReport/lxTime'
+  import { getPermissions } from '@/views/components/permission-bth/getPermissionMixin'
 
   const isDisabled = (row, disabledMap, key) => !!row.id && !!disabledMap[key]
 
@@ -64,12 +65,14 @@
       skuCount: Number,
       fieldStatus: Object,
       disabled: Boolean,
+      needPermission: Boolean,
       disabledExistSkuColumnMap: {
         type: Object,
         default: () => ({})
       },
       extraColumnConfig: Object
     },
+    mixins: [getPermissions('MODIFY_PRICE', 'MODIFY_STOCK', 'MODIFY_ON_AND_OFF_SHELVES')],
     computed: {
       specNameCol () {
         const base = {
@@ -130,8 +133,8 @@
               max={30000}
               min={0}
               disabled={{
-                input: this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'price'),
-                select: this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'priceUnit')
+                input: !this.permissions['MODIFY_PRICE'] || this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'price'),
+                select: !this.permissions['MODIFY_PRICE'] || this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'priceUnit')
               }}
               separtor='/'
               placeholder="请输入"
@@ -239,7 +242,7 @@
               precision={0}
               max={PRODUCT_MAX_STOCK}
               min={-1}
-              disabled={ this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'stock') || !freightStock}
+              disabled={ !this.permissions['MODIFY_STOCK'] || this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'stock') || !freightStock}
               vOn:on-focus={() => {
                 isInputFocus = true
                 if (!divFocus) {

@@ -176,16 +176,16 @@
         try {
           const poiIdList = this.isSinglePoi ? [this.$route.query.wmPoiId] : this.poiIdList
           const traceId = uuid()
+          const response = await this.submitData(poiIdList, !this.isSinglePoi, this.isUsePicBySp, file, {
+            traceId,
+            isStandard: this.mode.type === 'standard'
+          })
           lx.mc({
             bid: 'b_shangou_online_e_920d7dpf_mc',
             val: {
-              select_time: new Date().getTime(),
+              select_time: +new Date(response.serverTime || Date.now()).getTime(),
               trace_id: traceId
             }
-          })
-          await this.submitData(poiIdList, !this.isSinglePoi, this.isUsePicBySp, file, {
-            traceId,
-            isStandard: this.mode.type === 'standard'
           })
           this.$Message.success('批量创建成功')
           setTimeout(() => {

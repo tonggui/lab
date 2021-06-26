@@ -92,7 +92,7 @@
         }
       },
       auditStatus () {
-        return this.productInfo.auditState
+        return this.productInfo.auditStatus
       },
       auditBtnStatus () {
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
@@ -394,15 +394,6 @@
               }
             })
             if (this.spuId) {
-              LX.mv({
-                bid: 'b_shangou_online_e_61xp3hvd_mv',
-                val: {
-                  spu_id: this.spu_id || response.id || 0,
-                  list: getProductChangInfo(this.product, this.originalFormData),
-                  select_time: +new Date()
-                }
-              })
-            } else {
               if (window.page_source === 3) {
                 LX.mv({
                   bid: 'b_shangou_online_e_xe7mbypq_mv',
@@ -416,20 +407,30 @@
                 })
               } else {
                 LX.mv({
-                  bid: 'b_shangou_online_e_aifq7sdx_mv',
+                  bid: 'b_shangou_online_e_61xp3hvd_mv',
                   val: {
-                    spu_id: this.spuId || response.id || 0,
-                    source_id: 0,
-                    st_spu_id: this.product.spId || 0,
-                    viewtime: `${SearchTime.getSearchTime() + FillTime.getFillTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
-                    list: TimeCounters.getResult(),
-                    trace_id: response.traceId,
-                    select_time: +new Date()
+                    spu_id: this.spu_id || response.id || 0,
+                    list: getProductChangInfo(this.product, this.originalFormData),
+                    select_time: +new Date(response.serverTime || Date.now()).getTime()
                   }
                 })
               }
+            } else {
+              LX.mv({
+                bid: 'b_shangou_online_e_aifq7sdx_mv',
+                val: {
+                  // 后端数据绝对准确的情况下，无兜底逻辑
+                  // spu_id: response.id || this.spuId || 0,
+                  spu_id: response.id,
+                  source_id: 0,
+                  st_spu_id: this.product.spId || 0,
+                  viewtime: `${SearchTime.getSearchTime() + FillTime.getFillTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
+                  list: TimeCounters.getResult(),
+                  trace_id: response.traceId,
+                  select_time: +new Date(response.serverTime || Date.now()).getTime()
+                }
+              })
             }
-
             LXContext.destroyVm()
             this.popConfirmModal(response)
           }

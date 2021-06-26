@@ -203,8 +203,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     auditStatus,
     category,
     isMedicare,
-    limitRuleId,
-    isComplianceUnderAudit
+    isComplianceUnderAudit,
+    limitRuleId
   }
   return node
 }

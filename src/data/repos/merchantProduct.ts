@@ -115,7 +115,7 @@ export const fetchGetCloseMerchant = () => getCloseMerchant()
 
 export const fetchGetCategoryAppealInfo = (id: number) => getCategoryAppealInfo({ id })
 
-export const fetchGetUnRelatedProductCount = () => getUnRelatedProductCount()
+// export const fetchGetUnRelatedProductCount = () => getUnRelatedProductCount()
 
 export const getProductList = async (params) => await isAssociateMedicineMerchant() ? getMedicineProductList(params) : getShopProductList(params)
 

@@ -60,7 +60,10 @@ export const KEYS = {
   // 开通商家中心通过自助开通还是分店导入开通
   MERCHANT_OPEN_WAY: 'merchantOpenWay',
   // 商家商品中心任务进度
-  MERCHANT_TASK_PROCESS: 'merchantTaskProcess'
+  MERCHANT_TASK_PROCESS: 'merchantTaskProcess',
+  // 商家中心欢迎提示
+  MERCHANT_WELCOME: 'merchantWelcome'
+
 }
 
 export const orders = ['MERCHANT_GUIDE', 'MERCHANT_GUIDE_BOOK']

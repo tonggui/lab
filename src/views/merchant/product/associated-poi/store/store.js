@@ -1,4 +1,5 @@
 import message from '@/store/helper/toast'
+import lx from '@/common/lx/lxReport'
 import {
   defaultPagination
 } from '@/data/constants/common'
@@ -161,7 +162,14 @@ export default {
         if (addPoiIdList.length <= 0) {
           throw Error('请选择新增关联的门店')
         }
-        await api.addPoi(getters.spuId, addPoiIdList, arg.traceId)
+        const response = await api.addPoi(getters.spuId, addPoiIdList, arg.traceId)
+        lx.mc({
+          bid: 'b_shangou_online_e_y80tyqr3_mc',
+          val: {
+            select_time: new Date(response.serverTime || Date.now()).getTime(),
+            trace_id: arg.traceId
+          }
+        })
         message.success({
           content: '添加成功',
           duration: 2

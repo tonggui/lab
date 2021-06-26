@@ -15,7 +15,9 @@ import { fetchGetMerchantOpenStatus } from '@/data/repos/merchantProduct'
 import LocalStorage, { KEYS as STORAGE_KEYS } from '@/common/local-storage'
 import { MERCHANT_OPEN_STATUS } from '@/data/enums/product'
 import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
+import MerchantCube from './cube/router'
 import { isAssociateMedicineMerchant } from '@/module/helper/utils'
+// import jumpTo from '@/components/link/jumpTo'
 
 export default [
   {
@@ -62,7 +64,14 @@ export default [
           next()
         } else {
           LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] = false
-          window.location.href = '/reuse/sc/product/views/seller/center/merchant'
+          // 使用此方法在promise后会报错
+          // jumpTo('/reuse/sc/product/views/seller/center/merchant')
+          if (window.bridge && window.bridge.jumpTo) {
+            window.bridge.jumpTo({ href: '/reuse/sc/product/views/seller/center/merchant' })
+          } else {
+            const url = location.protocol + '//' + location.hostname + '/#/reuse/sc/product/views/seller/center/merchant'
+            setTimeout(() => { top.location.href = url })
+          }
         }
       } catch (err) {
         next()
@@ -200,5 +209,16 @@ export default [
       pv: { cid: 'c_shangou_online_e_l1zbbr16' },
       title: '审核详情修改页'
     }
+  },
+  {
+    /* 商家商品库中心 审核中修改页 */
+    name: 'merchantCube',
+    path: 'cube',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_cube" */ './cube/index'
+        ),
+    redirect: { path: '/merchant/cube/list' },
+    children: MerchantCube
   }
 ]

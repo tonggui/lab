@@ -1,15 +1,15 @@
 <template>
   <div class="product-relate-container">
-    <Alert type="warning" class="product-relate-alert" closable v-if="unRelateNum">
-      <div class="left">
-        <Icon type="error" size="17" color="red" />&nbsp;
-        检测到有{{unRelateNum}}个总部商品未关联门店。需商品与分店建立关联，才可实现“总部商品修改、已建立关联分店的商品自动更新”。
-      </div>
-      <div class="right" slot="close">
-        <Button type="primary" @click="handleRelate">立即关联</Button>&nbsp;
-        <Icon type="closed-thin"></Icon>
-      </div>
-    </Alert>
+<!--    <Alert type="warning" class="product-relate-alert" closable v-if="unRelateNum">-->
+<!--      <div class="left">-->
+<!--        <Icon type="error" size="17" color="red" />&nbsp;-->
+<!--        检测到有{{unRelateNum}}个总部商品未关联门店。需商品与分店建立关联，才可实现“总部商品修改、已建立关联分店的商品自动更新”。-->
+<!--      </div>-->
+<!--      <div class="right" slot="close">-->
+<!--        <Button type="primary" @click="handleRelate">立即关联</Button>&nbsp;-->
+<!--        <Icon type="closed-thin"></Icon>-->
+<!--      </div>-->
+<!--    </Alert>-->
     <Alert v-if="taskId !== -1 && isProcessing" type="warning" closable class="product-relate-result">
       <div class="left">
         <div class="title">任务进度</div>
@@ -37,10 +37,10 @@
 </template>
 
 <script>
-  import { fetchGetRunningTaskStatus, fetchGetUnRelatedProductCount } from '@/data/repos/merchantProduct'
+  import { fetchGetRunningTaskStatus } from '@/data/repos/merchantProduct'
   import LocalStorage, { KEYS } from '@/common/local-storage'
   import moment from 'moment'
-  import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
+  import { BATCH_REL_TASK_STATUS, BATCH_REL_TASK_RESULT_STATUS } from '@/data/enums/batch'
   import { jumpTo } from '@components/link'
 
   export default {
@@ -68,25 +68,25 @@
         this.$router.push({ name: 'newBatchRel' })
       },
       async getMerchantTaskStatus () {
-        const { id, status, ctime } = await fetchGetRunningTaskStatus(2)
+        const { id, status, ctime, resultStatus } = await fetchGetRunningTaskStatus(2)
         this.taskId = id
         this.ctime = ctime
         this.status = status
-      },
-      async getUnRelatedProductCount () {
-        const count = await fetchGetUnRelatedProductCount() || 0
-        this.unRelateNum = count
+        // 如果有失败任务，默认跳转到失败页面
+        if (id > 0 && BATCH_REL_TASK_STATUS.FINISH === status && resultStatus !== BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS) {
+          this.handleGoToTask()
+        }
       },
       handleGoToTask () {
         jumpTo(`/reuse/sc/product/views/seller/center/productImport`)
       }
     },
     mounted () {
-      if (LocalStorage[KEYS.MERCHANT_OPEN_STATUS] === false) {
+      if (LocalStorage[KEYS.MERCHANT_OPEN_STATUS] === false && !LocalStorage[KEYS.MERCHANT_WELCOME]) {
         this.$Message.success('欢迎使用，请尽快创建总部商品~')
+        LocalStorage[KEYS.MERCHANT_WELCOME] = true
       }
       this.getMerchantTaskStatus()
-      this.getUnRelatedProductCount()
     }
   }
 </script>

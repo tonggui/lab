@@ -80,7 +80,7 @@
   .nav-link {
     display: inline-block;
     color: @text-color;
-    text-align: center;
+    text-align: left;
     margin-left: 16px;
     font-size: @font-size-base;
     padding: 0;
