@@ -9,6 +9,7 @@ import { isEditLimit } from '@/common/product/editLimit'
 import AuditMixinFn from '@/views/components/configurable-form/plugins/audit/auditMixin'
 import { uuid } from '@utiljs/guid'
 import { SKU_FIELD, SPU_FIELD } from '@/views/components/configurable-form/field'
+import { SearchTime } from '@/common/lx/lxReport/lxTime'
 
 const DETAIL_ATTR_MAP = {
   10: SPU_FIELD.NAME,
@@ -112,19 +113,21 @@ export default ({ Component }) => (Api) => {
           usedSuggestCategory
         }
         const extra = poiId
+        // 埋点信息
         const traceId = uuid()
         const others = {
           traceId,
-          biz: get(this, '$route.query.spId') ? '从商品库新建（单店）' : (window.page_source === 3 ? '经营分析商家体检新建（单店）' : (product.spId ? '单个商品搜索新建（单店）' : '单个商品手动新建（单店）')),
+          biz: get(this, '$route.query.spId') ? '从商品库新建（单店）' : (window.page_source === 3 ? '经营分析商家体检新建（单店）' : (SearchTime.getSearchTime() ? '单个商品搜索新建（单店）' : '单个商品手动新建（单店）')),
           ext: get(window, 'page_source_param.task_id')
         }
         // 活动卡控
         const res = await isEditLimit(fetchSubmitProduct, { product, params: { ...params, checkActivitySkuModify: true }, extra, others })
         if (typeof res === 'boolean' && res) {
-          const response = fetchSubmitProduct(product, params, extra, others)
+          const response = await fetchSubmitProduct(product, params, extra, others)
           return {
             ...response,
-            traceId
+            traceId,
+            isFetchSubmit: true
           }
         } else {
           return res
@@ -166,15 +169,29 @@ export default ({ Component }) => (Api) => {
         }
       },
       async handleSubmit (product, context, cb, config = {}) {
+        let response = null
         try {
           this.product = product
-          // 透传参数加入兜底逻辑
-          const { noMessage } = config
-          const response = await this.fetchSubmitEditProduct(context)
-          response && !noMessage && this.$Message.success('编辑商品信息成功')
+          /**
+           * 加入兜底逻辑
+           * TODO 由于数据分析发现接口请求已上报埋点，但是前端漏报，猜测是否因为（response后cb前）报错，导致未上报前端埋点
+            */
+          let noMessage = false
+          if (config && typeof config === 'object') {
+            noMessage = config.noMessage
+          }
+          response = await this.fetchSubmitEditProduct(context)
+          if (response && !noMessage) this.$Message.success('编辑商品信息成功')
           cb(response)
         } catch (err) {
-          cb(null, err)
+          /**
+           * TODO 如果response存在，则判定接口请求成功，保证前后端埋点一致性，判断为返回结果正确，允许走入后续流程，保证前端埋点正常上报
+           */
+          if (response && response.isFetchSubmit) {
+            cb(response)
+          } else {
+            cb(null, err)
+          }
         }
       },
       async handleRevocation (product, cb) {

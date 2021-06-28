@@ -166,7 +166,7 @@ export default {
         lx.mc({
           bid: 'b_shangou_online_e_y80tyqr3_mc',
           val: {
-            select_time: new Date(response.serverTime || Date.now()),
+            select_time: new Date(response.serverTime || Date.now()).getTime(),
             trace_id: arg.traceId
           }
         })
