@@ -14,6 +14,7 @@ import {
   PRODUCT_SELL_STATUS,
   PRODUCT_STOCK_STATUS,
   PRODUCT_AUDIT_STATUS
+  // MERCHANT_OPEN_STATUS
 } from '../enums/product'
 import {
   convertMerchantProductList as convertMerchantProductListFromServer,
@@ -31,9 +32,70 @@ import {
 } from '../helper/product/merchant/convertToServer'
 import { defaultTo } from 'lodash'
 import { trimSplit, trimSplitId, setHeaderMContext } from '@/common/utils'
+// import { getCookie } from '@utiljs/cookie';
 // import {
 //   convertAuditProductDetail
 // } from '../helper/product/auditProduct/convertFromServer'
+
+/**
+ * 获取商家状态
+ */
+export const getMerchantOpenStatus = () => httpClient.post('hqcc/manage/r/getRelateMerUnionStatus').then(data => {
+  const {
+    merStatus,
+    resetTaskStatus,
+    closeTaskStatus
+  } = data
+  return {
+    closeTaskStatus,
+    resetTaskStatus,
+    merStatus
+  }
+})
+
+/**
+ * 查询正在执行的任务
+ */
+export const getRunningTaskStatus = ({ taskType }) => httpClient.post('hqcc/manage/r/runningTask', {
+  taskType
+}).then(data => {
+  const {
+    taskId,
+    taskName,
+    status,
+    ctime,
+    resultStatus,
+    resultDesc = {}
+  } = data
+
+  return {
+    id: taskId,
+    name: taskName,
+    status,
+    ctime,
+    resultStatus,
+    resultDesc: typeof resultDesc === 'string' ? JSON.parse(resultDesc) : resultDesc
+  }
+})
+
+/**
+ * 提交重置任务
+ */
+export const getResetMerchant = () => httpClient.post('hqcc/manage/w/reset')
+
+/**
+ * 提交关闭任务
+ * @param params
+ */
+export const getCloseMerchant = () => httpClient.post('hqcc/manage/w/close')
+
+/**
+ * 任务确认完成
+ * @param params
+ */
+export const getTaskFinish = ({ taskId }) => httpClient.post('hqcc/manage/w/finishTask', {
+  taskId: taskId || ''
+})
 
 export const getProductList = (params) => {
   const { pagination, keyword, tagId, includeStatus, needTags, brandId, status, startCTime } = params
@@ -361,3 +423,19 @@ export const getAuditProductList = ({ pagination, searchWord, auditStatus } : {
  * @param poiId 门店id
  */
 export const downloadProductList = () => httpClient.post('hqcc/r/downloadMerchantProductByExcel')
+
+/**
+ * 查询未关联的总部商品数量
+ */
+// export const getUnRelatedProductCount = () => httpClient.post('hqcc/r/getUnRelatedProductCount')
+
+/*
+ * 商家商品中心批量修改分类接口
+ */
+export const apiBatchModifyTag = ({ spuIds, type, tagIds, isSelectAll, wmPoiIds }) => httpClient.post('hqcc/w/batchUpdateProductTag', {
+  spuIds,
+  type,
+  tagIds,
+  isSelectAll,
+  wmPoiIds
+})

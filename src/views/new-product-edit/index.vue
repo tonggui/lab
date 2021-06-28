@@ -26,11 +26,11 @@
   import { LX, LXContext } from '@/common/lx/lxReport'
   import TimeCounters, { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
 
-  import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
+  import { PRODUCT_AUDIT_STATUS, BUSINESS_AUDIT_TYPE, COMPLIANCE_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId, decodeParamsFromURLSearch } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
-  import { diffKeyAttrs } from '@/common/product/audit'
+  import { diffCommon, diffKeyAttrs } from '@/common/product/audit'
   import { contextSafetyWrapper, getProductChangInfo } from '@/common/utils'
   import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
@@ -46,12 +46,15 @@
       originalFormData: Object,
       poiNeedAudit: Boolean, // 门店开启审核状态
       supportAudit: Boolean, // 是否支持审核状态
+      businessAuditStatus: Number, // 业务审核状态
+      complianceAuditStatus: Number, // 合规审核状态
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
       usedBusinessTemplate: Boolean,
       upcIsSp: Boolean,
       upcIsAuditPassProduct: Boolean,
-      isAuditFreeProduct: Boolean
+      isAuditFreeProduct: Boolean,
+      needAuditList: Array
     },
     provide () {
       return {
@@ -89,11 +92,16 @@
         }
       },
       auditStatus () {
-        return this.productInfo.auditState
+        return this.productInfo.auditStatus
       },
       auditBtnStatus () {
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
-        return this.needAudit ? 'SUBMIT' : !this.spuId ? 'PUBLISH' : 'SAVE'
+        // 新建
+        if (!this.spuId && (this.businessNeedAudit || this.complianceNeedAudit)) {
+          return 'SUBMIT'
+        }
+        return (this.needAudit && this.businessNeedAudit) || this.complianceNeedAuditTip ? 'SUBMIT' : !this.spuId ? 'PUBLISH'
+          : [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED, PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION].includes(this.auditStatus) ? 'SUBMIT' : 'SAVE' // 业务审核驳回、撤销审核的商品保存按钮文案默认为“提交审核”
       },
       auditBtnText () {
         return BUTTON_TEXTS[this.auditBtnStatus]
@@ -144,6 +152,14 @@
         if (this.isProductAuditFree) return false
         return this.realNeedAudit
       },
+      complianceNeedAuditTip () {
+        if (this.isCreateMode) return false // 新建场景不可能是纠错
+        if (!this.poiNeedAudit) return false // 门店审核状态
+        if (this.isProductAuditFree) return false // 免审
+
+        // 当前是opLog配置的修改后需审核的字段，并且是合规审核需要提示（先审后发）
+        return this.complianceNeedAudit && this.checkComplianceNeedAuditTip()
+      },
       // 是否为纠错审核
       isNeedCorrectionAudit () {
         if (this.isCreateMode) return false // 新建场景不可能是纠错
@@ -155,6 +171,14 @@
       isProductAuditFree () {
         if (!this.realNeedAudit) return false
         return (![PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.productInfo.auditStatus) && this.isAuditFreeProduct)
+      },
+      // 业务审核 先审后发
+      businessNeedAudit () {
+        return this.businessAuditStatus === BUSINESS_AUDIT_TYPE.START_AUDIT
+      },
+      // 合规审核 先审后发
+      complianceNeedAudit () {
+        return this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.START_AUDIT
       },
       context () {
         return {
@@ -175,7 +199,10 @@
               approveSnapshot: this.productInfo.approveSnapshot,
               needCorrectionAudit: this.isNeedCorrectionAudit && !this.isProductAuditFree,
               snapshot: this.productInfo.snapshot,
-              productSource: this.productInfo.productSource
+              productSource: this.productInfo.productSource,
+              businessNeedAudit: this.businessNeedAudit,
+              complianceNeedAuditTip: this.complianceNeedAuditTip,
+              needAuditList: this.needAuditList
             },
             allowCorrectSp: true,
             allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
@@ -196,35 +223,73 @@
         }
         return false
       },
+      checkComplianceNeedAuditTip () {
+        // 合规审核只需要判断时候是先审后发，不用判断类目是否需要审核originalProductCategoryNeedAudit，这个是业务审核的
+        const newData = this.productInfo
+        const oldData = this.originalFormData
+        return diffCommon(oldData, newData, this.needAuditList)
+      },
+      getModalTipAndText () {
+        let tip = []
+        let okText = '返回商品列表'
+        let cancelText = '查看商品审核'
+        // 合规审核为先发后审、需业务审核且为先审后发, 或者编辑商品页面时无需合规审核
+        if ((this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.START_SELL ||
+          this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.NO_AUDIT) &&
+          this.businessAuditStatus === BUSINESS_AUDIT_TYPE.START_AUDIT
+        ) {
+          tip = [
+            '此商品已送平台业务审核，预计1-2个工作日审核完毕。',
+            '审核中、审核驳回商品，不可售卖。',
+            '您可在【商品审核】查看业务审核进度。'
+          ]
+        }
+        // 合规审核为先审后发、不需业务送审或业务审核为先发后审
+        if (this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.START_AUDIT &&
+          (this.businessAuditStatus === BUSINESS_AUDIT_TYPE.NO_AUDIT ||
+          this.businessAuditStatus === BUSINESS_AUDIT_TYPE.START_SELL)
+        ) {
+          tip = [
+            '此商品已送平台合规审核，预计1个工作日内审核完毕。',
+            '审核中、审核驳回商品，不可售卖。',
+            '您可在【商品列表】查看合规审核进度。'
+          ]
+          cancelText = ''
+        }
+        // 合规审核、业务审核均为先审后发
+        if (this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.START_AUDIT &&
+          this.businessAuditStatus === BUSINESS_AUDIT_TYPE.START_AUDIT
+        ) {
+          tip = [
+            '此商品已送平台合规审核、业务审核。预计1-2个工作日审核完毕。审核中、审核驳回商品不可售卖。',
+            '您可在【商品审核】查看业务审核进度；业务审核通过后，可在【商品列表】查看合规审核进度。'
+          ]
+        }
+        return {
+          tip,
+          okText,
+          cancelText
+        }
+      },
       // 提交后弹窗
       popConfirmModal (response) {
-        // 正常新建编辑场景下如果提交审核需要弹框
-        if (this.needAudit) {
+        // 获取弹窗提示信息
+        const { tip, okText, cancelText } = this.getModalTipAndText()
+        // 正常新建编辑场景下如果提交审核需要弹框, 并且需要满足审核条件
+        if (this.auditBtnStatus === 'SUBMIT' && tip.length) {
           LX.mv({
             bid: 'b_shangou_online_e_nwej6hux_mv',
             val: { spu_id: this.spuId || 0 }
           })
-          /**
-             * 审核类型
-             * 1-先审后发；
-             * 2-先发后审
-             */
-          const { auditType } = response || {}
-          const tip = auditType === PRODUCT_AUDIT_TYPE.START_SELL ? [
-            '商品上架后可正常售卖，同时平台会进行审核，信息不准确会导致审核驳回，驳回后商品不可上架售卖。'
-          ] : [
-            '此商品已送平台审核，审核中不可售卖。',
-            '预计1-2工作日由平台审核通过后才可上架售卖。审核驳回的商品也不可售卖。',
-            '您可以再【商品审核】中查看审核进度。'
-          ]
-          const $modal = this.$Modal.confirm({
+          const showModal = cancelText ? this.$Modal.confirm : this.$Modal.success
+          const $modal = showModal({
             title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
             content: `<div>${tip.map(t => `<p>${t}</p>`).join('')}</div>`,
             centerLayout: true,
             iconType: null,
             scrollable: true,
-            okText: '返回商品列表',
-            cancelText: '查看商品审核',
+            okText,
+            cancelText,
             onOk: () => {
               if ($modal.destroy && isFunction($modal.destroy)) $modal.destroy()
               this.handleCancel() // 返回
@@ -239,6 +304,11 @@
             }
           })
         } else {
+          if (!this.spuId) {
+            this.$Message.success('创建商品成功')
+          } else {
+            this.$Message.success('编辑商品成功')
+          }
           this.handleCancel() // 返回
         }
       },
@@ -329,36 +399,39 @@
                 val: {
                   spu_id: this.spu_id || response.id || 0,
                   list: getProductChangInfo(this.product, this.originalFormData),
-                  select_time: +new Date()
-                }
-              })
-            }
-
-            if (window.page_source === 3) {
-              LX.mv({
-                bid: 'b_shangou_online_e_xe7mbypq_mv',
-                val: {
-                  spu_id: this.spuId,
-                  st_spu_id: this.product.spId || 0,
-                  viewtime: (Date.now() - this.startTime) / 1000,
-                  page_source: window.page_source,
-                  task_id: (window.page_source_param && window.page_source_param.task_id)
+                  select_time: +new Date(response.serverTime || Date.now())
                 }
               })
             } else {
-              LX.mv({
-                bid: 'b_shangou_online_e_aifq7sdx_mv',
-                val: {
-                  spu_id: this.spuId || response.id || 0,
-                  source_id: 0,
-                  st_spu_id: this.product.spId || 0,
-                  viewtime: `${SearchTime.getSearchTime() + FillTime.getFillTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
-                  list: TimeCounters.getResult(),
-                  trace_id: response.traceId,
-                  select_time: +new Date()
-                }
-              })
+              if (window.page_source === 3) {
+                LX.mv({
+                  bid: 'b_shangou_online_e_xe7mbypq_mv',
+                  val: {
+                    spu_id: this.spuId,
+                    st_spu_id: this.product.spId || 0,
+                    viewtime: (Date.now() - this.startTime) / 1000,
+                    page_source: window.page_source,
+                    task_id: (window.page_source_param && window.page_source_param.task_id)
+                  }
+                })
+              } else {
+                LX.mv({
+                  bid: 'b_shangou_online_e_aifq7sdx_mv',
+                  val: {
+                    // 后端数据绝对准确的情况下，无兜底逻辑
+                    // spu_id: response.id || this.spuId || 0,
+                    spu_id: response.id,
+                    source_id: 0,
+                    st_spu_id: this.product.spId || 0,
+                    viewtime: `${SearchTime.getSearchTime() + FillTime.getFillTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
+                    list: TimeCounters.getResult(),
+                    trace_id: response.traceId,
+                    select_time: +new Date(response.serverTime || Date.now())
+                  }
+                })
+              }
             }
+
             LXContext.destroyVm()
             this.popConfirmModal(response)
           }
@@ -367,7 +440,7 @@
         if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
           this.$emit('on-revocation', this.productInfo, cb)
         } else {
-          this.$emit('on-submit', this.productInfo, wholeContext, cb)
+          this.$emit('on-submit', this.productInfo, wholeContext, cb, { noMessage: true })
         }
       },
       pageLeave () {

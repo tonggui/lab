@@ -1,6 +1,6 @@
 import {
   SELLING_TIME_TYPE,
-  PRODUCT_SELL_STATUS
+  PRODUCT_SELL_STATUS, PRODUCT_SALE_TYPE
 } from '@/data/enums/product'
 import moment from 'moment'
 import { SKU_FIELD, SPU_FIELD } from '../../field'
@@ -35,14 +35,18 @@ export const getProduct = () => ({
   },
   labelList: [],
   description: '',
+  picContentSyncPoi: true,
   pictureContentList: [],
-  spPictureContentSwitch: false,
+  spPictureContentSwitch: true,
   spPictureContentList: [],
   sellAttributes: [],
   sellAttributesValueMap: {},
   normalAttributes: [],
   normalAttributesValueMap: {},
-  sellStatus: PRODUCT_SELL_STATUS.ON
+  sellStatus: PRODUCT_SELL_STATUS.ON,
+  preSale: {
+    saleType: PRODUCT_SALE_TYPE.NORMAL
+  }
 })
 
 /**
@@ -248,6 +252,12 @@ export const getContext = () => ({
     },
     // 商品上/下架
     [SPU_FIELD.SELL_STATUS]: {
+      required: false,
+      disabled: false,
+      visible: true
+    },
+    // 售卖方式
+    [SPU_FIELD.SALE_TYPE]: {
       required: false,
       disabled: false,
       visible: true

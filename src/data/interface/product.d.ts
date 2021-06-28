@@ -139,7 +139,10 @@ declare interface ProductInfo {
   stockoutAutoClearStock: boolean; // 是否设置缺货库存自动清零
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
   category: BaseCategory; // 商品分类
-  isMedicare: boolean // 是否是医保商品
+  isMedicare: boolean; // 是否是医保商品
+  limitRuleId: number; // 商品限购Id
+  isMedicare: boolean; // 是否是医保商品
+  isComplianceUnderAudit: boolean; // 合规审核中
 }
 
 // 商品基本信息
@@ -269,6 +272,7 @@ declare interface MerchantProduct {
   categoryId?:[string, number];
   displayInfo?: (string|string[])[]
   tagList?: Tag[];
+  limitRuleId?: number;
 }
 
 // 药品
@@ -340,6 +344,11 @@ declare interface StandardProduct extends BaseProduct {
   spVideo?: BrandProductVideo; // 品牌商视频
   isMedicare?: string;// 医保
 }
+// 售卖方式
+declare interface PreSale {
+  saleType?: number; // 售卖方式
+  deliveryTime?: number; // 发货时间
+}
 // 商超商品
 declare interface Product extends BaseProduct {
   tagList: BaseTag[]; // TODO 店内分类
@@ -351,6 +360,7 @@ declare interface Product extends BaseProduct {
     timeZone: TimeZone,
   }; // 商品可售时间
   pictureContentList?: string[]; // 图文详情
+  picContentSyncPoi?: boolean; // 商品图片同步门店
   spPictureContentList?: string[]; // 品牌商图片详情
   spPictureContentSwitch?: boolean; // 品牌商图片详情是否展示给买家
   video?: ProductVideo; // 商品视频
@@ -370,6 +380,7 @@ declare interface Product extends BaseProduct {
   isMedicare?: string; // 是否是医保商品
   recoverySymbol?: number; // 是否支持医药商品纠错
   detailSymbol?: number; // 是否支持查看医药标品详情
+  preSale?: PreSale; // 售卖方式
 }
 
 declare interface MatchRule {
@@ -513,7 +524,7 @@ declare interface MedicineRegisterInfo {
   cityId: number[]; // 城市
   purchaseType: string | number; // 购买方式
   matchingRules: string | number; // 药品识别方式
-  productInfo: string;  // 商品信息
+  productInfo: string; // 商品信息
 }
 
 declare interface MedicineRegisterInfoModify extends MedicineRegisterInfo {

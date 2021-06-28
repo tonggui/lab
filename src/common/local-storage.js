@@ -50,8 +50,25 @@ export const KEYS = {
   // 单店-商品列表-商品配置
   PRODUCT_LIST_SETTING: 'productListSetting',
   // 单店-商品列表-商品配置推广提示
-  PRODUCT_LIST_PROMOTION: 'productListPromotion'
+  PRODUCT_LIST_PROMOTION: 'productListPromotion',
+  // 商品中心是否已经开通
+  MERCHANT_OPEN_STATUS: 'merchantOpenStatus',
+  // 商家商品中心指导手册提示
+  MERCHANT_GUIDE_BOOK: 'merchantGuideBook',
+  // 商家商品中心新手引导
+  MERCHANT_GUIDE: 'merchantGuide',
+  // 商家商品中心新手引导 - 商品操作引导
+  MERCHANT_OPERATION_GUIDE: 'merchantOperationGuide',
+  // 开通商家中心通过自助开通还是分店导入开通
+  MERCHANT_OPEN_WAY: 'merchantOpenWay',
+  // 商家商品中心任务进度
+  MERCHANT_TASK_PROCESS: 'merchantTaskProcess',
+  // 商家中心欢迎提示
+  MERCHANT_WELCOME: 'merchantWelcome'
+
 }
+
+export const orders = ['MERCHANT_GUIDE', 'MERCHANT_GUIDE_BOOK']
 
 const storage = {}
 

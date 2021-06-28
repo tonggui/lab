@@ -46,7 +46,14 @@ const combineArguments = (method, params = {}, options = {}) => {
   }
 }
 
-const defaultSuccessHandler = data => data.data
+// const defaultSuccessHandler = data => ({ ...data.data, serverTime: data.serverTime })
+const defaultSuccessHandler = data => {
+  if (isPlainObject(data.data)) {
+    return { ...data.data, serverTime: data.serverTime }
+  } else {
+    return data.data
+  }
+}
 
 // 请求函数
 const request = (axiosInstance) => async (method = 'post', url = '', params = {}, options) => {
@@ -84,10 +91,10 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     if (!isPlainObject(response.data)) {
       throw Error(response.data)
     }
-    const { data } = response
+    const { data, headers: { Date, date } } = response
     const { code, message } = data
     if (code === 0) {
-      return successHandler(data)
+      return successHandler({ ...data, serverTime: date || Date })
     }
     if (code !== undefined) {
       throw createError({ ...data, code, message, url })
@@ -112,7 +119,7 @@ const customizer = (objValue, srcValue) => {
 
 export default ({ baseURL, ...rest }) => {
   const isLocal = process.env.NODE_ENV === 'development'
-  const fullBaseURL = isLocal ? `/api${baseURL}` : baseURL
+  let fullBaseURL = isLocal ? `/api${baseURL}` : baseURL
   const config = mergeWith({}, baseConfig, rest, customizer)
   const axiosInstance = Axios.create({ baseURL: fullBaseURL, ...config })
   /* eslint-disable-next-line */

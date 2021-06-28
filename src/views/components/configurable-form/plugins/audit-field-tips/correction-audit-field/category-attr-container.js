@@ -18,11 +18,15 @@ const injectContainer = (WrapperComponent) => Vue.extend({
   render (h) {
     const original = get(this.correctionAuditFieldTip, `original[${this.attr.id}]`)
     const needCorrectionAudit = get(this.correctionAuditFieldTip, 'needCorrectionAudit')
+    const businessNeedAudit = get(this.correctionAuditFieldTip, 'businessNeedAudit')
+    const complianceNeedAuditTip = get(this.correctionAuditFieldTip, 'complianceNeedAuditTip')
     return forwardComponent(this, WrapperComponent, {
       props: {
         original,
         needCorrectionAudit,
-        attr: this.attr
+        attr: this.attr,
+        complianceNeedAuditTip,
+        businessNeedAudit
       }
     })
   }
@@ -30,7 +34,7 @@ const injectContainer = (WrapperComponent) => Vue.extend({
 
 export default (WrapperComponent) => Vue.extend({
   name: 'category-attr-correction-audit-field',
-  props: ['original', 'needCorrectionAudit', 'attrList', 'attrContext'],
+  props: ['original', 'needCorrectionAudit', 'attrList', 'attrContext', 'businessNeedAudit', 'complianceNeedAuditTip'],
   provide () {
     return {
       correctionAuditFieldTip: this

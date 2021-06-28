@@ -20,7 +20,7 @@
             <Icon type="keyboard-arrow-down" />
           </div>
           <DropdownMenu slot="list">
-            <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx">
+            <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx" :id="subMenu.id">
               <Tooltip type="guide" v-bind="subMenu.tooltip ? subMenu.tooltip : { disabled: true }">
                 <RouteLink
                   v-if="!['批量新建', '批量修改', '批量传图'].includes(subMenu.label)"

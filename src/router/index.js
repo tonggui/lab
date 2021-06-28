@@ -9,6 +9,7 @@ import categoryMap from '@/module/category'
 import { pageGuardBeforeEach } from '@/common/app'
 import pvRouterGuard from '@/common/lx/pvRouterGuard'
 import _get from 'lodash/get'
+import { indexOf } from 'lodash'
 
 Vue.use(Router)
 
@@ -56,12 +57,23 @@ router.beforeEach((to, _from, next) => {
 // 设置全局页面守卫
 router.beforeEach(pageGuardBeforeEach)
 
+const ignoreFrom = [
+  '/merchant/product/setting',
+  '/product/setting/stockoutAutoClearStock'
+]
+
 // 闪购品类控制
 router.beforeEach((to, _form, next) => {
   if (to.meta && to.meta.categoryAuth) {
+    let isIgnore = false
+    if (indexOf(ignoreFrom, _form.path) >= 0) {
+      isIgnore = true
+      next()
+      return
+    }
     const context = moduleControl.getContext()
     // 数据异常 需要categoryAuth的路径都是单店路径 存在poiId
-    if (!context || !context.categoryList) {
+    if (!isIgnore && (!context || !context.categoryList)) {
       next({
         path: '/error',
         query: { type: 'category' },

@@ -1,4 +1,6 @@
 export enum MerchantTaskType {
+  BATCH_MODIFY_TAG = 112, // 批量修改分类
+  BATCH_DELETE = 106, // 批量删除
   BATCH_CREATE_BY_EXCEL = 501, // excel批量新建
   BATCH_UPDATE_BY_EXCEL = 502, // excel批量修改
   BATCH_UPLOAD_PIC = 503, // 批量传图

@@ -43,7 +43,11 @@ export const convertProductToServer = (product: MerchantDetailProduct, context =
     upcImage: product.upcImage,
     categoryAttrMap,
     spuSaleAttrMap,
-    sellStatus: product.sellStatus
+    sellStatus: product.sellStatus,
+    spPicContentSwitch: !!product.spPictureContentSwitch ? 1 : 2,
+    picContentSyncPoi: !product.picContentSyncPoi,
+    saleType: product.preSale && product.preSale.saleType,
+    deliveryTime: product.preSale && product.preSale.deliveryTime
   }
   return params
 }

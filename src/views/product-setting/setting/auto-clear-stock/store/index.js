@@ -9,6 +9,7 @@ import {
 import {
   defaultPagination
 } from '@/data/constants/common'
+import { getPoiId } from '@/common/constants'
 
 const initState = {
   submitting: false,
@@ -60,6 +61,9 @@ export default {
     },
     setConfig (state, config) {
       state.config = config
+    },
+    setPoiList (state, poiList) {
+      state.poiList = poiList
     },
     setStatus (state, status) {
       state.status = !!status
@@ -163,16 +167,19 @@ export default {
       }
     },
     async getConfig ({ commit }) {
-      const { status, config, productMap } = await api.getConfig()
+      const { status, config, productMap, wmPoiIds } = await api.getConfig(getPoiId())
       commit('setStatus', status)
       commit('setConfig', config)
+      commit('setPoiList', wmPoiIds)
       commit('setProductMap', productMap)
+      return wmPoiIds
     },
-    async getData ({ dispatch, commit }) {
+    async getData ({ dispatch, commit }, cb) {
       try {
         commit('setLoading', true)
         commit('setError', false)
-        await dispatch('getConfig')
+        const wmPoiIds = await dispatch('getConfig')
+        cb(wmPoiIds)
         dispatch('getTagList')
         dispatch('getProductList')
       } catch (err) {
@@ -226,20 +233,25 @@ export default {
     },
     async submit ({ state, commit }, callback) {
       try {
-        const { status, config, productMap } = state
+        const { status, config, productMap, poiList } = state
         if (status) {
           if (config.type.length <= 0) {
             message.warning('请选择取消订单方式')
             return
           }
           const { count } = helper.getAllTagStatus(productMap)
-          if (count <= 0) {
+          if (!config.isAll && count <= 0) {
             message.warning('请选择所需要设置的商品')
+            return
+          }
+          if (!getPoiId() && config.isAll && (!poiList || !poiList.length)) {
+            message.warning('请选择关联门店')
             return
           }
         }
         commit('setSubmitting', true)
-        await api.saveConfig(status, config, productMap)
+        config.poiList = poiList
+        await api.saveConfig(status, config, productMap, getPoiId())
         callback()
       } catch (err) {
         console.error(err)

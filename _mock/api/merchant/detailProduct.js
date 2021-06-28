@@ -5,6 +5,8 @@ module.exports = function () {
   return {
     code: 0,
     data: {
+      saleType: 2,
+      deliveryTime: 1620385000000,
       name: '商品11',
       spuId: 10294879,
       wmPoiIds: [1,2,3],
@@ -441,7 +443,9 @@ module.exports = function () {
       },
       wmPoiId: 5108726,
       isSp: 1,
-      spId: 123
+      spId: 123,
+      spPicContentSwitch: 1,
+      spPicContent: 'http://p0.meituan.net/xianfu/6069f13017f8dfb057f805b1325dd7b5763904.jpg,http://p0.meituan.net/xianfu/6069f13017f8dfb057f805b1325dd7b5763904.jpg'
     },
     msg: '成功'
   };

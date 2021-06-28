@@ -10,6 +10,7 @@
   import ListHeader from './components/list-header/index'
   import SortProductList from './container/sort-product-list'
   import ManageProductList from './container/manage-product-list'
+  import { triggerTour } from './merchant-tour'
 
   const { mapGetters, mapActions } = helper()
 
@@ -28,6 +29,7 @@
     },
     mounted () {
       this.getData()
+      triggerTour()
     },
     beforeDestroy () {
       this.destroy()

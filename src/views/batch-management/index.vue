@@ -1,6 +1,20 @@
 <template>
   <div class="batch-management">
     <template v-if="showHeader">
+      <template v-if="!isMedicineAccount && !isSinglePoi">
+        <Alert type="success" class="batch-management-alert" closable>
+          <div class="left">
+            <Icon type="error" size="17" color="#63D29D" />&nbsp;
+            平台建议您使用新版商品管理工具 “总部商品库” ，可大幅提高连锁总部商品管理效率。
+          </div>
+          <div class="right" slot="close">
+            <Button type="primary">
+<!--              返回新版-->
+              <RouteLink :to="newPage.path" tag="a" style="color: #fff">返回新版</RouteLink>
+            </Button>&nbsp;
+          </div>
+        </Alert>
+      </template>
       <div class="batch-management-navigator">
         <Breadcrumb separator=">" class="breadcrumb" v-if="prevPage">
           <BreadcrumbItem>
@@ -10,7 +24,7 @@
             <span v-if="isMerchantAccount">旧版</span>批量管理
           </BreadcrumbItem>
         </Breadcrumb>
-        <RouteLink v-if="isMerchantAccount" :to="prevPage.path" tag="a">
+        <RouteLink v-if="isMerchantAccount && isMedicineAccount" :to="prevPage.path" tag="a">
           <Icon type="arrow-left-double" />返回商家中心
         </RouteLink>
       </div>
@@ -49,6 +63,12 @@
       isSinglePoi () {
         return getIsSinglePoi(this.$route.query)
       },
+      isMedicineAccount () {
+        // 商家端壳子注入进来的
+        const localAllPoiList = (typeof localStorage.getItem('localAllPoiList') === 'string' ? JSON.parse(localStorage.getItem('localAllPoiList')) : localStorage.getItem('localAllPoiList')) || []
+        // 医药tag为22
+        return localAllPoiList.some(poi => poi.firstTagId === 22)
+      },
       /**
        * 上一页地址
        * 单店：返回列表页面
@@ -70,13 +90,19 @@
             path: `/reuse/product/router/page/multiPoiRouter`
           }
         }
-        if (this.isMerchantAccount) {
-          return {
-            name: '商品管理',
-            path: '/merchant/product/list'
-          }
-        }
+        // if (this.isMedicineAccount && this.isMerchantAccount) {
+        //   return {
+        //     name: '商品管理',
+        //     path: '/merchant/product/list'
+        //   }
+        // }
         return null
+      },
+      newPage () {
+        return {
+          name: '商品管理',
+          path: '/merchant/product/list'
+        }
       },
       currentTab () {
         return this.$route.name
@@ -109,6 +135,15 @@
   .batch-management {
     display: flex;
     flex-direction: column;
+    .batch-management-alert {
+      display: flex;
+      height: 50px;
+      .left, .right {
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+    }
     &-navigator {
       display: flex;
       justify-content: space-between;

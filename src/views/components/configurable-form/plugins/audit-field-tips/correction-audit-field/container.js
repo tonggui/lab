@@ -13,12 +13,14 @@ export default (WrapperComponent) => Vue.extend({
       type: Function,
       default: (v) => v
     },
-    needCorrectionAudit: Boolean
+    needCorrectionAudit: Boolean,
+    complianceNeedAuditTip: Boolean,
+    businessNeedAudit: Boolean
   },
   computed: {
     // 对比逻辑，触发纠错，并且 当前值和初始值不一致
     show () {
-      if (this.needCorrectionAudit) {
+      if ((this.needCorrectionAudit && this.businessNeedAudit) || this.complianceNeedAuditTip) {
         const value = this.formatter(this.value) || ''
         const original = this.formatter(this.original) || ''
         return !isEqual(value, original)
