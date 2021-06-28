@@ -7,7 +7,7 @@ import {
   convertMultiCubeEditProductList as convertMultiCubeEditProductListFromServer
 } from '../helper/product/multiCube/convertFromServer'
 import { Pagination } from '@/data/interface/common'
-import { convertCategoryToTagList } from '@/data/helper/category/convertFromServer'
+import { convertCategoryToTagList } from '@/data/helper/product/multiCube/convertFromServer'
 /**
  * 魔方创建任务进度
  * @param taskType
@@ -98,7 +98,7 @@ export const apiCubeSwitch = () => httpClient.post('/hqcc/cube/r/cubeSwitch')
  * 商品上新推荐tabList
  * @param poiId
  */
-export const getMultiCubeTabList = ({ cityId, poiId } : { cityId:number, poiId: number, }) => httpClient.post('/hqcc/cube/r/tabList', {
+export const getMultiCubeTabList = ({ cityId, poiId } : { cityId:number, poiId?: number, }) => httpClient.post('/hqcc/cube/r/tabList', {
   cityId,
   wmPoiId: poiId
 }).then(data => {
@@ -108,7 +108,7 @@ export const getMultiCubeTabList = ({ cityId, poiId } : { cityId:number, poiId: 
 /**
  * 获取上新推荐数据店内分类
  */
-export const getMultiCubeTagList = ({ cityId, poiId, tabId} : { cityId:number, poiId: number, tabId: number}) => httpClient.post('/hqcc/cube/r/tagList', {
+export const getMultiCubeTagList = ({ cityId, poiId, tabId } : { cityId:number, poiId: number, tabId: number}) => httpClient.post('/hqcc/cube/r/tagList', {
   cityId,
   wmPoiId: poiId,
   tabId
@@ -129,17 +129,18 @@ export const getMultiCubeTagList = ({ cityId, poiId, tabId} : { cityId:number, p
  * 商品上新推荐ScopeList
  */
 export const getMultiCubeScopeList = () => httpClient.post('hqcc/r/getAllPoiInfo').then(data => {
-  data = data['poiDetails'] || []
+  data = []
   return data
 })
 
 /**
  * 获取商品上新推荐数据
  */
-export const getMultiCubeProductList = ({ cityId, poiId, keyword, pagination, tagId, tabId, tagSource } : { cityId: number, poiId: number, tabId: string, pagination: Pagination, keyword: string, tagId: number, tagSource: number }) => httpClient.post('hqcc/cube/r/cubeProductList', {
+export const getMultiCubeProductList = ({ cityId, poiId, keyword, pagination, firstTagId, tabId, secondTagId } : { cityId: number, poiId: number, tabId: string, pagination: Pagination, keyword: string, firstTagId: number, secondTagId?: number }) => httpClient.post('hqcc/cube/r/cubeProductList', {
   cityId: cityId,
   poiId,
-  firstTagId: tagId,
+  firstTagId,
+  secondTagId,
   keyword,
   tabId,
   pageNum: pagination.current,
@@ -148,7 +149,7 @@ export const getMultiCubeProductList = ({ cityId, poiId, keyword, pagination, ta
   console.log(data)
   const { totalCount, cubeProductList } = (data || {}) as any
   return {
-    list: convertMultiCubeProductListFromServer(cubeProductList, tabId, tagSource),
+    list: convertMultiCubeProductListFromServer(cubeProductList, tabId),
     pagination: {
       ...pagination,
       total: totalCount

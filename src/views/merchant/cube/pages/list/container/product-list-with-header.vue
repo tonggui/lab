@@ -163,8 +163,8 @@
     },
     async mounted () {
       await this.getTabList()
-      await this.getData()
       await this.getScopeList()
+      await this.getData()
     },
     beforeDestroy () {
       this.destroy()

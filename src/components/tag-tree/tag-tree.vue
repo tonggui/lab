@@ -127,7 +127,7 @@
         }
         if (this.isLeaf(item)) {
           if (item.id !== this.value) {
-            this.$emit('select', this.labelInValue ? item : item.id)
+            this.$emit('select', { tagId: item.id, parentId: item.parentId })
           }
         } else {
           const index = item.level || 0

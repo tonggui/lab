@@ -81,8 +81,9 @@ export default {
       commit('setScopeList', cityList)
       dispatch('setCurrentScope', currentScope)
     },
-    async getTabList ({ dispatch, commit }) {
-      const tabList = await tab.getList() || []
+    async getTabList ({ state, dispatch, commit }) {
+      const param = state.currentScope.cityId !== -1 ? { cityId: state.currentScope.cityId, poiId: state.currentScope.poiId } : { cityId: state.currentScope.cityId }
+      const tabList = await tab.getList(param) || []
       const currentTab = get(tabList[0], 'id')
       const tagSource = get(tabList[0], 'tagSource')
 
@@ -135,9 +136,11 @@ export default {
       dispatch('getTagList')
       dispatch('getProductList')
     },
-    changeTag ({ commit, dispatch }, tagId) {
-      commit('tagList/select', tagId)
-      commit('productList/setTagId', tagId)
+    changeTag ({ commit, dispatch }, payload) {
+      console.log(payload)
+      commit('tagList/select', payload.tagId)
+      commit('productList/setTagId', payload.tagId)
+      commit('productList/setParentTagId', payload.parentId)
       commit('productList/setPagination', { current: 1 })
       dispatch('getProductList')
     },

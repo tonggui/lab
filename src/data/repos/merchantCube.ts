@@ -37,13 +37,13 @@ export const fetchGetMultiCubeTagList = ({ tabId, cityId, poiId } : { tabId: num
  * 商品上新tab列表
  * @param poiId
  */
-export const fetchGetProductMultiCubeTabList = (cityId: number, poiId: number) => getMultiCubeTabList({ cityId, poiId })
+export const fetchGetProductMultiCubeTabList = (cityId: number, poiId?: number) => getMultiCubeTabList({ cityId, poiId })
 
 // 获取推荐商品列表（多店魔方）
 export const fetchGetMultiRecommendProductList =
-  (pagination: Pagination, { keyword, tagId, tabId, tagSource } :
-    { tabId: string, keyword: string, tagId: number, tagSource: number }, cityId: number, poiId: number) => getMultiCubeProductList({
-    cityId, poiId, keyword, pagination, tagId, tabId, tagSource
+  (pagination: Pagination, { keyword, firstTagId, tabId, secondTagId } :
+    { tabId: string, keyword: string, firstTagId: number, secondTagId?: number }, cityId: number, poiId: number) => getMultiCubeProductList({
+    cityId, poiId, keyword, pagination, firstTagId, tabId, secondTagId
   })
 
 export const fetchSubmitMultiCreateRecommendProduct = (product: MultiCubeProduct, extra, poiId) => submitSingleCreateNewArrivalProduct({
@@ -52,5 +52,5 @@ export const fetchSubmitMultiCreateRecommendProduct = (product: MultiCubeProduct
   poiId
 })
 
-// 创建商品前校验 (魔方二期)
+// 创建商品前校验
 export const fetchMultiCubeCheckProducts = (productList: MultiCubeProduct[]) => multiCubeCheckProducts({ productList })

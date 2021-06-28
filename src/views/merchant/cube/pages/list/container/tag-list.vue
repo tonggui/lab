@@ -25,8 +25,9 @@
       })
     },
     methods: {
-      handleChangeTag (tagId) {
-        this.$emit('on-select', tagId)
+      handleChangeTag (tagId, parentId) {
+        console.log(tagId, parentId)
+        this.$emit('on-select', tagId, parentId)
       }
     }
   }

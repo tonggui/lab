@@ -2,17 +2,17 @@
  * @url reuse/sc/product/hqcc/cube/r/tagList
  */
 const tagList = [{
-  id: '1',
-  name: '一级类目',
+  tagId: '1',
+  tagName: '一级类目',
   level: '',
   parentId: '',
   isLeaf: 0,
   sequence: 1,
   categoryType: '',
   productCount: 100,
-  subCategoryList: [{
-    id: '12',
-    name: '一级分类',
+  subTags: [{
+    tagId: '12',
+    tagName: '一级分类',
     level: '',
     parentId: '',
     isLeaf: 1,
@@ -20,8 +20,8 @@ const tagList = [{
     categoryType: '',
     productCount: 2,
   }, {
-    id: '13',
-    name: '二级分类',
+    tagId: '13',
+    tagName: '二级分类',
     level: '',
     parentId: '',
     isLeaf: 1,
@@ -30,8 +30,8 @@ const tagList = [{
     productCount: 3,
   }]
 }, {
-  id: '2',
-  name: '二级类目',
+  tagId: '2',
+  tagName: '二级类目',
   level: '',
   parentId: '',
   isLeaf: 0,

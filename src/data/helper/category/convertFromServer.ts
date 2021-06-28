@@ -400,7 +400,7 @@ export const convertCategoryToTag = (tag: any, parentId = 0, level = 0, parentNa
     parentId,
     parentName,
     children: convertCategoryToTagList(tag.subCategoryList || [], tag.id, level + 1, tag.name),
-    isLeaf: !tag.subTags || tag.subCategoryList.length <= 0,
+    isLeaf: tag.isLeaf || (!tag.subCategoryList || tag.subCategoryList.length <= 0),
     productCount: tag.productCount || 0,
     isUnCategorized: tag.name === '未分类'
   }

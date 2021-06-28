@@ -15,6 +15,7 @@ const initState = {
   }, // 搜索商品信息
   pagination: { ...defaultPagination, pageSize: 50, 'show-total': true }, // 商品列表 分页信息
   tagId: defaultTagId, // 当前是的分类id
+  parentTagId: 0,
   tabId: '', // 选中的tabId
   scopeId: {
     cityId: -1,
@@ -44,6 +45,9 @@ export default (api) => {
       },
       setTagId (state, payload) {
         state.tagId = payload
+      },
+      setParentTagId (state, payload) {
+        state.parentTagId = payload
       },
       setScopeId (state, payload) {
         state.scopeId.cityId = payload.cityId
@@ -96,20 +100,20 @@ export default (api) => {
         try {
           commit('setLoading', true)
           commit('setError', false)
-          const params = {
-            tagId: state.tagId,
+          const params = state.parentTagId === 0 ? {
+            firstTagId: state.tagId,
+            tabId: state.tabId,
+            cityId: state.scopeId.cityId,
+            poiId: state.scopeId.poiId,
+            ...state.filters
+          } : {
+            firstTagId: state.parentTagId,
+            secondTagId: state.tagId,
             tabId: state.tabId,
             cityId: state.scopeId.cityId,
             poiId: state.scopeId.poiId,
             ...state.filters
           }
-          // const params1 = {
-          //   tagId: state.tagId,
-          //   tabId: state.tabId,
-          //   cityId: state.scopeId.cityId,
-          //   poiId: state.scopeId.poiId,
-          //   ...state.filters
-          // }
           console.log(params)
           const result = await api.getList(state.pagination, params)
           const { pageSize, current } = state.pagination
@@ -141,8 +145,9 @@ export default (api) => {
         commit('setPagination', pagination)
         dispatch('getList')
       },
-      tagIdChange ({ commit, dispatch }, tagId) {
-        commit('setTagId', tagId)
+      tagIdChange ({ commit, dispatch }, payload) {
+        commit('setTagId', payload.tagId)
+        commit('setParentTagId', payload.parentId)
         commit('setPagination', { current: 1 })
         dispatch('getList')
       },
