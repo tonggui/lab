@@ -129,7 +129,6 @@ export const getMultiCubeTagList = ({ cityId, poiId, tabId } : { cityId:number, 
  * 商品上新推荐ScopeList
  */
 export const getMultiCubeScopeList = () => httpClient.post('hqcc/r/getAllPoiInfo').then(data => {
-  data = []
   return data
 })
 

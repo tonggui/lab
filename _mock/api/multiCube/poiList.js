@@ -4,8 +4,7 @@
 module.exports = {
   code: 0,
   msg: '',
-  data: {
-    poiDetails: [
+  data: [
       {
         id: 1,
         name: '望京711',
@@ -56,6 +55,5 @@ module.exports = {
         name: '虹口',
         cityId: 130,
         cityName: '上海',
-      }]
-  }
+  }]
 }
