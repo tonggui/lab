@@ -126,7 +126,8 @@ export default ({ Component }) => (Api) => {
           const response = await fetchSubmitProduct(product, params, extra, others)
           return {
             ...response,
-            traceId
+            traceId,
+            isFetchSubmit: true
           }
         } else {
           return res
@@ -186,7 +187,7 @@ export default ({ Component }) => (Api) => {
           /**
            * TODO 如果response存在，则判定接口请求成功，保证前后端埋点一致性，判断为返回结果正确，允许走入后续流程，保证前端埋点正常上报
            */
-          if (response && response.traceId) {
+          if (response && response.isFetchSubmit) {
             cb(response)
           } else {
             cb(null, err)
