@@ -13,14 +13,14 @@ import { convertCategoryToTagList } from '@/data/helper/category/convertFromServ
  * 魔方创建任务进度
  * @param taskType
  */
-export const apiCubeTaskStatus = () => httpClient.post('/hqcc/cube/r/cubeRunningTask').then(({ cubeTaskStatus }) => {
+export const apiCubeTaskStatus = () => httpClient.post('/hqcc/cube/r/cubeRunningTask').then((data) => {
   const {
     taskId,
     status,
     runningStatusVo,
     finishStatusVo: processResult = {},
     submitTime
-  } = (cubeTaskStatus || {}) as any
+  } = (data || {}) as any
 
   const {
     runningStatus,
