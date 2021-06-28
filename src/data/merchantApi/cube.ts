@@ -17,7 +17,7 @@ export const apiCubeTaskStatus = () => httpClient.post('/hqcc/cube/r/cubeRunning
     taskId,
     status,
     runningStatusVo,
-    finishStatusVo: processResult = {},
+    finishStatusVo: processResult,
     submitTime
   } = (data || {}) as any
 
@@ -40,7 +40,7 @@ export const apiCubeTaskStatus = () => httpClient.post('/hqcc/cube/r/cubeRunning
     taskId,
     status,
     submitTime,
-    processStatus: {
+    processStatus: runningStatusVo ? {
       runningStatus,
       mainStatus: {
         succeedNum: mainStatus.finishedNum,
@@ -50,15 +50,15 @@ export const apiCubeTaskStatus = () => httpClient.post('/hqcc/cube/r/cubeRunning
         succeedNum: poiStatus.finishedNum,
         totalNum: poiStatus.totalNum
       }
-    },
-    processResult: {
+    } : {},
+    processResult: processResult ? {
       resultStatus,
       succeedNum,
       failedNum,
       succeedList,
       failedList,
       failedUrl
-    }
+    } : {}
   }
 })
 
