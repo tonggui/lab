@@ -551,7 +551,7 @@ declare interface MultiCubeProduct {
   customSequence?: number; // 自定义一级类目排序
   tagSource?: number; // 自定义还是非自定义类目
   isHqExist: boolean; // 商品是否在总部已存在
-  relatingPoiIds?: number[]; // 待关联门店列表
+  addedPoiIds?: number[]; // 待关联门店列表
   relatedPoiIds: number[]; // 已关联门店列表
   totalPoiIds: number[]; // 所有可关联门店列表
 }

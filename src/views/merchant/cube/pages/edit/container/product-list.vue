@@ -144,7 +144,7 @@
                 return {
                   tabId: product.tabId,
                   ...(this.productInfoMap[id] || product),
-                  relatingPoiIds: product.relatingPoiIds || this.productInfoMap[id].relatingPoiIds,
+                  addedPoiIds: product.addedPoiIds || this.productInfoMap[id].addedPoiIds,
                   productLabelIdList: product.productLabelIdList || this.productInfoMap[id].productLabelIdList
                 }
               })

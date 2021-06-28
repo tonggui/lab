@@ -24,7 +24,7 @@ export const convertMultiCubeProduct = (product: MultiCubeProduct) => {
     isHqExist: product.isHqExist,
     relatedPoiIds: product.relatedPoiIds,
     totalPoiIds: product.totalPoiIds,
-    addedPoiIds: product.relatingPoiIds
+    addedPoiIds: product.addedPoiIds
   }
 }
 

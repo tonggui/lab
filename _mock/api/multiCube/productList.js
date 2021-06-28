@@ -3545,7 +3545,7 @@ module.exports = function (req) {
     "code": 0,
     "msg": "",
     "data": {
-      "recProducts": data,// data.slice(pageSize * (pageNum - 1), pageSize * (pageNum - 1) + Number(pageSize)).filter(item => item.tagList.some(it => keyword ? it.tagName.indexOf(keyword) !== -1 : true)).filter(item => item.tagList.some(it => leafTagId ? Number(it.tagId) === Number(leafTagId) : true)),
+      "cubeProductList": data,// data.slice(pageSize * (pageNum - 1), pageSize * (pageNum - 1) + Number(pageSize)).filter(item => item.tagList.some(it => keyword ? it.tagName.indexOf(keyword) !== -1 : true)).filter(item => item.tagList.some(it => leafTagId ? Number(it.tagId) === Number(leafTagId) : true)),
       "totalCount": data.length
     }
   }

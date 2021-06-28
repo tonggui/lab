@@ -151,7 +151,7 @@
         for (let key in this.dataSourceList) {
           let dataItem = this.dataSourceList[key].productList
           dataItem.forEach(item => {
-            let poiIds = item.relatedPoiIds.slice().concat(item.relatingPoiIds.slice())
+            let poiIds = item.relatedPoiIds.slice().concat(item.addedPoiIds.slice())
             poiIds.forEach(ele => {
               // 不是全国范围则筛选
               if (self.selectScope.cityId !== -1 && self.selectScope.cityId !== undefined) {

@@ -31,19 +31,19 @@ export const fetchGetPoiScopeList = () => getMultiCubeScopeList()
  * @param keyword
  * @param poiId
  */
-export const fetchGetMultiCubeTagList = ({ keyword, tabId, tagSource } : { keyword: string, tabId: string, tagSource: number }, poiId: number) => getMultiCubeTagList({ tabId, keyword, poiId, tagSource })
+export const fetchGetMultiCubeTagList = ({ keyword, tabId, tagSource, cityId, poiId } : { keyword: string, tabId: number, tagSource: number, cityId:number, poiId: number}) => getMultiCubeTagList({ tabId, keyword, cityId, poiId, tagSource })
 
 /**
  * 商品上新tab列表
  * @param poiId
  */
-export const fetchGetProductMultiCubeTabList = (poiId: number) => getMultiCubeTabList({ poiId })
+export const fetchGetProductMultiCubeTabList = (cityId: number, poiId: number) => getMultiCubeTabList({ cityId, poiId })
 
 // 获取推荐商品列表（多店魔方）
 export const fetchGetMultiRecommendProductList =
-  (pagination: Pagination, { keyword, isProductVisible, tagId, tabId, tagSource } :
-    { tabId: string, keyword: string, isProductVisible: boolean, tagId: number, tagSource: number }, cityId: number, poiId: number) => getMultiCubeProductList({
-    cityId, poiId, keyword, isProductVisible, pagination, tagId, tabId, tagSource
+  (pagination: Pagination, { keyword, tagId, tabId, tagSource } :
+    { tabId: string, keyword: string, tagId: number, tagSource: number }, cityId: number, poiId: number) => getMultiCubeProductList({
+    cityId, poiId, keyword, pagination, tagId, tabId, tagSource
   })
 
 export const fetchSubmitMultiCreateRecommendProduct = (product: MultiCubeProduct, extra, poiId) => submitSingleCreateNewArrivalProduct({

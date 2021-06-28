@@ -111,14 +111,14 @@
       selection (type = false) {
         if (type) {
           return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
-            productList.forEach(({ __id__, relatedPoiIds, relatingPoiIds, totalPoiIds }) => {
+            productList.forEach(({ __id__, relatedPoiIds, addedPoiIds, totalPoiIds }) => {
               // 当前范围所有门店是否在当前商品的待关联门店范围内
               let flag = totalPoiIds.every(item => {
-                return relatingPoiIds.indexOf(item) > -1 || relatedPoiIds.indexOf(item) > -1
+                return addedPoiIds.indexOf(item) > -1 || relatedPoiIds.indexOf(item) > -1
               })
               console.log(flag)
               if (flag) {
-                prev.push({ __id__, relatedPoiIds, relatingPoiIds })
+                prev.push({ __id__, relatedPoiIds, addedPoiIds })
               }
             })
             console.log(prev)
@@ -126,7 +126,7 @@
           }, [])
         } else {
           return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
-            productList.forEach(({ __id__, relatedPoiIds, relatingPoiIds, totalPoiIds }) => prev.push({ __id__, relatedPoiIds, relatingPoiIds }))
+            productList.forEach(({ __id__, relatedPoiIds, addedPoiIds, totalPoiIds }) => prev.push({ __id__, relatedPoiIds, addedPoiIds }))
             return prev
           }, [])
         }

@@ -21,7 +21,7 @@
       productId: Number,
       totalPoiIds: Array,
       relatedPoiIds: Array,
-      relatingPoiIds: Array,
+      addedPoiIds: Array,
       label: String,
       disabled: Boolean
     },
@@ -40,11 +40,11 @@
         return Object.values(this.classifySelectedProducts)
       },
       size () {
-        return this.relatedPoiIds.length + this.relatingPoiIds.length
+        return this.relatedPoiIds.length + this.addedPoiIds.length
       }
     },
     watch: {
-      relatingPoiIds (v) {
+      addedPoiIds (v) {
         if (v) {
           this.getScopeTips()
         }
@@ -70,7 +70,7 @@
         return cityIds
       },
       getScopeTips () {
-        let pois = this.relatingPoiIds.concat(this.relatedPoiIds)
+        let pois = this.addedPoiIds.concat(this.relatedPoiIds)
         const alreadyCities = this.getCitiesList(pois)
         const totalCities = this.getCitiesList(this.totalPoiIds)
         if (alreadyCities.size === totalCities.size && pois.length === this.totalPoiIds.length) {

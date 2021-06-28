@@ -124,7 +124,7 @@ export const mergeProduct = (...productList) => {
         return { ...item, ...cache }
       })
     }
-    return { ...product, ...cacheProduct, skuList: newSkuList, relatingPoiIds: product.relatingPoiIds }
+    return { ...product, ...cacheProduct, skuList: newSkuList, addedPoiIds: product.addedPoiIds }
   })
 }
 
