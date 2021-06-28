@@ -19,11 +19,10 @@ export default (api) => {
       },
       async getList ({ commit, state, rootState }, query) {
         try {
-          const tagSource = get(rootState, 'productMultiCubeRecommend.multiCubeList.tagSource')
           const currentScope = get(rootState, 'productMultiCubeRecommend.multiCubeList.currentScope')
           commit('setLoading', true)
           commit('setError', false)
-          const { tagList, tagInfo } = await api.getList({ tabId: state.tabId, tagSource, cityId: currentScope.cityId, poiId: currentScope.poiId, ...query })
+          const { tagList, tagInfo } = await api.getList({ tabId: state.tabId, cityId: currentScope.cityId, poiId: currentScope.poiId })
           const { productTotal } = tagInfo
           commit('setProductCount', productTotal)
           commit('setList', tagList)

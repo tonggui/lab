@@ -108,12 +108,10 @@ export const getMultiCubeTabList = ({ cityId, poiId } : { cityId:number, poiId: 
 /**
  * 获取上新推荐数据店内分类
  */
-export const getMultiCubeTagList = ({ cityId, poiId, tabId, keyword, tagSource } : { cityId:number, poiId: number, keyword: string, tabId: number, tagSource: number }) => httpClient.post('/hqcc/cube/r/tagList', {
+export const getMultiCubeTagList = ({ cityId, poiId, tabId} : { cityId:number, poiId: number, tabId: number}) => httpClient.post('/hqcc/cube/r/tagList', {
   cityId,
   wmPoiId: poiId,
-  keyword,
-  tabId,
-  tagSource
+  tabId
 }).then(data => {
   const {
     tagList,

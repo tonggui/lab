@@ -10,19 +10,10 @@
       </RadioGroup>
       <span v-if="contentScope">所选分店为: {{ displayShop.name }}</span>
     </Card>
-<!--    <Anchor :container="'.doc-container-content'">-->
-<!--      <div type="warning" class="operation-info2-tip">-->
-<!--      <span>-->
-<!--        <Icon type="info" color="#F89800" class="icon" />dddd-->
-<!--        {{operationInfo.cityName}}{{operationInfo.poiName}}-->
-<!--      </span>-->
-<!--        <AnchorLink href="#basic_usage" title="更换推荐范围按钮" />-->
-<!--      </div>-->
-<!--    </Anchor>-->
     <Modal
       v-model="scopeVisible"
       title="选择一个指定城市或分店"
-      @on-ok="ok"
+      @on-ok="confirmSubmit"
       @on-cancel="cancel">
       <Form ref="currentScope" :model="currentScope" :label-width="80">
         <div type="warning" class="operation-info-tip">
@@ -45,8 +36,7 @@
           <FormItem label="指定城市" prop="cityId" style="width:350px">
             <Select line
                     v-model="currentScope.cityId"
-                    filterable clearable
-                    @on-change="handleSelectedCity" placeholder="Select your city">
+                    filterable clearable placeholder="Select your city">
               <Option v-for="item in scopeList" :value="item.cityId" :key="item.cityId" >{{item.cityName}}</Option>
             </Select>
           </FormItem>
@@ -55,8 +45,7 @@
           <FormItem label="指定城市" prop="cityId" style="width:350px">
             <Select line
                     v-model="currentScope.cityId"
-                    filterable clearable
-                    @on-change="handleSelectedCity" placeholder="Select your city">
+                    filterable clearable placeholder="Select your city">
               <Option v-for="item in scopeList" :value="item.cityId" :key="item.cityId" >{{item.cityName}}</Option>
             </Select>
           </FormItem>
@@ -88,11 +77,6 @@
           cityId: '',
           poiId: ''
         }
-        // ruleValidate: {
-        //   city: [
-        //     { required: true, message: 'Please select the city', trigger: ['blur', 'change'] }
-        //   ]
-        // }
       }
     },
     watch: {
@@ -122,9 +106,12 @@
     },
     computed: {
       ...mapState({
-        scopeList: 'scopeList',
+        scopeLists: 'scopeList',
         currentScopeId: 'currentScope'
       }),
+      scopeList () {
+        return this.scopeLists.filter(item => item.cityId !== -1)
+      },
       shopList () {
         let tmp = this.scopeList.filter(item => {
           if (item.cityId === this.currentScope.cityId) {
@@ -159,15 +146,15 @@
           }
           this.contentScope = false
           this.setCurrentScope({ cityId: -1, poiId: -1 })
+          this.getData()
         }
-        // this.$emit('change', Boolean(status), status ? this.value : {})
       },
       handleStatusClick () {
         if (this.scope === 1 && !this.scopeVisible) {
           this.scopeVisible = true
         }
       },
-      ok () {
+      confirmSubmit () {
         if (this.scope === 1 && typeof this.currentScope.poiId !== 'undefined') {
           this.contentScope = true
           let tmp = {
@@ -188,22 +175,18 @@
           this.setCurrentScope(tmp)
           this.getData()
         }
-        this.$Message.info('ok')
+        this.$Message.info('更换范围成功')
       },
       cancel () {
-        this.$Message.info('Clicked cancel')
-      },
-      handleSelectedCity (v) {
-        console.log(v)
-        // setTimeout(() => {
-        //   this.loading2 = false
-        //   this.shopList = this.optionsShop.map(item => {
-        //     return {
-        //       value: item.value,
-        //       label: item.label
-        //     }
-        //   })
-        // }, 200)
+        this.scope = this.currentScopeId && this.currentScopeId.cityId !== -1 ? 1 : -1
+        if (this.scope === 1) {
+          this.currentScope = {
+            scopeStatus: this.currentScopeId.poiId === -1 ? 0 : 1,
+            cityId: this.currentScopeId.cityId,
+            poiId: this.currentScopeId.poiId
+          }
+        }
+        this.$Message.info('取消')
       }
     }
   }

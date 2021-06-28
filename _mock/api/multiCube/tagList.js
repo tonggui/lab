@@ -48,7 +48,7 @@ module.exports = function (req) {
     data: {
       tabId,
       totalProductCount: 300,
-      tagList: tagList.filter(item => item.name.indexOf(keyword) !== -1)
+      tagList: tagList
     }
   }
 };
