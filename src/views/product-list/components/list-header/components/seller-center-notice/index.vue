@@ -42,7 +42,7 @@
                 actions: [{
                   text: '查看进度',
                   type: 'button',
-                  handle: '/reuse/sc/product/views/new/create'
+                  handle: '/reuse/sc/product/views/seller/center/new/create'
                 }]
               }
             }
@@ -54,7 +54,7 @@
                 actions: [{
                   text: '查看详情',
                   type: 'button',
-                  handle: '/reuse/sc/product/views/new/create'
+                  handle: '/reuse/sc/product/views/seller/center/new/create'
                 }, {
                   text: '我知道了',
                   type: 'link',
@@ -73,7 +73,7 @@
                 actions: [{
                   text: '立即补充',
                   type: 'button',
-                  handle: '/reuse/sc/product/views/new/create'
+                  handle: '/reuse/sc/product/views/seller/center/new/create'
                 }]
               }
             }
@@ -85,7 +85,7 @@
                 actions: [{
                   text: '立即补充',
                   type: 'button',
-                  handle: '/reuse/sc/product/views/new/create'
+                  handle: '/reuse/sc/product/views/seller/center/new/create'
                 }]
               }
             }
@@ -99,7 +99,7 @@
                 actions: [{
                   text: '立即补充',
                   type: 'button',
-                  handle: '/reuse/sc/product/views/new/create'
+                  handle: '/reuse/sc/product/views/seller/center/new/create'
                 }]
               }
             } else {
@@ -110,7 +110,7 @@
                 actions: [{
                   text: '立即补充',
                   type: 'button',
-                  handle: '/reuse/sc/product/views/new/create'
+                  handle: '/reuse/sc/product/views/seller/center/new/create'
                 }, {
                   text: '忽略',
                   type: 'link',
