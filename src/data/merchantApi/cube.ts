@@ -100,7 +100,7 @@ export const apiCubeSwitch = () => httpClient.post('/hqcc/cube/r/cubeSwitch')
  */
 export const getMultiCubeTabList = ({ cityId, poiId } : { cityId:number, poiId?: number, }) => httpClient.post('/hqcc/cube/r/tabList', {
   cityId,
-  wmPoiId: poiId
+  poiId
 }).then(data => {
   data = data['cubeTabInfoVoList'] || []
   return data.map(tab => { tab.id = `${tab.id}`; return tab })
@@ -110,7 +110,7 @@ export const getMultiCubeTabList = ({ cityId, poiId } : { cityId:number, poiId?:
  */
 export const getMultiCubeTagList = ({ cityId, poiId, tabId } : { cityId:number, poiId: number, tabId: number}) => httpClient.post('/hqcc/cube/r/tagList', {
   cityId,
-  wmPoiId: poiId,
+  poiId,
   tabId
 }).then(data => {
   const {

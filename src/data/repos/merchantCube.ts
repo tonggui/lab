@@ -37,7 +37,7 @@ export const fetchGetMultiCubeTagList = ({ tabId, cityId, poiId } : { tabId: num
  * 商品上新tab列表
  * @param poiId
  */
-export const fetchGetProductMultiCubeTabList = (cityId: number, poiId?: number) => getMultiCubeTabList({ cityId, poiId })
+export const fetchGetProductMultiCubeTabList = ({ cityId, poiId } : {cityId: number, poiId?: number}) => getMultiCubeTabList({ cityId, poiId })
 
 // 获取推荐商品列表（多店魔方）
 export const fetchGetMultiRecommendProductList =
