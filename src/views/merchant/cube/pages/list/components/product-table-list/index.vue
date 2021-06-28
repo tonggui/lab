@@ -241,7 +241,7 @@
         // console.log(this.rowScopeList)
         if (target) {
           // console.log('=====')
-          let pois = type === true ? target['relatingPoiIds'].concat(target['relatedPoiIds']) : target['relatingPoiIds']
+          let pois = type === true ? target['addedPoiIds'].concat(target['relatedPoiIds']) : target['addedPoiIds']
           const alreadyCities = this.getCitiesList(pois)
           const totalCities = this.getCitiesList(target.totalPoiIds)
           if (alreadyCities.size === totalCities.size && pois.length === item.totalPoiIds.length && type === true) {

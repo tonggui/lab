@@ -1,7 +1,7 @@
 <template>
   <section>
     <Trigger label="关联门店" :disabled="disabled" @show="handleShowDrawer" @clear="handleClear" :productId="productId"
-             :relatedPoiIds="disabledIds" :totalPoiIds="totalPoiIds" :relatingPoiIds="value" allowClear />
+             :relatedPoiIds="disabledIds" :totalPoiIds="totalPoiIds" :addedPoiIds="value" allowClear />
     <PoiSelectDrawer
       title="关联门店"
       v-model="show"

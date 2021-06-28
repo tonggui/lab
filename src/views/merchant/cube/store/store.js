@@ -22,8 +22,8 @@ export default {
     toggleSelectProduct ({ commit, state, rootState }, { productList, selected }) {
       const map = { ...state.classifySelectedProducts }
       productList.forEach(product => {
-        if (!product.hasOwnProperty('relatingPoiIds')) {
-          product['relatingPoiIds'] = []
+        if (!product.hasOwnProperty('addedPoiIds')) {
+          product['addedPoiIds'] = []
         }
         const { tagList } = product
         if (isEmptyArray(tagList)) {
@@ -38,21 +38,21 @@ export default {
         let poiIds = state.multiCubeList.currentPoiIds
         if (selected) {
           if (currentScope.poiId !== -1) {
-            product['relatingPoiIds'].push(poiIds[0])
+            product['addedPoiIds'].push(poiIds[0])
           } else {
             let canRelatePoiIds = product.totalPoiIds.filter(item => product['relatedPoiIds'].indexOf(item) === -1)
             canRelatePoiIds.forEach(item => {
-              if (poiIds.indexOf(item) !== -1 && product['relatingPoiIds'].indexOf(item) === -1) {
-                product['relatingPoiIds'].push(item)
+              if (poiIds.indexOf(item) !== -1 && product['addedPoiIds'].indexOf(item) === -1) {
+                product['addedPoiIds'].push(item)
               }
             })
           }
           map[id].productList = arrayUniquePush(productList, product, (p) => p.__id__)
         } else {
           poiIds.forEach(item => {
-            arrayRemoveItem(product['relatingPoiIds'], item)
+            arrayRemoveItem(product['addedPoiIds'], item)
           })
-          if (product['relatingPoiIds'].length === 0) {
+          if (product['addedPoiIds'].length === 0) {
             map[id].productList = arrayUniquePop(productList, product, (p) => p.__id__)
           }
         }
@@ -70,7 +70,7 @@ export default {
         if (map[id] && map[id].productList) {
           map[id].productList.forEach(item => {
             if (item.__id__ === product.__id__) {
-              if (item.relatingPoiIds) item.relatingPoiIds = product.relatingPoiIds
+              if (item.addedPoiIds) item.addedPoiIds = product.addedPoiIds
             }
           })
         }

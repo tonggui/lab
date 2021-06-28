@@ -49,7 +49,7 @@ export default {
     async getScopeList ({ dispatch, commit }) {
       let cityList = []
       const optionsShop = await scope.getList() || []
-      optionsShop.unshift({ id: -1, name: 'all', cityId: -1, cityName: 'quanguo' })
+      optionsShop.unshift({ id: -1, name: '全国所有门店', cityId: -1, cityName: '全国' })
       optionsShop.forEach(item => {
         let city = cityList.some(ele => ele.cityId === item.cityId)
         if (!city) {

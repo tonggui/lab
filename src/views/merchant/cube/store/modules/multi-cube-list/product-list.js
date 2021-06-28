@@ -5,7 +5,6 @@ import {
   defaultTagId
 } from '@/data/constants/poi'
 import message from '@/store/helper/toast'
-import { get } from 'lodash'
 
 const initState = {
   loading: false, // 加载状态
@@ -102,7 +101,6 @@ export default (api) => {
             tabId: state.tabId,
             cityId: state.scopeId.cityId,
             poiId: state.scopeId.poiId,
-            tagSource: get(rootState, 'productMultiCubeRecommend.multiCubeList.tagSource'),
             ...state.filters
           }
           // const params1 = {
@@ -112,7 +110,7 @@ export default (api) => {
           //   poiId: state.scopeId.poiId,
           //   ...state.filters
           // }
-          // console.log(params1)
+          console.log(params)
           const result = await api.getList(state.pagination, params)
           const { pageSize, current } = state.pagination
           const { total } = result.pagination

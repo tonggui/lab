@@ -144,11 +144,11 @@
           width: 192,
           render: (h, { row }) => {
             const handleChange = (poiIds) => {
-              this.handleModifyProduct({ params: { relatingPoiIds: poiIds }, product: row })
-              this.handleModifyRelatingRange([{ ...row, relatingPoiIds: poiIds }])
+              this.handleModifyProduct({ params: { addedPoiIds: poiIds }, product: row })
+              this.handleModifyRelatingRange([{ ...row, addedPoiIds: poiIds }])
             }
             return h(PoiSelect, {
-              props: { productId: row.id, totalPoiIds: row.totalPoiIds, value: row.relatingPoiIds, disabledIds: row.relatedPoiIds },
+              props: { productId: row.id, totalPoiIds: row.totalPoiIds, value: row.addedPoiIds, disabledIds: row.relatedPoiIds },
               on: { change: handleChange }
             })
           }
