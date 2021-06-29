@@ -332,7 +332,17 @@
     text-align: right;
     padding: 16px 20px;
     border-top: 1px solid #E9EAF2;
-    width: 100%;
+    text-align: right;
+    position: fixed;
+    flex: 0;
+    bottom: 60px;
+    width: 59.6% !important;
+    z-index: 100;
+    background: #FFFFFF;
+    color: black !important;
+    padding: 16px 20px;
+    border-top: 1px solid #E9EAF2;
+    border-bottom: 1px solid #E9EAF2;
   }
   .empty {
     width: 100%;

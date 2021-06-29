@@ -1,7 +1,7 @@
 <template>
-  <div style="background:#eee;padding: 20px">
+  <div style="background：rgb(247, 248, 250);padding-bottom: 10px">
     <Card :bordered="false" id="basic_usage">
-      <span>选择推荐商品范围</span>
+      <span style="margin: 0 30px">选择推荐商品范围</span>
       <RadioGroup v-model="scope" type="button" @on-change="handleStatusChange" >
         <Radio :label="-1">全国</Radio>
         <span @click="handleStatusClick">
