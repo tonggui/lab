@@ -3507,6 +3507,7 @@ data = data.map((item, index) => {
     isHqExist,
     relatedPoiIds,
     totalPoiIds,
+    merchantSpuId: Math.floor(Math.random() * 100),
     isDelete: 0,
     hotSaleDetailsMap:{'近期热销':222},
     ...item,

@@ -41,7 +41,8 @@ export const convertMultiCubeEditProduct = (product): MultiCubeProduct => {
     labelVo,
     isHqExist,
     relatedPoiIds,
-    totalPoiIds
+    totalPoiIds,
+    merchantSpuId
   } = product
   let skuList = (convertProductSkuList(skus)) as CellularProductSku[]
   if (!poiSpuId) {
@@ -73,7 +74,8 @@ export const convertMultiCubeEditProduct = (product): MultiCubeProduct => {
     isExist: Number(isExist) === 1,
     isHqExist: isHqExist === 1,
     relatedPoiIds,
-    totalPoiIds
+    totalPoiIds,
+    merchantSpuId
   }
   return multiCubeProduct
 }

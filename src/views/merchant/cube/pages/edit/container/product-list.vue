@@ -186,6 +186,7 @@
         } else {
           params.syncType = 10
         }
+        params.productList = this.createProduct
         this.handleBatchCreate(params)
       },
       handleModalVisible (visble) {

@@ -173,7 +173,7 @@
         }]
       },
       type () {
-        return TYPE.NEW_ARRIVAL_MIX
+        return TYPE.MERCHANT_CENTER
       },
       rowSelection () {
         return {
