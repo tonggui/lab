@@ -22,9 +22,9 @@
 <!--      <Button type="primary" style="margin:0px 10px" @click="handleFilterScope">筛选</Button>-->
     </div>
     <div class="header">
-      <span class="content-span" style="width: 70%;">商品信息</span>
+      <span class="content-span" style="width: 60%;">商品信息</span>
       <Divider type="vertical" />
-      <span class="content-span" style="width: 20%;">关联分店</span>
+      <span class="content-span" style="width: 25%;">关联分店</span>
       <Divider type="vertical" />
       <span class="content-span">操作</span>
     </div>
@@ -49,7 +49,7 @@
       <a class="empty-selected" @click.prevent="handleEmptySelected"
       >清空已选</a
       >
-      <Button type="primary" @click="handleCreate" :disabled="total <= 0">确定创建</Button>
+      <Button type="primary" class="create-btn" @click="handleCreate" :disabled="total <= 0">确定创建</Button>
     </div>
   </Drawer>
 </template>
@@ -236,6 +236,21 @@
       &:hover {
         cursor: pointer;
       }
+    }
+    .create-btn {
+      height: 40px;
+      line-height: 25px;
+      width: 110px;
+      text-align: center;
+      font-size: 14px;
+      color: #222222;
+      cursor: pointer;
+      font-weight: 500;
+      font-family: PingFangSC-Medium;
+      margin-left: 24px;
+      border-color: antiquewhite;
+      background-image: linear-gradient(-45deg, #FFC34D 0%, #FFE14D 100%);
+      border-radius: 25px;
     }
   }
 }

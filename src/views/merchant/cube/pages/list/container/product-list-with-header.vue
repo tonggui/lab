@@ -1,19 +1,6 @@
 <template>
   <div :data-lx-param="param">
     <ProductListPage class="product-list-container">
-<!--      <Header slot="header">-->
-<!--        <div slot="left" class="header-left">-->
-<!--          <CubeLogo /> 上架商品推荐-->
-<!--        </div>-->
-<!--        <div slot="right" class="header-right">-->
-<!--          <SelectedProductButtonOperations-->
-<!--            :total="totalSelectedCount"-->
-<!--            btnText="去上架"-->
-<!--            @on-click-view="drawerVisible = true"-->
-<!--            @on-click-create="handleClickCreate"-->
-<!--          />-->
-<!--        </div>-->
-<!--      </Header>-->
       <Header slot="header" class="header-slot-tabs">
         <Tabs slot="left" class="header-left-with-tabs" @on-change="getData">
           <ProductSearch @on-search="handleSearch" :searchValue="keyword" slot="tabs-extra" style="margin-right: 0" />

@@ -33,6 +33,7 @@
           :findDataIndex="findDataIndex"
           :findDataRealIndex="findDataRealIndex"
           :isItemNotSeletable="isItemNotSeletable"
+          @related-dataSource="relatedDataSource"
           @on-select="handleSelectChange"
           @on-de-select="handleDeSelect"
           @on-tap-disabled="handleDisabled"
@@ -93,7 +94,9 @@
         if (this.showExist) {
           return this.dataSource
         }
-        return this.dataSource.filter(item => !(item.isHqExist))
+        return this.dataSource.filter(item => {
+          return !this.relatedDataSource(item)
+        })
       },
       isAllUnselectable () {
         return this.dataSource.every(item => this.isItemNotSeletable(item))
@@ -154,6 +157,21 @@
       ProductListFixedPage
     },
     methods: {
+      relatedDataSource (item) {
+        const itemRelatedPoiIds = item.relatedPoiIds
+        const itemTotalPoiIds = item.totalPoiIds
+        let flag = true
+        if (itemRelatedPoiIds.length !== itemTotalPoiIds.length) {
+          flag = false
+        } else {
+          itemTotalPoiIds.forEach(ele => {
+            if (itemRelatedPoiIds.indexOf(ele) === -1) {
+              flag = false
+            }
+          })
+        }
+        return flag
+      },
       handleExistSwitch () {
         this.showExist = !this.showExist
       },

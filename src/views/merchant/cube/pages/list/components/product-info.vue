@@ -181,6 +181,7 @@
       font-size: 14px;
       color: #3F4156;
       line-height: 22px;
+      width: 95%;
     }
     &-description {
       font-size: 12px;

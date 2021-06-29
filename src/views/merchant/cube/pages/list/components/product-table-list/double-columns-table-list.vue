@@ -18,6 +18,7 @@
 
 <script>
   import ProductInfo from '../product-info'
+  import { judgeArray } from '../../../../utils'
   import { helper } from '@/views/merchant/cube/store'
   const { mapState } = helper('multiCubeList')
   export default {
@@ -47,14 +48,6 @@
         rowScopeList: 'rowScopeList'
       })
     },
-    watch: {
-      'selectedIdList': {
-        immediate: true,
-        handler (v) {
-          console.log(v)
-        }
-      }
-    },
     methods: {
       viewHandler ({ going }, item, index) {
         try {
@@ -71,7 +64,8 @@
       disableItem (item) {
         if (this.isItemNotSeletable(item)) return true
         // 已存在且不是被选中的不可点击
-        return this.disabled && !this.isSelected(item)
+        let isContain = judgeArray(item.relatedPoiIds, item.totalPoiIds)
+        return isContain && !this.isSelected(item)
       },
       handleDisabledClick (item) {
         this.$emit('on-tap-disabled', item)
@@ -123,7 +117,7 @@
         .disableMask {
           background: #fff;
           opacity: 0.5;
-          z-index: 1;
+          z-index: 0;
           width: 100%;
           height: 100%;
           position: absolute;

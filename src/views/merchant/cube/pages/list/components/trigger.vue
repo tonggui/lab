@@ -109,20 +109,23 @@
   .trigger-display {
     display: flex;
     align-items: center;
+    justify-content: center;
     &-label {
       width: 60px;
     }
     &-content {
       width: 100px;
-      border: 1px solid @border-color-base;
-      border-radius: @border-radius-base;
+      //border: 1px solid @border-color-base;
+      //border-radius: @border-radius-base;
       position: relative;
+      font-size: 14px;
+      color: #FF6A00;
       line-height: 36px;
       cursor: pointer;
       background: transparent;
       overflow: hidden;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       margin-right: 8px;
       a {

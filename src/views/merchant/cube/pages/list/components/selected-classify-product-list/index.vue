@@ -3,8 +3,9 @@
     <h2 class="header" v-if="activeItemList.length > 0">{{title}}({{activeItemList.length}})</h2>
     <ul class="product-list">
       <li v-for="(item, index) in activeItemList" :key="item.__id__">
-        <ProductInfo style="width: 80%;" :product="item" :isSelected="true" :itemscope="false" :currentScope="currentScope" :rowScopeList ="rowScopeList"/>
-        <PoiSelect :productId="item.id" :totalPoiIds="item.totalPoiIds" v-model="activeItemList[index].addedPoiIds" :disabledIds = "activeItemList[index].relatedPoiIds" />
+        <ProductInfo style="width: 60%;" :product="item" :isSelected="true" :itemscope="false" :currentScope="currentScope" :rowScopeList ="rowScopeList"/>
+        <Divider type="vertical" />
+        <PoiSelect style="width: 25%;" :productId="item.id" :totalPoiIds="item.totalPoiIds" v-model="activeItemList[index].addedPoiIds" :disabledIds = "activeItemList[index].relatedPoiIds" />
         <Divider type="vertical" />
         <a href="" @click.prevent="$emit('on-unselect', title, item)">取消选择</a>
       </li>
@@ -54,7 +55,7 @@
 <style lang="less" scoped>
   .selected-classify-product-list {
     list-style: none;
-    width: 590px;
+    width: 576px;
     .header {
       height: 42px;
       background: #F7F8FA;
@@ -75,7 +76,7 @@
       list-style: none;
       .boo-divider, .boo-divider-vertical {
         display: inline-block;
-        height: 3.1em;
+        height: 9.2em;
         margin: 0;
       }
       > li {
@@ -84,11 +85,12 @@
         border-top: none;
         display: flex;
         align-items: center;
+        justify-content:center;
         > a {
           flex-shrink: 0;
           font-size: 14px;
           color: #676A78;
-          text-align: right;
+          text-align: center;
           line-height: 14px;
           text-decoration: underline;
         }

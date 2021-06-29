@@ -73,7 +73,7 @@
   .create-btn {
     height: 40px;
     line-height: 25px;
-    width: 96px;
+    width: 110px;
     text-align: center;
     font-size: 14px;
     color: #222222;
