@@ -216,3 +216,18 @@ export const arrayRemoveItem = (arr, item) => {
   }
   return arr
 }
+
+// 对比两个数组是否相同
+export const judgeArray = (arr1, arr2) => {
+  let flag = true
+  if (arr1.length !== arr2.length) {
+    flag = false
+  } else {
+    arr2.forEach(ele => {
+      if (arr1.indexOf(ele) === -1) {
+        flag = false
+      }
+    })
+  }
+  return flag
+}

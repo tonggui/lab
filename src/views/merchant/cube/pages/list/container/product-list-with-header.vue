@@ -1,19 +1,6 @@
 <template>
   <div :data-lx-param="param">
     <ProductListPage class="product-list-container">
-      <Header slot="header">
-        <div slot="left" class="header-left">
-          <CubeLogo /> 上架商品推荐
-        </div>
-        <div slot="right" class="header-right">
-          <SelectedProductButtonOperations
-            :total="totalSelectedCount"
-            btnText="去上架"
-            @on-click-view="drawerVisible = true"
-            @on-click-create="handleClickCreate"
-          />
-        </div>
-      </Header>
       <Header slot="header" class="header-slot-tabs">
         <Tabs slot="left" class="header-left-with-tabs" @on-change="getData">
           <ProductSearch @on-search="handleSearch" :searchValue="keyword" slot="tabs-extra" style="margin-right: 0" />
@@ -34,6 +21,14 @@
           @on-de-select="handleDeSelectProduct"
         />
       </template>
+      <div slot="footer" class="footer-button">
+        <SelectedProductButtonOperations
+          :total="totalSelectedCount"
+          btnText="确定创建"
+          @on-click-view="drawerVisible = true"
+          @on-click-create="handleClickCreate"
+        />
+      </div>
     </ProductListPage>
     <ProductSelectedDrawer
       v-model="drawerVisible"
@@ -65,7 +60,6 @@
   import ProductSelectedDrawer from './product-selected-drawer'
   import { helper } from '../../../store'
   import { objToArray } from '../../../utils'
-  import CubeLogo from '@/views/components/cube-logo/index'
 
   const MAX_SELECT = 100 // 最大可选数量
 
@@ -104,7 +98,6 @@
       }
     },
     components: {
-      CubeLogo,
       ProductListPage,
       Header,
       ProductSearch,
@@ -175,7 +168,7 @@
 <style lang="less" scoped>
 .product-list-container {
   margin-bottom: 0;
-  height: 100%;
+  height: 80%;
   .header-slot-tabs {
     height: auto;
     max-height: 109px;
@@ -213,6 +206,19 @@
     &-tag {
       overflow: auto;
     }
+  }
+  .footer-button {
+    position:fixed;
+    width:100%;
+    height: 60px;
+    color: #CCCCCC;
+    background: #FFFFFF;
+    box-shadow: 0 0 6px 0;
+    text-align: right;
+    padding-right: 17%;
+    line-height: 5em;
+    bottom: 0;
+    left: 0;
   }
 }
 </style>

@@ -5,7 +5,7 @@
       @click="handleViewSelected"
       >查看已选商品</a
     >
-    <Button type="primary" :disabled="!total" :loading="submitting" @click="handleCreate">{{
+    <Button type="primary" class="create-btn" :disabled="!total" :loading="submitting" @click="handleCreate">{{
       computedButtonText
     }}</Button>
   </div>
@@ -69,6 +69,21 @@
     &:hover {
       cursor: pointer;
     }
+  }
+  .create-btn {
+    height: 40px;
+    line-height: 25px;
+    width: 110px;
+    text-align: center;
+    font-size: 14px;
+    color: #222222;
+    cursor: pointer;
+    font-weight: 500;
+    font-family: PingFangSC-Medium;
+    margin-left: 24px;
+    border-color: antiquewhite;
+    background-image: linear-gradient(-45deg, #FFC34D 0%, #FFE14D 100%);
+    border-radius: 25px;
   }
 }
 </style>

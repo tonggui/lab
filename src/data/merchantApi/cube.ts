@@ -103,10 +103,6 @@ export const apiCubeSwitch = () => httpClient.post('/hqcc/cube/r/cubeSwitch')
  * @param poiId
  */
 export const getMultiCubeTabList = ({ cityId, poiId } : { cityId:number, poiId?: number, }) => {
-  console.log({
-    cityId,
-    poiId
-  })
   return httpClient.post('/hqcc/cube/r/tabList', {
     cityId,
     poiId
