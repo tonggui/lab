@@ -98,13 +98,22 @@ export const apiCubeSwitch = () => httpClient.post('/hqcc/cube/r/cubeSwitch')
  * 商品上新推荐tabList
  * @param poiId
  */
-export const getMultiCubeTabList = ({ cityId, poiId } : { cityId:number, poiId?: number, }) => httpClient.post('/hqcc/cube/r/tabList', {
-  cityId,
-  poiId
-}).then(data => {
-  data = data['cubeTabInfoVoList'] || []
-  return data.map(tab => { tab.id = `${tab.id}`; return tab })
-})
+export const getMultiCubeTabList = ({ cityId, poiId } : { cityId:number, poiId?: number, }) => {
+  console.log({
+    cityId,
+    poiId
+  })
+  return httpClient.post('/hqcc/cube/r/tabList', {
+    cityId,
+    poiId
+  }).then(data => {
+    data = data['cubeTabInfoVoList'] || []
+    return data.map(tab => {
+      tab.id = `${tab.id}`;
+      return tab
+    })
+  })
+}
 /**
  * 获取上新推荐数据店内分类
  */

@@ -82,7 +82,7 @@ export default {
       dispatch('setCurrentScope', currentScope)
     },
     async getTabList ({ state, dispatch, commit }) {
-      const param = state.currentScope.cityId !== -1 ? { cityId: state.currentScope.cityId, poiId: state.currentScope.poiId } : { cityId: state.currentScope.cityId }
+      const param = { cityId: state.currentScope.cityId, poiId: state.currentScope.poiId }
       console.log(param)
       const tabList = await tab.getList(param) || []
       const currentTab = get(tabList[0], 'id')
