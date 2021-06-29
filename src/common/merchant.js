@@ -17,7 +17,7 @@ export const updateMerchantConfig = (key, value) => {
 
 export const getMerchantConfig = (key) => {
   if (key in commonMerchantConfig) {
-    console.log('getMerchantConfigCache', key in commonMerchantConfig, commonMerchantConfig)
+    // console.log('getMerchantConfigCache', key in commonMerchantConfig, commonMerchantConfig)
     return commonMerchantConfig[key]
   } else {
     const cachedValue = sessionStorage.getItem(getConfigKey(key))
