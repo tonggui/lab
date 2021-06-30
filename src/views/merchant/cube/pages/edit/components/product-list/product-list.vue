@@ -141,7 +141,7 @@
           title: '关联分店',
           dimension: 'spu',
           align: 'center',
-          width: 192,
+          width: 180,
           render: (h, { row }) => {
             const handleChange = (poiIds) => {
               this.handleModifyProduct({ params: { addedPoiIds: poiIds }, product: row })
@@ -173,7 +173,7 @@
         }]
       },
       type () {
-        return TYPE.NEW_ARRIVAL_MIX
+        return TYPE.MERCHANT_CENTER
       },
       rowSelection () {
         return {

@@ -47,7 +47,9 @@
         ref="pagination"
       />
     </div>
-    <slot name="footer"></slot>
+    <div ref="footer">
+      <slot name="footer"></slot>
+    </div>
     <Loading v-if="loading" />
   </div>
 </template>
@@ -267,6 +269,7 @@
               const $pagination = this.$refs.pagination
               const $table = this.$refs.tbodyContainer
               if ($container && $table) {
+                console.log('$container', $container.offsetHeight, $table)
                 let height = $container.offsetHeight
                 const { top: containerTop } = $container.getBoundingClientRect()
                 const { top } = $table.getBoundingClientRect()
@@ -275,6 +278,10 @@
                   height = height - $pagination.$el.offsetHeight
                 }
                 height -= this.showHorizontalScrollBar ? this.scrollBarWidth : 0
+                console.log('this.$slots.footer', this.$scopedSlots, this.$refs)
+                if (this.$scopedSlots.footer) height -= this.$refs.footer.offsetHeight
+                console.log('height', height)
+
                 this.tableFixedHeight = height
                 this.$nextTick(resolve)
               }

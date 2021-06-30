@@ -140,7 +140,7 @@
               }).map((product) => {
                 const id = getUniqueId(product)
                 // tabId 特殊处理，从之前缓存中匹配
-                console.log('product', product, this.productInfoMap)
+                // console.log('product', product, this.productInfoMap)
                 return {
                   tabId: product.tabId,
                   ...(this.productInfoMap[id] || product),
@@ -186,6 +186,7 @@
         } else {
           params.syncType = 10
         }
+        params.productList = this.createProduct
         this.handleBatchCreate(params)
       },
       handleModalVisible (visble) {

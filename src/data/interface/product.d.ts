@@ -554,4 +554,5 @@ declare interface MultiCubeProduct {
   addedPoiIds?: number[]; // 待关联门店列表
   relatedPoiIds: number[]; // 已关联门店列表
   totalPoiIds: number[]; // 所有可关联门店列表
+  merchantSpuId?: number; // 对应的总部商品id（如果存在的话）
 }

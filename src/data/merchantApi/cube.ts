@@ -1,5 +1,8 @@
 import httpClient from '@/data/client/instance/merchant'
-import { convertMultiCubeProductList } from '../helper/product/multiCube/convertToServer'
+import {
+  convertMultiCubeProductList,
+  convertSaveCubeProductList
+} from '../helper/product/multiCube/convertToServer'
 import { MultiCubeProduct } from '../interface/product'
 import {
   convertMultiCubeProductList as convertMultiCubeProductListFromServer,
@@ -8,6 +11,7 @@ import {
 } from '../helper/product/multiCube/convertFromServer'
 import { Pagination } from '@/data/interface/common'
 import { convertCategoryToTagList } from '@/data/helper/product/multiCube/convertFromServer'
+
 /**
  * 魔方创建任务进度
  * @param taskType
@@ -80,7 +84,7 @@ export const apiCubeBatchSaveProduct = ({
     syncType = 1,
     excludeSyncContent = []
   } = params
-  const products = convertMultiCubeProductList(productList)
+  const products = convertSaveCubeProductList(productList)
   return httpClient.post('/hqcc/cube/w/batchSaveProduct', {
     products,
     syncType,
