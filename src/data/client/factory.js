@@ -47,16 +47,23 @@ const combineArguments = (method, params = {}, options = {}) => {
 }
 
 // const defaultSuccessHandler = data => ({ ...data.data, serverTime: data.serverTime })
-const defaultSuccessHandler = data => {
-  if (isPlainObject(data.data)) {
-    return { ...data.data, serverTime: data.serverTime }
-  } else {
+const defaultSuccessHandler = (data, customOptions) => {
+  try {
+    if (!data.data && customOptions.hasServerTime) {
+      return { serverTime: data.serverTime }
+    }
+    if (isPlainObject(data.data)) {
+      return { ...data.data, serverTime: data.serverTime }
+    } else {
+      return data.data
+    }
+  } catch (e) {
     return data.data
   }
 }
 
 // 请求函数
-const request = (axiosInstance) => async (method = 'post', url = '', params = {}, options) => {
+const request = (axiosInstance) => async (method = 'post', url = '', params = {}, options, customOptions = {}) => {
   try {
     const searchParams = parse(window.location.search, {
       ignoreQueryPrefix: true
@@ -94,7 +101,7 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     const { data, headers: { Date, date } } = response
     const { code, message } = data
     if (code === 0) {
-      return successHandler({ ...data, serverTime: date || Date })
+      return successHandler({ ...data, serverTime: date || Date }, customOptions)
     }
     if (code !== undefined) {
       throw createError({ ...data, code, message, url })
@@ -128,6 +135,7 @@ export default ({ baseURL, ...rest }) => {
   const apiClient = Object.create(null);
   ['get', 'post', 'put', 'patch', 'delete', 'head', 'upload'].forEach(method => {
     apiClient[method] = function (...rest) {
+      console.log(rest)
       return apiInstance(method, ...rest)
     }
   })
