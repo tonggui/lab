@@ -33,7 +33,6 @@
           :findDataIndex="findDataIndex"
           :findDataRealIndex="findDataRealIndex"
           :isItemNotSeletable="isItemNotSeletable"
-          @related-dataSource="relatedDataSource"
           @on-select="handleSelectChange"
           @on-de-select="handleDeSelect"
           @on-tap-disabled="handleDisabled"
@@ -157,10 +156,6 @@
       ProductListFixedPage
     },
     methods: {
-      relatedDataSource (item) {
-        let isContain = item.totalPoiIds.every(ele => item.relatedPoiIds.includes(ele))
-        return item.isHqExist && isContain
-      },
       handleExistSwitch () {
         this.showExist = !this.showExist
       },
