@@ -214,7 +214,7 @@
     list-style: none;
     border-top: 1px solid #e9eaf2;
     height: calc(100% - 49px);
-    overflow: hidden;
+    overflow: auto;
   }
   .load-fail {
     display: flex;

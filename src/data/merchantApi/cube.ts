@@ -141,7 +141,7 @@ export const getMultiCubeScopeList = () => httpClient.post('hqcc/r/getAllPoiInfo
  * 获取商品上新推荐数据
  */
 export const getMultiCubeProductList = ({ cityId, poiId, keyword, pagination, firstTagId, tabId, secondTagId } : { cityId: number, poiId: number, tabId: string, pagination: Pagination, keyword: string, firstTagId: number, secondTagId?: number }) => httpClient.post('hqcc/cube/r/cubeProductList', {
-  cityId: cityId,
+  cityId,
   poiId,
   firstTagId,
   secondTagId,
