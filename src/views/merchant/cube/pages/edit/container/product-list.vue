@@ -21,7 +21,7 @@
         :maxTagCount="maxTagCount"
         :autoSetting="autoSetting"
         :relInfo="relInfoDesc"
-        @rel-modal="(val) => relModalVisible = val"
+        @rel-modal="handleAutoSettingModal"
         @batch-create="handleBatchCreateConfirm"
         @delete="handleDelete"
         @modify-product="handleModifyProduct"
@@ -29,31 +29,6 @@
         @modify-sku="handleModifySku"
       />
     </div>
-    <Modal
-      :closable="false"
-      :width="800"
-      :value="relModalVisible"
-      @on-cancel="() => handleModalVisible(false)"
-      @on-ok="() => handleModalVisible(true)"
-      class-name="merchant-cube-edit-setting-modal"
-    >
-      <div slot="header">
-        <div class="header">请确认关联后商品信息更新范围</div>
-      </div>
-      <RadioGroup v-model="type">
-        <Radio label="all">
-          <span>全部信息</span>
-        </Radio>
-        <Radio label="exclude">
-          <span>除价格、库存的信息</span>
-        </Radio>
-        <Radio label="only">
-          <span>仅关联门店商品，不更新商品信息</span>
-        </Radio>
-      </RadioGroup>
-      <RelSample :type="type" class="sample" />
-      <Checkbox v-model="autoSettingEnable">开启默认设置</Checkbox>
-    </Modal>
   </div>
 </template>
 <script>
@@ -82,7 +57,6 @@
         relInfo: REL_INFO,
         relModalVisible: false,
         type: 'all',
-        autoSettingEnable: LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING],
         createProduct: []
       }
     },
@@ -92,16 +66,9 @@
         required: true
       }
     },
-    watch: {
-      relModalVisible (val) {
-        if (val) {
-          this.autoSettingEnable = this.autoSetting
-        }
-      }
-    },
     components: {
-      ProductList,
-      RelSample
+      ProductList
+      // RelSample
     },
     computed: {
       ...mapState({
@@ -176,7 +143,8 @@
         handleBatchCreate: 'batchCreate',
         destroy: 'destroy'
       }),
-      handleRequest (val) {
+      handleRequest (productList) {
+        console.log('到这里?')
         const params = {}
         if (this.type === 'all') {
           params.syncType = 1
@@ -186,18 +154,58 @@
         } else {
           params.syncType = 10
         }
-        params.productList = this.createProduct
+        params.productList = productList
         this.handleBatchCreate(params)
       },
-      handleModalVisible (visble) {
-        if (visble) LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING] = this.autoSettingEnable
-        this.relModalVisible = false
-        this.handleRequest()
+      handleAutoSettingModal (resolve, reject) {
+        let autoSetting = LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING]
+        this.$Modal.open({
+          className: 'merchant-cube-edit-setting-modal',
+          width: 800,
+          closable: false,
+          maskClosable: false,
+          centerLayout: true,
+          title: '请确认关联后商品信息更新范围',
+          render: () => {
+            return <div>
+              <RadioGroup value={this.type} vOn:on-change={(val) => { this.type = val }}>
+                <Radio label="all">
+                  <span>全部信息</span>
+                </Radio>
+                <Radio label="exclude">
+                  <span>除价格、库存的信息</span>
+                </Radio>
+                <Radio label="only">
+                  <span>仅关联门店商品，不更新商品信息</span>
+                </Radio>
+              </RadioGroup>
+              <RelSample type={this.type} class="sample"/>
+              <Checkbox
+                value={autoSetting}
+                vOn:on-change={(val) => { autoSetting = val }}>开启默认设置</Checkbox>
+            </div>
+          },
+          onOk: () => {
+            LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING] = autoSetting
+            if (resolve) resolve()
+          },
+          onCancel: () => {
+            if (reject) reject(new Error('取消'))
+          }
+        })
       },
-      handleBatchCreateConfirm (val) {
-        this.createProduct = val
-        if (!LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING]) this.relModalVisible = true
-        else this.handleRequest()
+      handleModalVisible (visble) {
+        return new Promise((resolve, reject) => {
+          if (!LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING]) {
+            this.handleAutoSettingModal(resolve, reject)
+          } else {
+            resolve()
+          }
+        })
+      },
+      async handleBatchCreateConfirm (productList) {
+        await this.handleModalVisible()
+        this.handleRequest(productList)
       },
       handleDelete (productList) {
         this.$emit('delete', productList)

@@ -37,7 +37,7 @@
       <div class="merchant-cube-edit-list-footer">
         <template v-if="autoSetting">
           关联商品信息默认更新范围"{{relInfo}}"&nbsp;
-          <Icon local="set" size="14" style="color: #ff6a00" @click="$emit('rel-modal', true)" />
+          <Icon local="set" size="14" style="color: #ff6a00" @click="$emit('rel-modal')" />
         </template>
         <div class="create-btn" @click="handleBatchCreate">确定创建</div>
       </div>
