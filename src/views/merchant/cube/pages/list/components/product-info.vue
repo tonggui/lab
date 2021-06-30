@@ -158,13 +158,16 @@
     }
     &-bottom-marker {
       position: absolute;
-      padding: 4px;
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(63, 65, 86, .9);
+      //background: rgba(63, 65, 86, .6);
       font-size: @font-size-small;
-      color: #ffffff;
+      font-weight: 400;
+      font-family: PingFangSC-Regular;
+      font-size: 10px;
+      background: rgba(0,0,0,0.60);
+      color: #FFFFFF;
       text-align: center;
       line-height: 1;
       &.delete {
