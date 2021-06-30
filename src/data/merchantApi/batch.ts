@@ -22,6 +22,8 @@ export const submitBatchCreateExcel = ({ wmPoiIds, file, fillPicBySp, traceObj }
     wmPoiIds, file, fillPicBySp
   }, {
     headers
+  }, {
+    hasServerTime: true
   })
 }
 
@@ -68,7 +70,7 @@ export const submitNewBatchRel = ({ wmPoiIds, params, traceId }) => httpClient.p
       id: traceId
     })
   }
-})
+}, { hasServerTime: true })
 
 /**
  * 批量关联 - 任务完成确认
