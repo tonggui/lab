@@ -290,6 +290,10 @@
         this.triggerDelete(productList)
       },
       handleBatchCreate () {
+        if (!this.selectIdList || !this.selectIdList.length) {
+          this.$Message.warning('请至少勾选一个商品')
+          return
+        }
         this.loading = true
         let errorInfo = {}
         const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList, (row) => {

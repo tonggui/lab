@@ -1,5 +1,5 @@
 /**
- * @url reuse/sc/product/hqcc/cube/w/cubeProductValidate
+ * @url reuse/sc/product/shangou/cube/r/checkProducts
  */
 module.exports = function (req) {
   const ProductCubeVos = JSON.parse(req.body.productCubeVos)
