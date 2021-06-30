@@ -13,10 +13,10 @@
         按关联分店筛选
       </span>
       <Select label="按关联分店筛选" style="width:150px; margin:0px 10px" line
-              v-model="selectScope.cityId" filterable placeholder="Select your city">
+              v-model="selectScope.cityId" filterable placeholder="请选择或输入城市名搜索">
         <Option v-for="item in scopeList" :value="item.cityId" :key="item.cityId" >{{item.cityName}}</Option>
       </Select>
-      <Select style="width:150px" v-model="selectScope.poiId" :disabled="selectScope.cityId === -1" placeholder="Select your shop" filterable line>
+      <Select style="width:150px" v-model="selectScope.poiId" :disabled="selectScope.cityId === -1" placeholder="请选择或输入分店名搜索" filterable line>
         <Option v-for="item in shopList" :value="item.id" :key="item.id">{{item.name}}</Option>
       </Select>
 <!--      <Button type="primary" style="margin:0px 10px" @click="handleFilterScope">筛选</Button>-->
@@ -199,10 +199,10 @@
     color: #A2A4B3;
     letter-spacing: 0;
     line-height: 42px;
-    padding-left: 14px;
     font-family: PingFangSC-Regular;
     .content-span{
       display: inline-block;
+      padding-left: 14px;
     }
     .boo-divider, .boo-divider-vertical {
       display: inline-block;
@@ -214,7 +214,7 @@
     list-style: none;
     border-top: 1px solid #e9eaf2;
     height: calc(100% - 49px);
-    overflow: auto;
+    overflow: hidden;
   }
   .load-fail {
     display: flex;

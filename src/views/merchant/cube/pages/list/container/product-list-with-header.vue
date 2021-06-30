@@ -169,6 +169,8 @@
 .product-list-container {
   margin-bottom: 0;
   height: 80%;
+  width:1280px;
+  padding-bottom: 60px;
   .header-slot-tabs {
     height: auto;
     max-height: 109px;
@@ -208,17 +210,18 @@
     }
   }
   .footer-button {
-    position:fixed;
-    width:100%;
+    display: flex;
+    position: fixed;
+    flex-direction: column;
+    width: inherit;
     height: 60px;
     color: #CCCCCC;
     background: #FFFFFF;
     box-shadow: 0 0 6px 0;
     text-align: right;
-    padding-right: 17%;
     line-height: 5em;
     bottom: 0;
-    left: 0;
+    clear:both;
   }
 }
 </style>

@@ -95,7 +95,7 @@
           return this.dataSource
         }
         return this.dataSource.filter(item => {
-          return !this.relatedDataSource(item)
+          return !this.isItemNotSeletable(item)
         })
       },
       isAllUnselectable () {
@@ -158,19 +158,8 @@
     },
     methods: {
       relatedDataSource (item) {
-        const itemRelatedPoiIds = item.relatedPoiIds
-        const itemTotalPoiIds = item.totalPoiIds
-        let flag = true
-        if (itemRelatedPoiIds.length !== itemTotalPoiIds.length) {
-          flag = false
-        } else {
-          itemTotalPoiIds.forEach(ele => {
-            if (itemRelatedPoiIds.indexOf(ele) === -1) {
-              flag = false
-            }
-          })
-        }
-        return flag
+        let isContain = item.totalPoiIds.every(ele => item.relatedPoiIds.includes(ele))
+        return item.isHqExist && isContain
       },
       handleExistSwitch () {
         this.showExist = !this.showExist
@@ -183,8 +172,9 @@
         return (pageSize * (current - 1)) + this.showDataSource.findIndex(item => item.__id__ === __id__)
       },
       isItemNotSeletable (item) {
-        // 不可勾选逻辑
-        return item.relatedPoiIds.length === item.totalPoiIds.length
+        // 不可勾选逻辑: 总部已存在且不是被选中的不可点击 totalPoiIds是否是relatedPoiIds的子集
+        let isContain = item.totalPoiIds.every(ele => item.relatedPoiIds.includes(ele))
+        return item.isHqExist && isContain
       },
       handleInvalidProduct (status, tips) {
         handleToast.call(this, status, tips)
@@ -313,6 +303,8 @@
 .product-table-list-container {
   position: relative;
   height: 100%;
+  width: calc(1280px - 220px);
+  padding-bottom: 60px;
   /deep/ .product-list-fixed-page-layout-content {
     height: calc(100% - 121px);
   }
@@ -354,11 +346,12 @@
     position: fixed;
     flex: 0;
     bottom: 60px;
-    width: 59.6% !important;
+    width: inherit;
     z-index: 100;
     background: #FFFFFF;
     color: black !important;
     padding: 16px 20px;
+    border-right:  1px solid #E9EAF2;
     border-top: 1px solid #E9EAF2;
     border-bottom: 1px solid #E9EAF2;
   }

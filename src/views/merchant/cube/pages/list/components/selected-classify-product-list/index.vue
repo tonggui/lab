@@ -7,7 +7,7 @@
         <Divider type="vertical" />
         <PoiSelect style="width: 25%;" :productId="item.id" :totalPoiIds="item.totalPoiIds" v-model="activeItemList[index].addedPoiIds" :disabledIds = "activeItemList[index].relatedPoiIds" />
         <Divider type="vertical" />
-        <a href="" @click.prevent="$emit('on-unselect', title, item)">取消选择</a>
+        <a href="" style="width: 15%;" @click.prevent="$emit('on-unselect', title, item)">取消选择</a>
       </li>
     </ul>
   </div>
@@ -56,6 +56,7 @@
   .selected-classify-product-list {
     list-style: none;
     width: 576px;
+    justify-content:center;
     .header {
       height: 42px;
       background: #F7F8FA;
@@ -86,13 +87,14 @@
         display: flex;
         align-items: center;
         justify-content:center;
+        text-align: center;
         > a {
           flex-shrink: 0;
           font-size: 14px;
           color: #676A78;
           text-align: center;
           line-height: 14px;
-          text-decoration: underline;
+          text-decoration: none;
         }
       }
     }
