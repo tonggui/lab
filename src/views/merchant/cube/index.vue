@@ -19,7 +19,7 @@
 
 <style lang="less" scoped>
   .merchant-cube-container {
-    height: 100vh;
+    //height: 100vh;
     display: flex;
     flex-direction: column;
     .content {
