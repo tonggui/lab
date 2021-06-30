@@ -36,7 +36,7 @@
           <FormItem label="指定城市" prop="cityId" style="width:350px">
             <Select line
                     v-model="currentScope.cityId"
-                    filterable clearable placeholder="Select your city">
+                    filterable clearable placeholder="请选择或输入城市名搜索">
               <Option v-for="item in scopeList" :value="item.cityId" :key="item.cityId" >{{item.cityName}}</Option>
             </Select>
           </FormItem>
@@ -45,12 +45,12 @@
           <FormItem label="指定城市" prop="cityId" style="width:350px">
             <Select line
                     v-model="currentScope.cityId"
-                    filterable clearable placeholder="Select your city">
+                    filterable clearable placeholder="请选择或输入城市名搜索">
               <Option v-for="item in scopeList" :value="item.cityId" :key="item.cityId" >{{item.cityName}}</Option>
             </Select>
           </FormItem>
           <FormItem label="指定分店" prop="poiId" style="width:350px" >
-            <Select v-model="currentScope.poiId" :disabled="shopDisabled" placeholder="Select your shop" filterable clearable line>
+            <Select v-model="currentScope.poiId" :disabled="shopDisabled" placeholder="请选择或输入分店名搜索" filterable clearable line>
               <Option v-for="item in shopList" :value="item.id" :key="item.id">{{item.name}}</Option>
             </Select>
           </FormItem>

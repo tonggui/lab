@@ -41,8 +41,8 @@ export const fetchGetProductMultiCubeTabList = (params) => getMultiCubeTabList(p
 
 // 获取推荐商品列表（多店魔方）
 export const fetchGetMultiRecommendProductList =
-  (pagination: Pagination, { keyword, firstTagId, tabId, secondTagId } :
-    { tabId: string, keyword: string, firstTagId: number, secondTagId?: number }, cityId: number, poiId: number) => getMultiCubeProductList({
+  (pagination: Pagination, { keyword, firstTagId, cityId, poiId, tabId, secondTagId } :
+    { tabId: string, keyword: string, cityId: number, poiId: number, firstTagId: number, secondTagId?: number }) => getMultiCubeProductList({
     cityId, poiId, keyword, pagination, firstTagId, tabId, secondTagId
   })
 

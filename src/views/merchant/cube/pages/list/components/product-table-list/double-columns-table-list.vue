@@ -18,7 +18,6 @@
 
 <script>
   import ProductInfo from '../product-info'
-  import { judgeArray } from '../../../../utils'
   import { helper } from '@/views/merchant/cube/store'
   const { mapState } = helper('multiCubeList')
   export default {
@@ -29,6 +28,7 @@
         default: () => ([])
       },
       selectedIdList: Array,
+      disabled: Boolean,
       findDataIndex: Function,
       findDataRealIndex: Function,
       isItemNotSeletable: Function
@@ -64,8 +64,7 @@
       disableItem (item) {
         if (this.isItemNotSeletable(item)) return true
         // 已存在且不是被选中的不可点击
-        let isContain = judgeArray(item.relatedPoiIds, item.totalPoiIds)
-        return isContain && !this.isSelected(item)
+        return this.disabled && !this.isSelected(item)
       },
       handleDisabledClick (item) {
         this.$emit('on-tap-disabled', item)

@@ -52,6 +52,8 @@
 
 <style lang="less" scoped>
 .selected-product-button-operations {
+  flex-grow: 1;
+  padding-right: 25px;
   .un-select {
     font-family: PingFangSC-Regular;
     font-size: 14px;
@@ -73,7 +75,7 @@
   .create-btn {
     height: 40px;
     line-height: 25px;
-    width: 110px;
+    width: fit-content;
     text-align: center;
     font-size: 14px;
     color: #222222;
@@ -81,6 +83,7 @@
     font-weight: 500;
     font-family: PingFangSC-Medium;
     margin-left: 24px;
+    margin-bottom: 6px;
     border-color: antiquewhite;
     background-image: linear-gradient(-45deg, #FFC34D 0%, #FFE14D 100%);
     border-radius: 25px;
