@@ -16,6 +16,7 @@
     },
     data () {
       return {
+        firstStatus: true,
         isNewBatchCreate: false
       }
     },
@@ -76,12 +77,13 @@
       inBatchInsertNewGrey(poiId).then(data => {
         if (data.inGrey) {
           window.isNewBatchCreate = true
+          this.firstStatus = false
           this.leftMenu = this.reorder(this.filterMenu(cloneDeep(leftMenu), this.moduleMap))
         }
       })
     },
     render (h) {
-      return h(HeaderBar, {
+      return !this.firstStatus ? null : h(HeaderBar, {
         on: this.$listeners,
         props: {
           left: this.leftMenu,
