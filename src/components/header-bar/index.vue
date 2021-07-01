@@ -16,8 +16,6 @@
     },
     data () {
       return {
-        firstStatus: true, // 初始状态
-        isNewBatchCreate: false,
         leftMenuExtInfo: {} // 左侧菜单动态信息
       }
     },
@@ -25,15 +23,23 @@
       HeaderBar
     },
     computed: {
+      leftModuleMapWithExtInfo () {
+        const _leftMenuExtInfo = (this.leftMenuExtInfo || {})
+        return Object.entries(this.moduleMap).reduce((dist, [key, value]) => {
+          if (!_leftMenuExtInfo[key]) return { ...dist, [key]: value }
+          if (isPlainObject(value)) return { ...dist, [key]: { ...value, ..._leftMenuExtInfo[key] } }
+          return { ...dist, [key]: { ..._leftMenuExtInfo[key], show: value } }
+        }, {})
+      },
       leftMenu () {
-        return this.reorder(this.filterMenu(cloneDeep(leftMenu), this.moduleMap, this.leftMenuExtInfo))
+        return this.reorder(this.filterMenu(cloneDeep(leftMenu), this.leftModuleMapWithExtInfo))
       },
       rightMenu () {
         return this.reorder(this.filterMenu(rightMenu, this.moduleMap))
       }
     },
     methods: {
-      filterMenu (list, moduleMap, extInfoMap = {}) {
+      filterMenu (list, moduleMap) {
         const result = []
         list.forEach(item => {
           const { key } = item
@@ -43,10 +49,6 @@
           if (isPlainObject(moduleItem)) {
             item = merge({}, item, moduleItem)
             show = item.show || false
-          }
-          const extInfo = (extInfoMap || {})[key]
-          if (isPlainObject(extInfo)) {
-            item = merge({}, item, extInfo)
           }
           if (children && children.length > 0) {
             children = this.filterMenu(children, moduleMap)
@@ -75,16 +77,13 @@
     },
     mounted () {
       inBatchInsertNewGrey(poiId).then(data => {
-        if (data.inGrey) {
+        if (!data.inGrey) {
           this.leftMenuExtInfo = { batchCreate: { link: '/reuse/sc/product/views/seller/center/new/create' } }
         }
-        this.$nextTick(() => {
-          this.firstStatus = false
-        })
       })
     },
     render (h) {
-      return this.firstStatus ? null : h(HeaderBar, {
+      return h(HeaderBar, {
         on: this.$listeners,
         props: {
           left: this.leftMenu,
