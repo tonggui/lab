@@ -18,9 +18,7 @@
       return {
         firstStatus: true,
         isNewBatchCreate: false,
-        leftMenuExtInfo: {
-
-        }
+        leftMenuExtInfo: {} // 左侧菜单动态信息
       }
     },
     components: {
@@ -35,7 +33,7 @@
       }
     },
     methods: {
-      getLeftMenuWithExtInfo () {
+      getLeftMenuWithExtInfo () { // 动态拼接附加信息
         if (!Object.keys(this.leftMenuExtInfo).length) return this.leftMenu
         return this.leftMenu.map(item => {
           const extInfo = this.leftMenuExtInfo[(item || {}).key]
@@ -86,7 +84,7 @@
     },
     mounted () {
       inBatchInsertNewGrey(poiId).then(data => {
-        if (!data.inGrey) {
+        if (data.inGrey) {
           this.leftMenuExtInfo = { batchCreate: { link: '/reuse/sc/product/views/seller/center/new/create' } }
         }
         this.$nextTick(() => {
