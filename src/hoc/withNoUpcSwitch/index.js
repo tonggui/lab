@@ -100,7 +100,9 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   render (h) {
-    if (!hasFunc || !this.required || !this.initEnable || !this.data.editable) return forwardComponent(this, WrapperComponent)
+    console.log('hasFunc-hasFunc-hasFunc', hasFunc, this.required, this.initEnable, this.data.editable)
+
+    if (!hasFunc || !this.initEnable || !this.data.editable) return forwardComponent(this, WrapperComponent)
     return h('div', [forwardComponent(this, WrapperComponent, {
       props: {
         disabled: this.disable,
@@ -111,7 +113,8 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
   },
   created () {
     // 初始是否存在此功能
-    this.initEnable = get(this.data, 'commonProperty.allowUpcEmpty', true)
+    this.initEnable = get(this.data, 'commonProperty.allowUpcEmpty', false)
+    console.log('this.data', this.data, this.initEnable)
     this.disable = this.initEnable
     if (this.disable) {
       // TODO hack方法
