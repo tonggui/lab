@@ -115,7 +115,9 @@
           // 只有单店 && 支持上传图片 才展示 批量上传图片
           [KEYS.UPLOAD_IMAGE]: this.isSinglePoi && this.supportUploadImage,
           // 只有多店才有批量同步
-          [KEYS.SYNC]: !this.isSinglePoi
+          [KEYS.SYNC]: !this.isSinglePoi,
+          [KEYS.CREATE]: !this.isSinglePoi ? true : !window.isNewBatchCreate
+
         })
       }
     },
