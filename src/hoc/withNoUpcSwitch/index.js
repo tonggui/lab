@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
-import { get } from 'lodash'
+import { get, isFunction } from 'lodash'
 import lx from '@/common/lx/lxReport'
 import { getName } from '@/hoc/helper'
 import LocalStorage from '@/common/local-storage'
@@ -42,7 +42,8 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
   },
   computed: {
     isNeedAudit () {
-      return this.needAudit()
+      if (isFunction(this.needAudit)) return this.needAudit()
+      else return false
     }
   },
   methods: {
@@ -109,7 +110,8 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }), this.renderEnableUpc(h)])
   },
   created () {
-    this.initEnable = get(this.data, 'commonProperty.allowUpcEmpty', false)
+    // 初始是否存在此功能
+    this.initEnable = get(this.data, 'commonProperty.allowUpcEmpty', true)
     this.disable = this.initEnable
     if (this.disable) {
       // TODO hack方法
