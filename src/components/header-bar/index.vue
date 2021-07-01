@@ -17,7 +17,10 @@
     data () {
       return {
         firstStatus: true,
-        isNewBatchCreate: false
+        isNewBatchCreate: false,
+        leftMenuExtInfo: {
+
+        }
       }
     },
     components: {
@@ -32,6 +35,14 @@
       }
     },
     methods: {
+      getLeftMenuWithExtInfo () {
+        if (!Object.keys(this.leftMenuExtInfo).length) return this.leftMenu
+        return this.leftMenu.map(item => {
+          const extInfo = this.leftMenuExtInfo[(item || {}).key]
+          if (!extInfo) return item
+          return { ...item, ...extInfo }
+        })
+      },
       filterMenu (list, moduleMap) {
         const result = []
         list.forEach(item => {
@@ -75,18 +86,20 @@
     },
     mounted () {
       inBatchInsertNewGrey(poiId).then(data => {
-        if (data.inGrey) {
-          window.isNewBatchCreate = true
-          this.firstStatus = false
-          this.leftMenu = this.reorder(this.filterMenu(cloneDeep(leftMenu), this.moduleMap))
+        if (!data.inGrey) {
+          this.leftMenuExtInfo = { batchCreate: { link: '/reuse/sc/product/views/seller/center/new/create' } }
         }
+        this.$nextTick(() => {
+          this.firstStatus = false
+        })
       })
     },
     render (h) {
-      return !this.firstStatus ? null : h(HeaderBar, {
+      const _leftMenu = this.getLeftMenuWithExtInfo()
+      return this.firstStatus ? null : h(HeaderBar, {
         on: this.$listeners,
         props: {
-          left: this.leftMenu,
+          left: _leftMenu,
           right: this.rightMenu,
           disabled: this.disabled,
           needPermission: this.needPermission
