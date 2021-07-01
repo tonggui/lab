@@ -23,7 +23,7 @@
       HeaderBar
     },
     computed: {
-      leftModuleMapWithExtInfo () {
+      leftModuleMapWithExtInfo () { //
         const _leftMenuExtInfo = (this.leftMenuExtInfo || {})
         return Object.entries(this.moduleMap).reduce((dist, [key, value]) => {
           if (!_leftMenuExtInfo[key]) return { ...dist, [key]: value }
