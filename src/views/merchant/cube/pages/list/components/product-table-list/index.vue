@@ -230,7 +230,8 @@
       },
       handleDeSelect (deSelectItem) {
         this.$emit('on-de-select', deSelectItem)
-        this.displayTips(deSelectItem, false)
+        // 当剔除关联后该商品待关联门店数>=1，则toast提示
+        deSelectItem.addedPoiIds && deSelectItem.addedPoiIds.length > 0 && this.displayTips(deSelectItem, false)
       },
       displayTips (item, type) {
         // console.log('===o')

@@ -24,7 +24,7 @@
         <div>{{product.isSp ? `条形码 ${product.upcCode || ''}` : '规格、重量创建时可修改'}}</div>
         <QualificationTip lackQuaText="该商品需补充资质方可售卖" lackCateText="该商品需申请对应营业资质方可售卖" :product="product" />
       </div>
-      <div class="recommend-product-info-hot-data">
+      <div class="recommend-product-info-hot-data" v-if="hotInfoDisabled">
         <template>{{hotSaleTabInfo}}{{hotSaleValue}}</template>
       </div>
     </template>
@@ -39,6 +39,7 @@
   import ProductInfoImage from '@/components/product-table-info/product-info-image'
   import Layout from '@/components/product-table-info/layout'
   import QualificationTip from '@/views/product-recommend/pages/product-recommend-list/components/qualification-tip'
+  import { getIntersection } from '@/views/merchant/cube/utils'
 
   export default {
     name: 'product-info',
@@ -60,6 +61,10 @@
       },
       rowScopeList: {
         type: Array
+      },
+      hotInfoDisabled: {
+        type: Boolean,
+        default: true
       }
     },
     components: {
@@ -91,28 +96,36 @@
       },
       scopeDisplay () {
         if (!this.isSelected) {
+          // 不选中时关联门店显示逻辑
           if (this.product.isHqExist) {
             if (this.currentScope.cityId !== -1) {
               if (this.currentScope.poiId !== -1) {
+                // 当前选中范围为某个门店
                 let poiName = this.rowScopeList.find(item => item.id === this.currentScope.poiId).name
                 let s = this.product.relatedPoiIds.indexOf(this.currentScope.poiId) === -1 ? '已关联' : '未关联'
                 return s + `${poiName}`
               } else {
+                // 城市
+                let intersection = getIntersection(this.product.relatedPoiIds, this.product.totalPoiIds)
                 let cityName = this.rowScopeList.find(item => item.cityId === this.currentScope.cityId).cityName
-                return `已关联${cityName + this.product.relatedPoiIds.length}个门店/${cityName}共${this.product.totalPoiIds.length}个门店`
+                return `已关联${cityName + intersection.length}个门店/${cityName}共${this.product.totalPoiIds.length}个门店`
               }
             } else {
+              // 全国
               return `已关联全国${this.product.relatedPoiIds.length}个门店/全国共${this.product.totalPoiIds.length}个门店`
             }
           } else {
             return ''
           }
         } else {
+          // 选中时关联门店显示逻辑
           if (this.currentScope.cityId !== -1) {
             if (this.currentScope.poiId !== -1) {
+              // 某个门店
               let poiName = this.rowScopeList.find(item => item.id === this.currentScope.poiId).name
               return `默认关联${poiName}`
             } else {
+              // 某个城市
               let cityName = this.rowScopeList.find(item => item.cityId === this.currentScope.cityId).cityName
               return `默认关联${cityName + this.product.totalPoiIds.length}个门店`
             }

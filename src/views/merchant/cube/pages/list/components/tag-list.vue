@@ -4,7 +4,7 @@
       slot="content"
       :value="tagId"
       :dataSource="tagList"
-      @select="$emit('select', $event)"
+      @select="handleSelect"
       showAllData
       :productCount="productCount"
     >
@@ -42,6 +42,9 @@
       TagTree
     },
     methods: {
+      handleSelect (tagId, parentId) {
+        this.$emit('select', tagId, parentId)
+      }
     }
   }
 </script>

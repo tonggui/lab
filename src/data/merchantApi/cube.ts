@@ -154,10 +154,10 @@ export const getMultiCubeProductList = ({ cityId, poiId, keyword, pagination, fi
   pageNum: pagination.current,
   pageSize: pagination.pageSize
 }).then(data => {
-  console.log(data)
-  const { totalCount, cubeProductList } = (data || {}) as any
+  // console.log(data)
+  const { totalCount, productList } = (data || {}) as any
   return {
-    list: convertMultiCubeProductListFromServer(cubeProductList, tabId),
+    list: convertMultiCubeProductListFromServer(productList, tabId),
     pagination: {
       ...pagination,
       total: totalCount

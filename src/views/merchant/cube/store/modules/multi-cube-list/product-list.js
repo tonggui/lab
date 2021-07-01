@@ -100,7 +100,7 @@ export default (api) => {
         try {
           commit('setLoading', true)
           commit('setError', false)
-          const params = state.parentTagId === 0 ? {
+          const params = state.parentTagId === 0 || state.parentTagId === null ? {
             firstTagId: state.tagId,
             tabId: state.tabId,
             cityId: state.scopeId.cityId,

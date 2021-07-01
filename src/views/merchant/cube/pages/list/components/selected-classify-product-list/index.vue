@@ -3,7 +3,7 @@
     <h2 class="header" v-if="activeItemList.length > 0">{{title}}({{activeItemList.length}})</h2>
     <ul class="product-list">
       <li v-for="(item, index) in activeItemList" :key="item.__id__">
-        <ProductInfo style="width: 60%;" :product="item" :isSelected="true" :itemscope="false" :currentScope="currentScope" :rowScopeList ="rowScopeList"/>
+        <ProductInfo style="width: 60%;" :hotInfoDisabled="false" :product="item" :isSelected="true" :itemscope="false" :currentScope="currentScope" :rowScopeList ="rowScopeList"/>
         <Divider type="vertical" />
         <PoiSelect style="width: 25%;" :productId="item.id" :totalPoiIds="item.totalPoiIds" v-model="activeItemList[index].addedPoiIds" :disabledIds = "activeItemList[index].relatedPoiIds" />
         <Divider type="vertical" />

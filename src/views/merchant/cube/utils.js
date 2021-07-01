@@ -231,3 +231,8 @@ export const judgeArray = (arr1, arr2) => {
   }
   return flag
 }
+
+// 两个数组求交集
+export const getIntersection = (arr1, arr2) => {
+  return arr1.filter(item => arr2.indexOf(item) !== -1)
+}

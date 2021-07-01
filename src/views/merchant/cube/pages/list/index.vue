@@ -45,7 +45,7 @@
       'currentScope': {
         immediate: true,
         handler (v) {
-          this.selection(true)
+          // this.selectedIdList()
         }
       }
     },
@@ -71,7 +71,8 @@
       },
       selectedIdList () {
         console.log(this.classifySelectedProducts)
-        return this.selection()
+        console.log(this.selectionList())
+        return this.selectionList()
       }
     },
     components: {
@@ -108,28 +109,22 @@
           this.$Message.error(err.message || err)
         })
       },
-      selection (type = false) {
-        if (type) {
-          return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
-            productList.forEach(({ __id__, relatedPoiIds, addedPoiIds, totalPoiIds }) => {
-              // 当前范围所有门店是否在当前商品的待关联门店范围内
-              let flag = totalPoiIds.every(item => {
-                return addedPoiIds.indexOf(item) > -1 || relatedPoiIds.indexOf(item) > -1
-              })
-              console.log(flag)
-              if (flag) {
-                prev.push({ __id__, relatedPoiIds, addedPoiIds })
-              }
+      // 勾选状态：手动勾选 or 自动勾选type = true
+      selectionList () {
+        return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
+          productList.forEach(({ __id__, relatedPoiIds, addedPoiIds, totalPoiIds }) => {
+            // 当前商品在所选范围下可关联的所有门店 是否在该商品的 待关联门店范围 和 已关联门店范围内
+            let flag = totalPoiIds.every(item => {
+              return addedPoiIds.indexOf(item) > -1 || relatedPoiIds.indexOf(item) > -1
             })
-            console.log(prev)
-            return prev
-          }, [])
-        } else {
-          return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
-            productList.forEach(({ __id__, relatedPoiIds, addedPoiIds, totalPoiIds }) => prev.push({ __id__, relatedPoiIds, addedPoiIds }))
-            return prev
-          }, [])
-        }
+            console.log(flag)
+            if (flag) {
+              prev.push({ __id__, relatedPoiIds, addedPoiIds })
+            }
+          })
+          console.log(prev)
+          return prev
+        }, [])
       }
     },
     mounted () {

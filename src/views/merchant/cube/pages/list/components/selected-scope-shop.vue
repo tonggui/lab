@@ -22,8 +22,8 @@
             {{operationInfo.cityName}}{{operationInfo.poiName}}
           </span>
         </div>
-        <FormItem label="城市/分店" prop="scopeStatus" style="width:350px" >
-          <RadioGroup v-model="currentScope.scopeStatus">
+        <FormItem label="城市/分店" prop="scopeStatus" style="width:350px"  >
+          <RadioGroup v-model="currentScope.scopeStatus" @on-change="handleScopeChange">
             <Radio :label=0>
               <span>城市</span>
             </Radio>
@@ -32,7 +32,7 @@
             </Radio>
           </RadioGroup>
         </FormItem>
-        <template v-if="currentScope.scopeStatus == 0">
+        <template v-if="currentScope.scopeStatus === 0">
           <FormItem label="指定城市" prop="cityId" style="width:350px">
             <Select line
                     v-model="currentScope.cityId"
@@ -41,7 +41,7 @@
             </Select>
           </FormItem>
         </template>
-        <template v-if="currentScope.scopeStatus == 1">
+        <template v-if="currentScope.scopeStatus === 1">
           <FormItem label="指定城市" prop="cityId" style="width:350px">
             <Select line
                     v-model="currentScope.cityId"
@@ -70,7 +70,7 @@
       return {
         scope: this.currentScopeId && this.currentScopeId.cityId !== -1 ? 1 : -1,
         scopeVisible: false,
-        shopDisabled: false,
+        shopDisabled: true,
         contentScope: false,
         currentScope: {
           scopeStatus: 0,
@@ -83,7 +83,7 @@
       'currentScope.cityId': {
         immediate: true,
         handler (v) {
-          if (typeof v === 'undefined') {
+          if (typeof v === 'undefined' || v === '') {
             this.shopDisabled = true
           } else this.shopDisabled = false
         }
@@ -135,6 +135,11 @@
     // },
     methods: {
       ...mapActions(['setCurrentScope', 'getData']),
+      handleScopeChange (v) {
+        if (v === 1) {
+          this.currentScope.poiId = ''
+        }
+      },
       handleStatusChange (scope) {
         if (this.scope === 1) {
           this.scopeVisible = true
@@ -155,13 +160,9 @@
         }
       },
       confirmSubmit () {
-        if (this.scope === 1 && typeof this.currentScope.poiId !== 'undefined') {
-          this.contentScope = true
-          let tmp = {
-            poiId: this.currentScope.poiId,
-            cityId: this.currentScope.cityId
-          }
+        if (this.scope === 1 && (this.currentScope.cityId !== -1 || this.currentScope.cityId !== '')) {
           if (this.currentScope.scopeStatus === 0) {
+            this.setCurrentScope({ cityId: this.currentScope.cityId, poiId: -1 })
             let tmp = this.scopeList.filter(item => {
               return item.cityId === this.currentScope.cityId
             })[0]
@@ -170,12 +171,14 @@
               id: tmp.cityId
             }
           } else {
+            this.setCurrentScope(this.setCurrentScope({ cityId: this.currentScope.cityId, poiId: this.currentScope.poiId }))
             this.displayShop = this.shopList.filter(item => item.id === this.currentScope.poiId)[0]
           }
-          this.setCurrentScope(tmp)
+          this.contentScope = true
           this.getData()
+          this.$Message.info('更换范围成功')
+          this.scopeVisible = false
         }
-        this.$Message.info('更换范围成功')
       },
       cancel () {
         this.scope = this.currentScopeId && this.currentScopeId.cityId !== -1 ? 1 : -1

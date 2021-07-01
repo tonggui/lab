@@ -35,28 +35,31 @@ export default {
         }
         const productList = [...map[id].productList]
         let currentScope = state.multiCubeList.currentScope
-        let poiIds = state.multiCubeList.currentPoiIds
         if (selected) {
+          // 将当前范围下未关联的门店&&可关联门店 加入待关联门店中
           if (currentScope.poiId !== -1) {
-            product['addedPoiIds'].push(poiIds[0])
+            product['addedPoiIds'].push(currentScope.poiId)
           } else {
             let canRelatePoiIds = product.totalPoiIds.filter(item => product['relatedPoiIds'].indexOf(item) === -1)
             canRelatePoiIds.forEach(item => {
-              if (poiIds.indexOf(item) !== -1 && product['addedPoiIds'].indexOf(item) === -1) {
+              if (product['addedPoiIds'].indexOf(item) === -1) {
                 product['addedPoiIds'].push(item)
               }
             })
           }
           map[id].productList = arrayUniquePush(productList, product, (p) => p.__id__)
         } else {
-          poiIds.forEach(item => {
+          // 从待关联门店中移除当前范围下未关联的门店
+          product.totalPoiIds.forEach(item => {
             arrayRemoveItem(product['addedPoiIds'], item)
           })
+          // 待关联门店数=0，已选商品列表移除该商品
           if (product['addedPoiIds'].length === 0) {
             map[id].productList = arrayUniquePop(productList, product, (p) => p.__id__)
           }
         }
       })
+      console.log('===')
       commit('setClassifySelectedProducts', map)
     },
     poiRelatingRangeChange ({ state, commit }, productList) {

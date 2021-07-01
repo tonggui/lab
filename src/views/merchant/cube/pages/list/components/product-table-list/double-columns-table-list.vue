@@ -70,7 +70,6 @@
         this.$emit('on-tap-disabled', item)
       },
       handleSelectChange (selection, item) {
-        console.log(item)
         if (selection) this.$emit('on-select', [item])
         else this.$emit('on-de-select', [item])
       },

@@ -129,7 +129,7 @@ let data = [
       }
     ],
     "isHqExist" : Math.random() * 10 > 5 ? 0 : 1,
-    "relatedPoiIds" : [1],
+    "relatedPoiIds" : [1,2,3],
     "totalPoiIds" : [1,2],
     "isSp": 2,
     "spId": "Fdc6A2f0-4AB4-973e-9431-87cDB9cA535D",
@@ -307,7 +307,7 @@ let data = [
     ],
     "isSp": 2,
     "isHqExist" : Math.random() * 10 > 5 ? 0 : 1,
-    "relatedPoiIds" :[1,4,8],
+    "relatedPoiIds" :[1,4,8,5,6],
     "totalPoiIds" :[1,4,8],
     "spId": "F09F63e8-e4e7-bAF5-daBD-65776dB50e11",
     "picture": "http://p0.meituan.net/xianfu/8216af051c08df43c7288b6dbabd254194208.jpg",
@@ -396,7 +396,7 @@ let data = [
     ],
     "isSp": 1,
     "isHqExist" : Math.random() * 10 > 5 ? 0 : 1,
-    "relatedPoiIds" : [1,2,3,4],
+    "relatedPoiIds" : [1,2,3,4,6,7,8,9],
     "totalPoiIds" : [1,2,3,4],
     "spId": "c3Ac23BE-fe2B-bd6C-30B6-F860fBee20BA",
     "picture": "http://p0.meituan.net/xianfu/6d593a6582f4a31e1b51c670634c4a32131072.jpg",
@@ -3546,7 +3546,7 @@ module.exports = function (req) {
     "code": 0,
     "msg": "",
     "data": {
-      "cubeProductList": data,// data.slice(pageSize * (pageNum - 1), pageSize * (pageNum - 1) + Number(pageSize)).filter(item => item.tagList.some(it => keyword ? it.tagName.indexOf(keyword) !== -1 : true)).filter(item => item.tagList.some(it => leafTagId ? Number(it.tagId) === Number(leafTagId) : true)),
+      "productList": data,// data.slice(pageSize * (pageNum - 1), pageSize * (pageNum - 1) + Number(pageSize)).filter(item => item.tagList.some(it => keyword ? it.tagName.indexOf(keyword) !== -1 : true)).filter(item => item.tagList.some(it => leafTagId ? Number(it.tagId) === Number(leafTagId) : true)),
       "totalCount": data.length
     }
   }
