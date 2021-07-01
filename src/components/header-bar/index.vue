@@ -16,15 +16,23 @@
     },
     data () {
       return {
-        isNewBatchCreate: false
+        leftMenuExtInfo: {} // 左侧菜单动态信息
       }
     },
     components: {
       HeaderBar
     },
     computed: {
+      leftModuleMapWithExtInfo () { //
+        const _leftMenuExtInfo = (this.leftMenuExtInfo || {})
+        return Object.entries(this.moduleMap).reduce((dist, [key, value]) => {
+          if (!_leftMenuExtInfo[key]) return { ...dist, [key]: value }
+          if (isPlainObject(value)) return { ...dist, [key]: { ...value, ..._leftMenuExtInfo[key] } }
+          return { ...dist, [key]: { ..._leftMenuExtInfo[key], show: value } }
+        }, {})
+      },
       leftMenu () {
-        return this.reorder(this.filterMenu(cloneDeep(leftMenu), this.moduleMap))
+        return this.reorder(this.filterMenu(cloneDeep(leftMenu), this.leftModuleMapWithExtInfo))
       },
       rightMenu () {
         return this.reorder(this.filterMenu(rightMenu, this.moduleMap))
@@ -49,11 +57,6 @@
             show = children.length > 0 && (key in moduleMap ? show : true)
           }
           if (show) {
-            if (item.key === 'batchCreate') {
-              item.link = !window.isNewBatchCreate ? {
-                path: '/batchManagement/batchCreate'
-              } : '/reuse/sc/product/views/seller/center/new/create'
-            }
             result.push(item)
           }
         })
@@ -74,9 +77,8 @@
     },
     mounted () {
       inBatchInsertNewGrey(poiId).then(data => {
-        if (data.inGrey) {
-          window.isNewBatchCreate = true
-          this.leftMenu = this.reorder(this.filterMenu(cloneDeep(leftMenu), this.moduleMap))
+        if (!data.inGrey) {
+          this.leftMenuExtInfo = { batchCreate: { link: '/reuse/sc/product/views/seller/center/new/create' } }
         }
       })
     },
