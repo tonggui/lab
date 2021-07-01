@@ -61,7 +61,7 @@ export const leftMenu = [{
 {
   key: 'batchCreate',
   label: '批量新建',
-  link: !window.isNewBatchCreate ? {
+  link: !window.isNewBatchCreate ? { // 灰度策略
     path: '/batchManagement/batchCreate'
   } : '/reuse/sc/product/views/seller/center/new/create',
   icon: BatchCreate,
