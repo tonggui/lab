@@ -77,7 +77,7 @@
     },
     mounted () {
       inBatchInsertNewGrey(poiId).then(data => {
-        if (!data.inGrey) {
+        if (data.inGrey) {
           this.leftMenuExtInfo = { batchCreate: { link: '/reuse/sc/product/views/seller/center/new/create' } }
         }
       })
