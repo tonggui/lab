@@ -16,7 +16,7 @@
     },
     data () {
       return {
-        firstStatus: true,
+        firstStatus: true, // 初始状态
         isNewBatchCreate: false,
         leftMenuExtInfo: {} // 左侧菜单动态信息
       }
@@ -26,22 +26,14 @@
     },
     computed: {
       leftMenu () {
-        return this.reorder(this.filterMenu(cloneDeep(leftMenu), this.moduleMap))
+        return this.reorder(this.filterMenu(cloneDeep(leftMenu), this.moduleMap, this.leftMenuExtInfo))
       },
       rightMenu () {
         return this.reorder(this.filterMenu(rightMenu, this.moduleMap))
       }
     },
     methods: {
-      getLeftMenuWithExtInfo () { // 动态拼接附加信息
-        if (!Object.keys(this.leftMenuExtInfo).length) return this.leftMenu
-        return this.leftMenu.map(item => {
-          const extInfo = this.leftMenuExtInfo[(item || {}).key]
-          if (!extInfo) return item
-          return { ...item, ...extInfo }
-        })
-      },
-      filterMenu (list, moduleMap) {
+      filterMenu (list, moduleMap, extInfoMap = {}) {
         const result = []
         list.forEach(item => {
           const { key } = item
@@ -52,6 +44,10 @@
             item = merge({}, item, moduleItem)
             show = item.show || false
           }
+          const extInfo = (extInfoMap || {})[key]
+          if (isPlainObject(extInfo)) {
+            item = merge({}, item, extInfo)
+          }
           if (children && children.length > 0) {
             children = this.filterMenu(children, moduleMap)
             item.children = children
@@ -59,11 +55,6 @@
             show = children.length > 0 && (key in moduleMap ? show : true)
           }
           if (show) {
-            if (item.key === 'batchCreate') {
-              item.link = !window.isNewBatchCreate ? {
-                path: '/batchManagement/batchCreate'
-              } : '/reuse/sc/product/views/seller/center/new/create'
-            }
             result.push(item)
           }
         })
@@ -93,11 +84,10 @@
       })
     },
     render (h) {
-      const _leftMenu = this.getLeftMenuWithExtInfo()
       return this.firstStatus ? null : h(HeaderBar, {
         on: this.$listeners,
         props: {
-          left: _leftMenu,
+          left: this.leftMenu,
           right: this.rightMenu,
           disabled: this.disabled,
           needPermission: this.needPermission
