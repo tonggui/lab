@@ -176,7 +176,7 @@ export const getMultiCubeProductList = ({ cityId, poiId, keyword, pagination, fi
 export const multiCubeCheckProducts = ({ productList }: { productList: MultiCubeProduct[]}) => {
   const list = convertMultiCubeProductList(productList) // TODO
   return httpClient.post('hqcc/cube/w/cubeProductValidate', {
-    cubeProductList: JSON.stringify(list)
+    cubeProductList: list
   }).then(data => {
     data = data || {}
     const { deleteSpuList, editSpuList } = data
