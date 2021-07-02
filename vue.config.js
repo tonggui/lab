@@ -201,10 +201,7 @@ module.exports = {
     },
     proxy: {
       '^/api': {
-        target: 'http://queenbee.m.waimai.test.sankuai.com',
-        pathRewrite: { '^/api': '' },
-        changeOrigin: true,
-        secure: false
+        target: 'http://localhost:10010'
       },
       '^/api/reuse/mpc/product': {
         target: 'http://e.shangou.test.sankuai.com',
