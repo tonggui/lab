@@ -277,6 +277,8 @@
   }
 
   .link-item-wrapper-3 > span,
+  .link-item-wrapper-3 > button,
+  .link-item-wrapper-3 > a,
   .link-item-wrapper-3 > div {
     width: 33%;
     margin-top: 26px;
@@ -288,6 +290,8 @@
   }
 
   .link-item-wrapper-6 > span,
+  .link-item-wrapper-6 > button,
+  .link-item-wrapper-6 > a,
   .link-item-wrapper-6 > div {
     width: 33%;
     margin-top: 12px;
@@ -299,6 +303,8 @@
   }
 
   .link-item-wrapper-9 > span,
+  .link-item-wrapper-9 > button,
+  .link-item-wrapper-9 > a,
   .link-item-wrapper-9 > div {
     width: 33%;
     margin-top: 5px;

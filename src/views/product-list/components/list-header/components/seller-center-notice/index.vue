@@ -38,7 +38,7 @@
               return {
                 title: '批量新建',
                 type: 'warning',
-                content: `于 ${moment(ctime).format('YYYY-MM-DD h:mm')} 提交的创建任务正在进⾏中，请耐⼼等待。`,
+                content: `于 ${moment(ctime * 1000).format('YYYY-MM-DD h:mm')} 提交的创建任务正在进⾏中，请耐⼼等待。`,
                 actions: [{
                   text: '查看进度',
                   type: 'button',
@@ -50,7 +50,7 @@
               return {
                 title: '批量新建',
                 type: 'warning',
-                content: `于 ${moment(ctime).format('YYYY-MM-DD h:mm')} 提交的创建任务已完成。商品全部创建成功。`,
+                content: `于 ${moment(ctime * 1000).format('YYYY-MM-DD h:mm')} 提交的创建任务已完成。商品全部创建成功。`,
                 actions: [{
                   text: '查看详情',
                   type: 'button',
@@ -69,7 +69,7 @@
               return {
                 title: '批量新建',
                 type: 'error',
-                content: `于 ${moment(ctime).format('YYYY-MM-DD h:mm')} 提交的任务，商品全部创建失败。`,
+                content: `于 ${moment(ctime * 1000).format('YYYY-MM-DD h:mm')} 提交的任务，商品全部创建失败。`,
                 actions: [{
                   text: '立即补充',
                   type: 'button',
@@ -81,7 +81,7 @@
               return {
                 title: '批量新建',
                 type: 'error',
-                content: `于 ${moment(ctime).format('YYYY-MM-DD h:mm')} 提交的任务，有${infoMiss}个商品需补充必填信息。请⽴即处理。`,
+                content: `于 ${moment(ctime * 1000).format('YYYY-MM-DD h:mm')} 提交的任务，有${infoMiss}个商品需补充必填信息。请⽴即处理。`,
                 actions: [{
                   text: '立即补充',
                   type: 'button',

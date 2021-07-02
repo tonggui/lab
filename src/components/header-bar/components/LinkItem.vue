@@ -82,7 +82,7 @@
     font-size: 12px;
     color: #222222;
     text-align: left;
-    margin-right: 16px;
+    //margin-right: 16px;
     padding: 0;
     cursor: pointer;
     height: 100%;
