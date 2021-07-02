@@ -168,8 +168,10 @@
       },
       isItemNotSeletable (item) {
         // 不可勾选逻辑: 总部已存在且不是被选中的不可点击 totalPoiIds是否是relatedPoiIds的子集
-        let isContain = item.totalPoiIds.every(ele => item.relatedPoiIds.includes(ele))
-        return item.isHqExist && isContain
+        if (item.totalPoiIds) {
+          let isContain = item.totalPoiIds.every(ele => item.relatedPoiIds.includes(ele))
+          return item.isHqExist && isContain
+        } else return true
       },
       handleInvalidProduct (status, tips) {
         handleToast.call(this, status, tips)

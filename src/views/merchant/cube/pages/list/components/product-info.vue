@@ -25,7 +25,7 @@
         <QualificationTip lackQuaText="该商品需补充资质方可售卖" lackCateText="该商品需申请对应营业资质方可售卖" :product="product" />
       </div>
       <div class="recommend-product-info-hot-data" v-if="hotInfoDisabled">
-        <template>{{hotSaleTabInfo}}{{hotSaleValue}}</template>
+        <template>{{hotSaleTabInfo}}</template>
       </div>
     </template>
     <template slot="scope">
@@ -73,14 +73,11 @@
       QualificationTip
     },
     computed: {
-      // hotValue () {
-      //   return this.product.hotSaleDetailsMap || {}
-      // },
       hotSaleTabInfo () {
-        return '近三十天热销'
-      },
-      hotSaleValue () {
-        return 22222
+        if (this.product.hotSaleDetailsMap) {
+          let info = Object.keys(this.product.hotSaleDetailsMap)[0]
+          return info + this.product.hotSaleDetailsMap[info]
+        } else return ''
       },
       getSkus () {
         // TODO 商品信息展示
@@ -102,7 +99,7 @@
               if (this.currentScope.poiId !== -1) {
                 // 当前选中范围为某个门店
                 let poiName = this.rowScopeList.find(item => item.id === this.currentScope.poiId).name
-                let s = this.product.relatedPoiIds.indexOf(this.currentScope.poiId) === -1 ? '已关联' : '未关联'
+                let s = this.product.relatedPoiIds.indexOf(this.currentScope.poiId) === -1 ? '未关联' : '已关联'
                 return s + `${poiName}`
               } else {
                 // 城市

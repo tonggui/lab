@@ -14,7 +14,7 @@
       v-model="scopeVisible"
       title="选择一个指定城市或分店"
       @on-ok="confirmSubmit"
-      @on-cancel="cancel">
+      @on-cancel="cancel" :mask-closable="false">
       <Form ref="currentScope" :model="currentScope" :label-width="80">
         <div type="warning" class="operation-info-tip">
           <span>
@@ -94,7 +94,7 @@
           if (v !== '') {
             this.scope = this.currentScopeId && this.currentScopeId.cityId !== -1 ? 1 : -1
             this.currentScope = {
-              scopeStatus: 0,
+              scopeStatus: this.currentScopeId.poiId === -1 ? 0 : 1,
               cityId: this.currentScopeId.cityId,
               poiId: this.currentScopeId.poiId
             }
@@ -160,25 +160,31 @@
         }
       },
       confirmSubmit () {
-        if (this.scope === 1 && (this.currentScope.cityId !== -1 || this.currentScope.cityId !== '')) {
-          if (this.currentScope.scopeStatus === 0) {
-            this.setCurrentScope({ cityId: this.currentScope.cityId, poiId: -1 })
-            let tmp = this.scopeList.filter(item => {
-              return item.cityId === this.currentScope.cityId
-            })[0]
-            this.displayShop = {
-              name: tmp.cityName,
-              id: tmp.cityId
+        return new Promise((resolve, reject) => {
+          if ((this.currentScope.scopeStatus === 0 && this.currentScope.cityId !== -1 && this.currentScope.cityId !== '') ||
+            (this.currentScope.scopeStatus === 1 && this.currentScope.poiId !== -1 && this.currentScope.poiId)) {
+            if (this.currentScope.scopeStatus === 0) {
+              this.setCurrentScope({ cityId: this.currentScope.cityId, poiId: -1 })
+              let tmp = this.scopeList.filter(item => {
+                return item.cityId === this.currentScope.cityId
+              })[0]
+              this.displayShop = {
+                name: tmp.cityName,
+                id: tmp.cityId
+              }
+            } else {
+              this.setCurrentScope(this.setCurrentScope({ cityId: this.currentScope.cityId, poiId: this.currentScope.poiId }))
+              this.displayShop = this.shopList.filter(item => item.id === this.currentScope.poiId)[0]
             }
+            this.contentScope = true
+            this.getData()
+            this.$Message.info('更换范围成功')
+            this.scopeVisible = false
+            resolve()
           } else {
-            this.setCurrentScope(this.setCurrentScope({ cityId: this.currentScope.cityId, poiId: this.currentScope.poiId }))
-            this.displayShop = this.shopList.filter(item => item.id === this.currentScope.poiId)[0]
+            reject(new Error())
           }
-          this.contentScope = true
-          this.getData()
-          this.$Message.info('更换范围成功')
-          this.scopeVisible = false
-        }
+        })
       },
       cancel () {
         this.scope = this.currentScopeId && this.currentScopeId.cityId !== -1 ? 1 : -1

@@ -117,12 +117,12 @@
             let flag = totalPoiIds.every(item => {
               return addedPoiIds.indexOf(item) > -1 || relatedPoiIds.indexOf(item) > -1
             })
-            console.log(flag)
+            // console.log(flag)
             if (flag) {
               prev.push({ __id__, relatedPoiIds, addedPoiIds })
             }
           })
-          console.log(prev)
+          // console.log(prev)
           return prev
         }, [])
       }

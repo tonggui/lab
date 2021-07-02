@@ -100,7 +100,7 @@ export default (api) => {
         try {
           commit('setLoading', true)
           commit('setError', false)
-          const params = state.parentTagId === 0 || state.parentTagId === null ? {
+          const params = state.parentTagId === -1 || state.parentTagId === 0 || state.parentTagId === null ? {
             firstTagId: state.tagId,
             tabId: state.tabId,
             cityId: state.scopeId.cityId,
@@ -114,7 +114,7 @@ export default (api) => {
             poiId: state.scopeId.poiId,
             ...state.filters
           }
-          console.log(params)
+          // console.log(params)
           const result = await api.getList(state.pagination, params)
           const { pageSize, current } = state.pagination
           const { total } = result.pagination

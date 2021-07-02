@@ -26,7 +26,7 @@ export const convertMultiCubeEditProduct = (product): MultiCubeProduct => {
     isExist,
     poiSpuId,
     name,
-    tagList,
+    tagInfoList,
     isSp,
     spId,
     skus,
@@ -38,7 +38,7 @@ export const convertMultiCubeEditProduct = (product): MultiCubeProduct => {
     sourceLabelIds,
     sourceLabel,
     isDelete,
-    labelVo,
+    hotSaleDetailsMap,
     isHqExist,
     relatedPoiIds,
     totalPoiIds,
@@ -55,7 +55,7 @@ export const convertMultiCubeEditProduct = (product): MultiCubeProduct => {
       return sku
     })
   }
-  const list = convertCategoryTemplateTag(typeof tagList === 'string' ? JSON.parse(tagList) : tagList)
+  const list = convertCategoryTemplateTag(typeof tagInfoList === 'string' ? JSON.parse(tagInfoList) : tagInfoList)
   const multiCubeProduct: MultiCubeProduct = {
     __id__: Number(poiSpuId) || spId,
     id: poiSpuId,
@@ -70,7 +70,7 @@ export const convertMultiCubeEditProduct = (product): MultiCubeProduct => {
     upcCode,
     productLabelIdList: sourceLabelIds || [sourceLabel],
     isDelete: isDelete === 1,
-    hotSaleDetailsMap: labelVo,
+    hotSaleDetailsMap: hotSaleDetailsMap,
     isExist: Number(isExist) === 1,
     isHqExist: isHqExist === 1,
     relatedPoiIds,
