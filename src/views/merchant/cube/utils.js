@@ -130,12 +130,15 @@ export const mergeProduct = (...productList) => {
 
 // 商品信息是否不完整
 export const isIncompleteProductInfo = (product) => {
-  const { name, skuList } = product
+  const { name, skuList, tagList } = product
   if (!name) {
     return true
   }
   const list = skuList.filter(sku => sku.editable)
   if (list.length <= 0) {
+    return true
+  }
+  if (tagList.length <= 0) {
     return true
   }
   return list.some(sku => {

@@ -1,7 +1,7 @@
 import {
   isIncompleteProductInfo,
   getUniqueId
-} from '@/views/product-recommend/utils'
+} from '../../../../utils'
 
 const createError = (id) => ({
   __id__: id,

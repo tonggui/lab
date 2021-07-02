@@ -1,4 +1,5 @@
-import { fetchGetTagList } from '@/data/repos/category'
+// import { fetchGetTagList } from '@/data/repos/category'
+import { fetchGetTagList } from '@/data/repos/medicineMerchantCategory'
 import ProductList from './product-list'
 import { WithProductStock } from '@/views/product-recommend/pages/product-recommend-edit/components/product-list'
 import WithAsyncTask from '@/hoc/withAsyncTask'
