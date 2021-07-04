@@ -437,11 +437,11 @@
               })
               bid = 'b_shangou_online_e_aifq7sdx_mv'
             }
-            window.Owl.addError({ name: 'saveError', msg: `callback内：product:${JSON.stringify(this.product)}, response: ${JSON.stringify(response)}, page_source: ${window.page_source}, bid: ${bid}` }, { level: 'warn' })
             LXContext.destroyVm()
             this.popConfirmModal(response)
           }
           callback()
+          window.Owl.addError({ name: 'saveError', msg: `callback内：product:${JSON.stringify(this.product)}, response: ${JSON.stringify(response)}, page_source: ${window.page_source}, bid: ${bid}` }, { level: 'warn' })
         }, this)
         if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
           this.$emit('on-revocation', this.productInfo, cb)
