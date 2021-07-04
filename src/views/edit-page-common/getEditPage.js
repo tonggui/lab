@@ -172,6 +172,7 @@ export default ({ Component }) => (Api) => {
         let response = null
         try {
           this.product = product
+          // window.owl('message', { product, ...context, type: 'saveError' })
           /**
            * 加入兜底逻辑
            * TODO 由于数据分析发现接口请求已上报埋点，但是前端漏报，猜测是否因为（response后cb前）报错，导致未上报前端埋点
@@ -181,6 +182,7 @@ export default ({ Component }) => (Api) => {
             noMessage = config.noMessage
           }
           response = await this.fetchSubmitEditProduct(context)
+          window.Owl.addError({ name: 'saveError', msg: `请求之后：product:${JSON.stringify(this.product)}, response: ${JSON.stringify(response)}, context:${JSON.stringify(context)}` }, { level: 'warn' })
           if (response && !noMessage) this.$Message.success('编辑商品信息成功')
           cb(response)
         } catch (err) {
@@ -192,6 +194,7 @@ export default ({ Component }) => (Api) => {
           } else {
             cb(null, err)
           }
+          window.Owl.addError({ name: 'saveError', msg: `请求之后：product:${JSON.stringify(this.product)}, response: ${JSON.stringify(response)}, context:${JSON.stringify(context)}, error: ${err}` }, { level: 'warn' })
         }
       },
       async handleRevocation (product, cb) {
