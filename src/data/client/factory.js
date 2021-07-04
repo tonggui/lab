@@ -135,7 +135,6 @@ export default ({ baseURL, ...rest }) => {
   const apiClient = Object.create(null);
   ['get', 'post', 'put', 'patch', 'delete', 'head', 'upload'].forEach(method => {
     apiClient[method] = function (...rest) {
-      console.log(rest)
       return apiInstance(method, ...rest)
     }
   })
