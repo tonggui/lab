@@ -181,6 +181,7 @@ export default ({ Component }) => (Api) => {
           if (config && typeof config === 'object') {
             noMessage = config.noMessage
           }
+          window.Owl.addError({ name: 'saveError', msg: `请求之前：product:${JSON.stringify(this.product)}, context:${JSON.stringify(context)}` }, { level: 'warn' })
           response = await this.fetchSubmitEditProduct(context)
           window.Owl.addError({ name: 'saveError', msg: `请求之后：product:${JSON.stringify(this.product)}, response: ${JSON.stringify(response)}, context:${JSON.stringify(context)}` }, { level: 'warn' })
           if (response && !noMessage) this.$Message.success('编辑商品信息成功')
