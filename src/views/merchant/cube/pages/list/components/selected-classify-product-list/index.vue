@@ -55,7 +55,7 @@
 <style lang="less" scoped>
   .selected-classify-product-list {
     list-style: none;
-    width: 576px;
+    width: 591px;
     justify-content:center;
     .header {
       height: 42px;

@@ -5,7 +5,7 @@
       :error="pageError"
       @refresh="handleRefresh"
     >
-      <SelectedScopeShop/>
+      <SelectedScopeShop @updateSelectedProducts="updateSelectedProducts"/>
       <ProductListFixedPage class="product-recommend-container-product">
         <div slot="content" class="product-recommend-container-product-content">
           <ProductListWithHeader
@@ -45,7 +45,7 @@
       'currentScope': {
         immediate: true,
         handler (v) {
-          // this.selectedIdList()
+          // this.updateSelectedProducts()
         }
       }
     },
@@ -87,7 +87,8 @@
         handleDeSelect: 'deSelectProduct',
         handleSetEditProduct: 'setEditProductList',
         handleGetData: 'multiCubeList/getData',
-        handleGetScopeData: 'multiCubeList/getScopeList'
+        handleGetScopeData: 'multiCubeList/getScopeList',
+        updateSelectedProducts: 'updateSelectedProducts'
       }),
       handleRefresh () {
         this.getUploadRecTips()
