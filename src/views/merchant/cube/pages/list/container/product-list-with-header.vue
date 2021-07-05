@@ -94,7 +94,12 @@
         })
       },
       totalSelectedCount () {
-        return this.selectedIdList.length
+        const classifySelectedProducts = this.$store.state.productMultiCubeRecommend.classifySelectedProducts
+        let totalLength = 0
+        for (let key in classifySelectedProducts) {
+          totalLength += classifySelectedProducts[key].productList.length
+        }
+        return totalLength
       }
     },
     components: {

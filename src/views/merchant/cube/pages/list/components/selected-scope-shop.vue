@@ -152,6 +152,7 @@
           this.contentScope = false
           this.setCurrentScope({ cityId: -1, poiId: -1 })
           this.getData()
+          this.$emit('updateSelectedProducts')
         }
       },
       handleStatusClick () {
@@ -178,6 +179,7 @@
             }
             this.contentScope = true
             this.getData()
+            this.$emit('updateSelectedProducts')
             this.$Message.info('更换范围成功')
             this.scopeVisible = false
             resolve()
