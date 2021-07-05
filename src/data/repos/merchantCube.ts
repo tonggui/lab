@@ -6,7 +6,9 @@ import {
   getMultiCubeTabList,
   getMultiCubeScopeList,
   getMultiCubeProductList,
-  multiCubeCheckProducts, getMultiCubeTagList
+  multiCubeCheckProducts,
+  getMultiCubeTagList,
+  apiMultiCubeDefaultStock
 } from '@/data/merchantApi/cube'
 import { Pagination } from '@/data/interface/common'
 import { MultiCubeProduct } from '@/data/interface/product'
@@ -54,3 +56,5 @@ export const fetchSubmitMultiCreateRecommendProduct = (product: MultiCubeProduct
 
 // 创建商品前校验
 export const fetchMultiCubeCheckProducts = (productList: MultiCubeProduct[]) => multiCubeCheckProducts({ productList })
+
+export const fetchMultiCubeDefaultStock = () => apiMultiCubeDefaultStock()

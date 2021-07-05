@@ -2,11 +2,12 @@
  * @url reuse/sc/product/hqcc/cube/w/cubeProductValidate
  */
 module.exports = function (req) {
-  const ProductCubeVos = JSON.parse(req.body.productCubeVos)
+  console.log('req.body.hqccParams', req.body)
+  const { cubeProductList } = req.body
   const indexs = []
   const deleteSpuList = []
-  const editSpuList = [...ProductCubeVos]
-  const delNum = Math.floor(Math.random() * ProductCubeVos.length)
+  const editSpuList = [...cubeProductList]
+  const delNum = Math.floor(Math.random() * cubeProductList.length)
   // if (Array.isArray(ProductCubeVos)) {
   //   while (deleteSpuList.length !== delNum) {
   //     const randomNum = Math.floor(Math.random() * ProductCubeVos.length)

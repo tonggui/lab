@@ -78,7 +78,7 @@
     props: {
       autoSetting: Boolean,
       relInfo: String,
-      source: Array,
+      sourceTagList: Array,
       groupList: Array,
       cacheProduct: Object,
       cacheProductDefaultValue: Object,
@@ -135,7 +135,7 @@
           required: true,
           render: (h, { row, skuIndex }) => {
             const handleChange = (tagList) => this.handleModifyProduct({ params: { tagList }, product: row })
-            return h(Tag, { props: { maxCount: this.maxTagCount || 1, tagList: row.tagList, source: this.source }, on: { change: handleChange } })
+            return h(Tag, { props: { maxCount: this.maxTagCount || 1, tagList: row.tagList, source: this.sourceTagList }, on: { change: handleChange } })
           }
         }, {
           title: '关联分店',

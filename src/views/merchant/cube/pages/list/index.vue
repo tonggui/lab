@@ -25,7 +25,6 @@
 <script>
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
   import ProductListWithHeader from './container/product-list-with-header'
-  import { fetchUploadRecTips } from '@/data/repos/product'
   import SelectedScopeShop from './components/selected-scope-shop'
   import { helper } from '../../store'
   import { get } from 'lodash'
@@ -90,24 +89,12 @@
         handleGetScopeData: 'multiCubeList/getScopeList'
       }),
       handleRefresh () {
-        this.getUploadRecTips()
         this.handleGetData()
         this.handleGetScopeData()
       },
       handleGoBack () {
         this.handleDestroyStatus()
         this.$router.push({ name: 'productList', query: this.$route.query })
-      },
-      getUploadRecTips () {
-        fetchUploadRecTips().then(res => {
-          this.error = false
-          const { title, content } = res
-          this.title = title
-          this.desc = content
-        }).catch(err => {
-          this.error = true
-          this.$Message.error(err.message || err)
-        })
       },
       // 勾选状态：手动勾选 or 自动勾选type = true
       selectionList () {
@@ -128,7 +115,6 @@
       }
     },
     mounted () {
-      this.getUploadRecTips()
       this.handleGetScopeData()
     }
   }

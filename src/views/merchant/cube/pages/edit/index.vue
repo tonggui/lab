@@ -2,16 +2,14 @@
   <div class="merchant-cube-edit">
     <ProductList
       :tag-group-product="tagGroupProduct"
+      :auto-fill-tag="false"
       @delete="handleDelete"
       class="merchant-cube-edit-list"
     />
   </div>
 </template>
 <script>
-  // import { fetchGetIsAutoFillRecProductTag } from '@/data/repos/category'
   import ProductList from './container/product-list'
-  // import { getCategoryIdList } from '../../utils'
-  // import LocalStorage, { KEYS } from '@/common/local-storage'
   import lx from '@/common/lx/lxReport'
   import { helper } from '../../store'
 
@@ -34,29 +32,9 @@
       handleGoBack () {
         this.$router.back()
       }
-      // async getIsAutoFill () {
-      //   const autoFill = LocalStorage[KEYS.PRODUCT_NEW_ARRIVAL_AUTO_FILL]
-      //   if (!autoFill) {
-      //     const hasAutoFill = await fetchGetIsAutoFillRecProductTag({ categoryIds: getCategoryIdList(this.tagGroupProduct) })
-      //     if (hasAutoFill) {
-      //       this.$Modal.info({
-      //         title: '温馨提示',
-      //         content: '平台已自动帮您填写部分新商品的店内分类，无需再手动填写',
-      //         centerLayout: true,
-      //         iconType: '',
-      //         width: 420,
-      //         okText: '我知道了',
-      //         onOk: () => {
-      //           LocalStorage[KEYS.PRODUCT_NEW_ARRIVAL_AUTO_FILL] = true
-      //         }
-      //       })
-      //     }
-      //   }
-      // }
     },
     mounted () {
       this.createTime = +new Date()
-      // this.getIsAutoFill()
     },
     beforeDestroy () {
       lx.mv({
