@@ -11,7 +11,6 @@ export default {
   namespaced: true,
   state: {
     currentTabId: '',
-    tagSource: 0,
     tabList: [],
     scopeList: [],
     rowScopeList: [],
@@ -27,9 +26,6 @@ export default {
     },
     setCurrentTab (state, currentTabId) {
       state.currentTabId = currentTabId
-    },
-    setTagSource (state, tagSource) {
-      state.tagSource = tagSource
     },
     setScopeList (state, scopeList) {
       state.scopeList = scopeList
@@ -49,6 +45,7 @@ export default {
     async getScopeList ({ dispatch, commit }) {
       let cityList = []
       const optionsShop = await scope.getList() || []
+      commit('setRowScopeList', [...optionsShop])
       optionsShop.unshift({ id: -1, name: '全国所有门店', cityId: -1, cityName: '全国' })
       optionsShop.forEach(item => {
         let city = cityList.some(ele => ele.cityId === item.cityId)
@@ -77,7 +74,6 @@ export default {
         cityId: -1,
         poiId: -1
       }
-      commit('setRowScopeList', optionsShop)
       commit('setScopeList', cityList)
       dispatch('setCurrentScope', currentScope)
     },
@@ -85,16 +81,9 @@ export default {
       const param = { cityId: state.currentScope.cityId, poiId: state.currentScope.poiId }
       const tabList = await tab.getList(param) || []
       const currentTab = get(tabList[0], 'id')
-      const tagSource = get(tabList[0], 'tagSource')
 
       commit('setTabList', tabList)
-      commit('setTagSource', tagSource)
       dispatch('setCurrentTab', currentTab)
-    },
-    setTagSource ({ state, commit }, tabId) {
-      const tabList = state.tabList || []
-      const tagSource = tabList.find(it => it.id === tabId).tagSource
-      commit('setTagSource', tagSource)
     },
     setCurrentScope ({ state, commit, dispatch }, currentScope) {
       commit('setCurrentScope', currentScope)
@@ -118,7 +107,6 @@ export default {
     },
     setCurrentTab ({ commit, dispatch }, tabId) {
       commit('setCurrentTab', tabId)
-      dispatch('setTagSource', tabId)
       dispatch('tagList/setTabId', tabId)
       dispatch('productList/setTabId', tabId)
       commit('productList/setPagination', { current: 1, total: 0 })
@@ -127,14 +115,14 @@ export default {
       const filters = state.productList.filters
       dispatch('tagList/getList', filters)
     },
-    getProductList ({ dispatch }) {
-      dispatch('productList/getList')
+    async getProductList ({ dispatch }) {
+      await dispatch('productList/getList')
     },
-    getData ({ dispatch, commit, state }) {
+    async getData ({ dispatch, commit, state }) {
       const tagId = state.tagList.currentTagId
       commit('productList/setTagId', tagId)
       dispatch('getTagList')
-      dispatch('getProductList')
+      await dispatch('getProductList')
     },
     changeTag ({ commit, dispatch }, payload) {
       console.log(payload)

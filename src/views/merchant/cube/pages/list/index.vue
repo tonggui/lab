@@ -71,7 +71,6 @@
       },
       selectedIdList () {
         console.log(this.classifySelectedProducts)
-        console.log(this.selectionList())
         return this.selectionList()
       }
     },

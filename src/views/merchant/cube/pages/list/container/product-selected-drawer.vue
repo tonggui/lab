@@ -13,10 +13,10 @@
         按关联分店筛选
       </span>
       <Select label="按关联分店筛选" style="width:150px; margin:0px 10px" line
-              v-model="selectScope.cityId" filterable placeholder="请选择或输入城市名搜索">
+              v-model="selectScope.cityId" filterable clearable placeholder="请选择或输入城市名搜索">
         <Option v-for="item in scopeList" :value="item.cityId" :key="item.cityId" >{{item.cityName}}</Option>
       </Select>
-      <Select style="width:150px" v-model="selectScope.poiId" :disabled="selectScope.cityId === -1" placeholder="请选择或输入分店名搜索" filterable line>
+      <Select style="width:150px" v-model="selectScope.poiId" :disabled="selectScope.cityId === -1" placeholder="请选择或输入分店名搜索" filterable clearable line>
         <Option v-for="item in shopList" :value="item.id" :key="item.id">{{item.name}}</Option>
       </Select>
 <!--      <Button type="primary" style="margin:0px 10px" @click="handleFilterScope">筛选</Button>-->
@@ -58,6 +58,7 @@
   import SelectedClassifyProductList from '../components/selected-classify-product-list'
   import { helper } from '../../../store'
   import { covertObjectToSequenceArr } from '../../../utils'
+  // import { cloneDeep } from 'lodash'
   const { mapActions, mapState } = helper()
 
   export default {
@@ -81,6 +82,7 @@
     computed: {
       ...mapState({
         scopeList: state => state.multiCubeList.scopeList,
+        rowScopeList: state => state.multiCubeList.rowScopeList,
         currentPoiIds: state => state.multiCubeList.currentPoiIds,
         dataSourceList: 'classifySelectedProducts'
       }),
@@ -166,6 +168,23 @@
         }
         this.curScopePoiIdMap = map
       },
+      // handleFilterScope () {
+      //   if (this.selectScope.cityId !== '' && this.selectScope.cityId !== undefined) {
+      //     let choosePoiList = this.choosePoiList()
+      //     for (let key in this.dataSourceList) {
+      //       let dataItem = cloneDeep(this.dataSourceList[key])
+      //       dataItem.productList.filter(item => {
+      //         let poiIds = item.relatedPoiIds.slice().concat(item.addedPoiIds.slice())
+      //         // 已/待关联门店只需有一个id在当前所选择的门店范围内即可
+      //         return poiIds.some(id => {
+      //           return choosePoiList.includes(id)
+      //         })
+      //       })
+      //       this.curScopePoiIdMap[key] = dataItem
+      //     }
+      //     return this.curScopePoiIdMap
+      //   } else return this.dataSourceList
+      // },
       choosePoiList () {
         if (this.selectScope.cityId !== -1 && this.selectScope.cityId !== undefined) {
           let poiList = []
@@ -178,7 +197,7 @@
             poiList.push(this.selectScope.poiId)
             return poiList
           }
-        } else return []
+        } else return this.rowScopeList.map(item => item.id)
       }
     }
   }

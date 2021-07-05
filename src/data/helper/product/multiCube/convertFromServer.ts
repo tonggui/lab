@@ -16,9 +16,8 @@ export const convertMultiCubeProduct = (product): MultiCubeProduct => {
   })
 }
 
-export const convertMultiCubeProductList = (list: MultiCubeProduct[], tabId: string = '', tagSource: number = 0) => (list || []).map(convertMultiCubeProduct).map(product => {
+export const convertMultiCubeProductList = (list: MultiCubeProduct[], tabId: string = '') => (list || []).map(convertMultiCubeProduct).map(product => {
   product.tabId = tabId
-  product.tagSource = tagSource
   return product
 })
 export const convertMultiCubeEditProduct = (product): MultiCubeProduct => {

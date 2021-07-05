@@ -102,8 +102,6 @@
         }
       }
     },
-    mounted () {
-    },
     computed: {
       ...mapState({
         scopeLists: 'scopeList',
@@ -121,18 +119,13 @@
         return tmp && tmp[0] ? tmp[0].poiList : []
       },
       operationInfo () {
-        // console.log(this.currentScope)
         const scope = this.scopeList && this.scopeList.find(item => item.id === this.currentScope.poiId)
-        // console.log(scope)
         return {
           cityName: get(scope, 'cityName') || '',
           poiName: get(scope, 'poiName') || ''
         }
       }
     },
-    // mounted () {
-    //   console.log(this.scopeList)
-    // },
     methods: {
       ...mapActions(['setCurrentScope', 'getData']),
       handleScopeChange (v) {
@@ -151,7 +144,9 @@
           }
           this.contentScope = false
           this.setCurrentScope({ cityId: -1, poiId: -1 })
-          this.getData()
+          this.getData().then(() => {
+            this.$emit('updateSelectedProducts')
+          })
           this.$emit('updateSelectedProducts')
         }
       },
@@ -178,8 +173,9 @@
               this.displayShop = this.shopList.filter(item => item.id === this.currentScope.poiId)[0]
             }
             this.contentScope = true
-            this.getData()
-            this.$emit('updateSelectedProducts')
+            this.getData().then(() => {
+              this.$emit('updateSelectedProducts')
+            })
             this.$Message.info('更换范围成功')
             this.scopeVisible = false
             resolve()

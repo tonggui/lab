@@ -34,6 +34,9 @@ export default {
           map[id] = { name, sequence, productList: [] }
         }
         const productList = [...map[id].productList]
+        const existProduct = _.find(productList, item => {
+          return item.__id__ === product.__id__
+        })
         let currentScope = state.multiCubeList.currentScope
         if (selected) {
           // 将当前范围下未关联的门店&&可关联门店 加入待关联门店中
@@ -47,7 +50,11 @@ export default {
               }
             })
           }
-          map[id].productList = arrayUniquePush(productList, product, (p) => p.__id__)
+          if (existProduct) {
+            existProduct['addedPoiIds'] = product['addedPoiIds']
+          } else {
+            map[id].productList = arrayUniquePush(productList, product, (p) => p.__id__)
+          }
         } else {
           // 从待关联门店中移除当前范围下未关联的门店
           product.totalPoiIds.forEach(item => {
@@ -59,7 +66,6 @@ export default {
           }
         }
       })
-      console.log('===')
       commit('setClassifySelectedProducts', map)
     },
     poiRelatingRangeChange ({ state, commit }, productList) {
@@ -90,6 +96,7 @@ export default {
           const totalPoiIds = _.result(_.find(rowProductList, item => {
             return item.__id__ === product.__id__
           }), 'totalPoiIds')
+          console.log(product.totalPoiIds)
           product.totalPoiIds = totalPoiIds
         })
       }
