@@ -17,6 +17,7 @@ import { MERCHANT_OPEN_STATUS } from '@/data/enums/product'
 import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
 import MerchantCube from './cube/router'
 import { isAssociateMedicineMerchant } from '@/module/helper/utils'
+import { bridgeJump } from '@/common/bridge/bridgeJump'
 // import jumpTo from '@/components/link/jumpTo'
 
 export default [
@@ -64,14 +65,7 @@ export default [
           next()
         } else {
           LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] = false
-          // 使用此方法在promise后会报错
-          // jumpTo('/reuse/sc/product/views/seller/center/merchant')
-          if (window.bridge && window.bridge.jumpTo) {
-            window.bridge.jumpTo({ href: '/reuse/sc/product/views/seller/center/merchant' })
-          } else {
-            const url = location.protocol + '//' + location.hostname + '/#/reuse/sc/product/views/seller/center/merchant'
-            setTimeout(() => { top.location.href = url })
-          }
+          bridgeJump('/reuse/sc/product/views/seller/center/merchant')
         }
       } catch (err) {
         next()
