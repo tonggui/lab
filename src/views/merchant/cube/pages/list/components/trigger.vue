@@ -59,12 +59,14 @@
         let tmp = {}
         pois.forEach(item => {
           tmp = this.rowScopeList.find(i => i.id === item)
-          if (!cityIds.has(tmp.cityName)) {
-            cityIds.set(tmp.cityName, [].push(item))
-          } else {
-            let arr = Array.isArray(cityIds.get(tmp.cityName)) ? cityIds.get(tmp.cityName) : []
-            arr.push(item)
-            cityIds.set(tmp.cityName, arr)
+          if (tmp && tmp.cityName) {
+            if (!cityIds.has(tmp.cityName)) {
+              cityIds.set(tmp.cityName, item)
+            } else {
+              let arr = Array.isArray(cityIds.get(tmp.cityName)) ? cityIds.get(tmp.cityName) : []
+              arr.push(item)
+              cityIds.set(tmp.cityName, arr)
+            }
           }
         })
         return cityIds
@@ -72,8 +74,7 @@
       getScopeTips () {
         let pois = this.addedPoiIds.concat(this.relatedPoiIds)
         const alreadyCities = this.getCitiesList(pois)
-        const totalCities = this.getCitiesList(this.totalPoiIds)
-        if (alreadyCities.size === totalCities.size && pois.length === this.totalPoiIds.length) {
+        if (alreadyCities.size >= this.scopeList.length - 1 && pois.length >= this.rowScopeList.length) {
           this.displayContent = '全国所有门店'
         } else {
           let cityCount = 0
