@@ -143,11 +143,11 @@
             poiId: ''
           }
           this.contentScope = false
-          this.setCurrentScope({ cityId: -1, poiId: -1 })
-          this.getData().then(() => {
-            this.$emit('updateSelectedProducts')
+          this.setCurrentScope({ cityId: -1, poiId: -1 }).then(() => {
+            this.getData().then(() => {
+              this.$emit('updateSelectedProducts')
+            })
           })
-          this.$emit('updateSelectedProducts')
         }
       },
       handleStatusClick () {
@@ -160,7 +160,11 @@
           if ((this.currentScope.scopeStatus === 0 && this.currentScope.cityId !== -1 && this.currentScope.cityId !== '') ||
             (this.currentScope.scopeStatus === 1 && this.currentScope.poiId !== -1 && this.currentScope.poiId)) {
             if (this.currentScope.scopeStatus === 0) {
-              this.setCurrentScope({ cityId: this.currentScope.cityId, poiId: -1 })
+              this.setCurrentScope({ cityId: this.currentScope.cityId, poiId: -1 }).then(() => {
+                this.getData().then(() => {
+                  this.$emit('updateSelectedProducts')
+                })
+              })
               let tmp = this.scopeList.filter(item => {
                 return item.cityId === this.currentScope.cityId
               })[0]
@@ -169,13 +173,14 @@
                 id: tmp.cityId
               }
             } else {
-              this.setCurrentScope(this.setCurrentScope({ cityId: this.currentScope.cityId, poiId: this.currentScope.poiId }))
+              this.setCurrentScope(this.setCurrentScope({ cityId: this.currentScope.cityId, poiId: this.currentScope.poiId })).then(() => {
+                this.getData().then(() => {
+                  this.$emit('updateSelectedProducts')
+                })
+              })
               this.displayShop = this.shopList.filter(item => item.id === this.currentScope.poiId)[0]
             }
             this.contentScope = true
-            this.getData().then(() => {
-              this.$emit('updateSelectedProducts')
-            })
             this.$Message.info('更换范围成功')
             this.scopeVisible = false
             resolve()

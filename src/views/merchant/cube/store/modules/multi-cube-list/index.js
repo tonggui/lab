@@ -75,17 +75,16 @@ export default {
         poiId: -1
       }
       commit('setScopeList', cityList)
-      dispatch('setCurrentScope', currentScope)
+      await dispatch('setCurrentScope', currentScope)
     },
     async getTabList ({ state, dispatch, commit }) {
       const param = { cityId: state.currentScope.cityId, poiId: state.currentScope.poiId }
       const tabList = await tab.getList(param) || []
       const currentTab = get(tabList[0], 'id')
-
       commit('setTabList', tabList)
       dispatch('setCurrentTab', currentTab)
     },
-    setCurrentScope ({ state, commit, dispatch }, currentScope) {
+    async setCurrentScope ({ state, commit, dispatch }, currentScope) {
       commit('setCurrentScope', currentScope)
       let poiIds = []
       // 当前所选范围对应的门店id
@@ -102,7 +101,7 @@ export default {
         })
       }
       commit('setCurrentPoiIds', poiIds)
-      dispatch('getTabList')
+      await dispatch('getTabList')
       commit('productList/setScope', currentScope)
     },
     setCurrentTab ({ commit, dispatch }, tabId) {

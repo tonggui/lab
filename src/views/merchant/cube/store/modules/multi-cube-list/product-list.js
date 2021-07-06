@@ -103,7 +103,6 @@ export default (api) => {
             poiId: state.scopeId.poiId,
             ...state.filters
           }
-          console.log('22', rootState.productMultiCubeRecommend.multiCubeList.currentTabId, state.tabId)
           const result = await api.getList(state.pagination, params)
           const { pageSize, current } = state.pagination
           const { total } = result.pagination
@@ -119,7 +118,6 @@ export default (api) => {
             dispatch('getList')
             return
           }
-          console.log('333', result.list)
           commit('setList', result.list || [])
           commit('setProductScope', result.list || [])
           commit('setPagination', result.pagination)
