@@ -1,6 +1,6 @@
 import { defaultTo, get } from 'lodash'
 import { isEmpty } from '@/common/utils'
-import {Product, Sku, CellularProductSku, ProductVideo} from '../../../interface/product'
+import { Product, Sku, CellularProductSku, ProductVideo } from '../../../interface/product'
 import {
   convertAttributeList,
   convertProductLabelList,

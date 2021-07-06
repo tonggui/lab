@@ -186,3 +186,8 @@ export const multiCubeCheckProducts = ({ productList }: { productList: MultiCube
     }
   })
 }
+
+/**
+ * 默认库存值获取
+ */
+export const apiMultiCubeDefaultStock = () => httpClient.post('hqcc/r/defaultStock')
