@@ -70,7 +70,7 @@ export const apiCubeTaskStatus = () => httpClient.post('/hqcc/cube/r/cubeRunning
  * 确认魔方创建任务
  * @param taskId
  */
-export const apiCubeTaskConfirm = ({ taskId } : { taskId: number }) => httpClient.post('/hqcc/w/cubeRunningTaskConfirm', { taskId })
+export const apiCubeTaskConfirm = ({ taskId } : { taskId: number }) => httpClient.post('/hqcc/cube/w/cubeRunningTaskConfirm', { taskId })
 
 /**
  * 魔方商品批量创建

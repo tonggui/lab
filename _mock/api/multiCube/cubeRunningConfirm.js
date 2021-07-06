@@ -1,5 +1,5 @@
 /**
- * @url reuse/sc/product/hqcc/w/cubeRunningTaskConfirm
+ * @url reuse/sc/product/hqcc/cube/w/cubeRunningTaskConfirm
  */
 module.exports = {
   code: 0,
