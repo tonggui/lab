@@ -105,7 +105,7 @@ module.exports = {
       },
       "upcCode": {
         "visible": true,
-        "required": false,
+        "required": true,
         "disabled": false
       },
       "minOrderCount": {

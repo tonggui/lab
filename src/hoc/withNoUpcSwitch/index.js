@@ -32,6 +32,14 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   watch: {
+    required: {
+      immediate: true,
+      handler (val) {
+        if (!val) {
+          if (this.data.commonProperty && 'allowUpcEmpty' in this.data.commonProperty) this.data.commonProperty = null
+        }
+      }
+    },
     disable (val) {
       if (this.data.commonProperty) this.data.commonProperty.allowUpcEmpty = !!val
       if (val) this.$emit('input', '')
@@ -100,9 +108,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   render (h) {
-    console.log('hasFunc-hasFunc-hasFunc', hasFunc, this.required, this.initEnable, this.data.editable)
-
-    if (!hasFunc || !this.initEnable || !this.data.editable) return forwardComponent(this, WrapperComponent)
+    if (!hasFunc || !this.required || !this.initEnable || !this.data.editable) return forwardComponent(this, WrapperComponent)
     return h('div', [forwardComponent(this, WrapperComponent, {
       props: {
         disabled: this.disable,
@@ -114,7 +120,6 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
   created () {
     // 初始是否存在此功能
     this.initEnable = get(this.data, 'commonProperty.allowUpcEmpty', false)
-    console.log('this.data', this.data, this.initEnable)
     this.disable = this.initEnable
     if (this.disable) {
       // TODO hack方法
