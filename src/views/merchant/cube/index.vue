@@ -24,10 +24,16 @@
         immediate: true,
         handler () {
           const route = this.$router.match(window.location.pathname)
+          console.log('路由变化', route)
           if (route && route.name !== 'merchantCubeList') this.style = { height: '100vh' }
           else this.style = {}
         }
       }
+    },
+    mounted () {
+      window.addEventListener('hashchange', () => {
+        console.log('hash监听', window.location.hash)
+      })
     }
   }
 </script>
