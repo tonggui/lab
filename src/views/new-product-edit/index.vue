@@ -187,6 +187,7 @@
               required: !this.usedBusinessTemplate // 从mixin获取
             },
             [SPU_FIELD.UPC_IMAGE]: { // upcImage判断逻辑更改
+              required: this.upcIsSp,
               visible: this.needAudit && !this.upcIsSp && !this.upcIsAuditPassProduct
             }
           },

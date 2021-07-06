@@ -139,6 +139,7 @@
               visible: false
             },
             [SPU_FIELD.UPC_IMAGE]: {
+              required: this.upcIsSp,
               visible: this.needAudit && !this.upcIsSp && !this.upcIsAuditPassProduct
             }
           },

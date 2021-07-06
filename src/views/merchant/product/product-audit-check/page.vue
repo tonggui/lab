@@ -121,6 +121,7 @@
               visible: !!(this.originalFormData.id && this.originalFormData.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
+              required: this.upcIsSp,
               disabled: !this.upcIsSp && this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
               visible: !this.upcIsSp && ((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && !!this.productInfo.upcImage) || this.needAudit) && !this.upcIsAuditPassProduct
             }

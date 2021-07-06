@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
-import { get, isFunction } from 'lodash'
+import { get, isFunction, set } from 'lodash'
 import lx from '@/common/lx/lxReport'
 import { getName } from '@/hoc/helper'
 import LocalStorage from '@/common/local-storage'
@@ -41,7 +41,10 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
       }
     },
     disable (val) {
-      if (this.data.commonProperty) this.data.commonProperty.allowUpcEmpty = !!val
+      console.log(66666, val, this.data)
+      if (val) set(this.data, 'commonProperty.allowUpcEmpty', !!val)
+      else set(this.data, 'commonProperty', null)
+
       if (val) this.$emit('input', '')
       // if (!this.data.commonProperty) this.data.commonProperty = {}
       // this.data.commonProperty.allowUpcEmpty = !!val
@@ -70,7 +73,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
             this.$Modal.open({
               width: 420,
               title: `确定此商品没有条形码`,
-              content: this.isNeedAudit ? '确定后，无需再填写条形码。若商品实际存在条形码，提交审核后将被驳回。' : '确定后，无需再填写条形码。若商品实际存在条形码，平台可能自动下架该商品。',
+              content: '确定后，无需再填写条形码。若商品实际存在条形码，可能被审核驳回或自动下架',
               closable: false,
               maskClosable: false,
               centerLayout: true,
@@ -108,7 +111,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   render (h) {
-    if (!hasFunc || !this.required || !this.initEnable || !this.data.editable) return forwardComponent(this, WrapperComponent)
+    if (!hasFunc || !this.required || !this.data.editable) return forwardComponent(this, WrapperComponent)
     return h('div', [forwardComponent(this, WrapperComponent, {
       props: {
         disabled: this.disable,
