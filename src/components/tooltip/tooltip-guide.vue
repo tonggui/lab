@@ -49,6 +49,7 @@
     },
     methods: {
       handleClose () {
+        // TODO: 新增一个local-storage的key
         storage[KEYS[this.keyName]] = true
       }
     }

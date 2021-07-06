@@ -5,8 +5,9 @@ import api from './api'
 import { isEditLimit } from '@/common/product/editLimit'
 import { findFirstLeaf, sleep } from '@/common/utils'
 import { allProductTag } from '@/data/constants/poi'
-import { PRODUCT_BATCH_OP } from '@/data/enums/product'
+import { PRODUCT_BATCH_OP, PRODUCT_STATUS } from '@/data/enums/product'
 import store from '@/store'
+import storage, { KEYS } from '@/common/local-storage'
 
 const tagListStoreInstance = createSortTagListStore(api.tag)
 const productListStoreInstance = createSortProductListStore(api.product)
@@ -103,6 +104,10 @@ export default {
     getData ({ getters, dispatch, commit }) {
       const tagId = getters['tagList/currentTagId']
       commit('product/setTagId', tagId)
+      // TODO: 新增库存不足展开Tab
+      if (!storage[KEYS.PRODUCT_STOCK_INSUFFICIENT_COUNT]) {
+        commit('product/setStatus', PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
+      }
       dispatch('getTagList')
       dispatch('getProductList')
       commit('setInit', false)

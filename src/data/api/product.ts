@@ -97,7 +97,7 @@ export const getSearchSuggestion = ({ poiId, keyword, auditStatus, packageProduc
   return convertProductSuggestionListFromServer(data.list)
 })
 /**
- * 获取商品列表
+ * 获取商品列表 // TODO: 点击商品Tab触发
  * @param tagId 店内分类id
  * @param keyword 关键字
  * @param status 商品状态

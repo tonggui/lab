@@ -1,9 +1,11 @@
 <template>
   <div class="edit-input">
+    <!-- TODO: 新增了change事件 -->
     <edit
       v-on="$listeners"
       v-bind="$attrs"
       @on-edit="onEdit"
+      @change="change"
       :size="size"
       :border="false"
     >
@@ -33,6 +35,8 @@
         <slot name="icon"></slot>
       </template>
     </edit>
+    <!-- TODO: 新增小于库存标识 -->
+    <div v-if="showStockInsufficient">库存小于最小购买量{{minOrderCount}}</div>
   </div>
 </template>
 
@@ -42,6 +46,13 @@
 
   export default {
     name: 'edit-input',
+    data () {
+      return {
+        // TODO: 新增是否编辑中、输入框的值
+        editing: false,
+        changeValue: null
+      }
+    },
     props: {
       size: {
         type: String,
@@ -58,7 +69,17 @@
         type: Object,
         default: () => ({})
       },
-      inputPrefix: String
+      inputPrefix: String,
+      // 新增起购数
+      minOrderCount: {
+        type: Number,
+        default: 0
+      },
+      // 当前编辑标识
+      sign: {
+        type: String,
+        default: ''
+      }
     },
     computed: {
       inputComponent () {
@@ -66,16 +87,26 @@
       },
       wrapperComponent () {
         return this.inputPrefix ? UnitNumber : 'span'
+      },
+      // 增加计算属性，判断是否展示
+      showStockInsufficient () {
+        return this.sign === 'stock' && this.editing && this.changeValue > 0 && this.changeValue < this.minOrderCount
       }
     },
     components: { Edit, UnitNumber },
     methods: {
       onEdit (edit) {
+        // 自定义事件赋值
+        this.editing = edit
         if (edit) {
           this.$nextTick(() => {
             this.$refs.input.focus()
           })
         }
+      },
+      // 监听value值变化
+      change (value) {
+        this.changeValue = value
       }
     }
   }

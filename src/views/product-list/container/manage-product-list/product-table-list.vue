@@ -6,6 +6,7 @@
       @refresh="handleRefresh"
       description="商品获取失败～"
     >
+      <!-- TODO: 商家商品列表一级包裹 -->
       <ProductTableList
         :disabled="disabled"
         :tag-list="tagList"
