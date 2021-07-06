@@ -5,7 +5,6 @@
     </div>
     <div>
       <span class="batch-delete" :class="{ disabled }" @click="handleDelete">批量删除</span>
-<!--      <Button type="primary">批量创建</Button>-->
       <span></span>
       <!-- <Button type="primary" :disabled="disabled" @click="handleCreate">
         确认创建

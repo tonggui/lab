@@ -12,7 +12,7 @@
     name: 'cube-steps',
     data () {
       return {
-        list: stepConfig.map(item => ({ id: item.meta.id, title: item.meta.title, name: item.name })),
+        list: stepConfig.map(item => ({ id: item.meta.id, title: item.meta.title, name: item.name, path: item.path })),
         current: 0
       }
     },
@@ -24,7 +24,7 @@
         immediate: true,
         handler () {
           const route = this.$router.match(window.location.pathname)
-          const index = this.list.findIndex(item => item.name === route.name)
+          const index = this.list.findIndex(item => (route.path || '').includes(item.path))
           this.current = index
         }
       }
