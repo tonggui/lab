@@ -130,14 +130,14 @@ export const mergeProduct = (...productList) => {
 
 // 商品信息是否不完整
 export const isIncompleteProductInfo = (product) => {
-  const { name, skuList, tagList = [] } = product
+  const { name, skuList, selectedTagList = [] } = product
   if (!name) return true
 
   const list = skuList.filter(sku => sku.editable)
 
   if (list.length <= 0) return true
 
-  if (!tagList || !tagList.length) return true
+  if (!selectedTagList || !selectedTagList.length) return true
 
   return list.some(sku => {
     const { price, stock, weight } = sku
@@ -171,6 +171,7 @@ export const getPaginationRange = (pagination) => {
   const end = Math.min(current * pageSize, total)
   return [start, end]
 }
+
 // 按照分页 分割 分类聚合的商品
 export const splitTagGroupProductByPagination = (groupData, pagination) => {
   const [start, end] = getPaginationRange(pagination)
@@ -194,6 +195,7 @@ export const splitTagGroupProductByPagination = (groupData, pagination) => {
   }
   return result
 }
+
 // 在分类聚合的商品中
 export const findProductListInTagGroupProductById = (groupData, idList, getProduct = (p) => p) => {
   const result = []
@@ -208,6 +210,7 @@ export const findProductListInTagGroupProductById = (groupData, idList, getProdu
   }
   return result
 }
+
 export const arrayRemoveItem = (arr, item) => {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i] === item) {
@@ -236,4 +239,27 @@ export const judgeArray = (arr1, arr2) => {
 // 两个数组求交集
 export const getIntersection = (arr1, arr2) => {
   return arr1.filter(item => arr2.indexOf(item) !== -1)
+}
+
+export const ErrorJumper = function (target, name, descriptor) {
+  const fn = descriptor.value
+  const wrapFn = function (fn) {
+    return function () {
+      try {
+        const promise = fn.apply(this, arguments)
+        if (promise && promise.then && typeof promise.then === 'function') {
+          promise.then(res => {
+            // Do something
+          }).catch(err => {
+            console.log(err)
+            this.$router.push({ name: 'merchantCubeError' })
+          })
+        }
+      } catch (err) {
+        this.$router.push({ name: 'merchantCubeError' })
+      }
+    }
+  }
+  descriptor.value = wrapFn(fn)
+  return descriptor
 }

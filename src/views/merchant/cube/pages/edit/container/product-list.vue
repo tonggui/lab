@@ -36,8 +36,6 @@
   import { helper } from '../../../store'
   import { getUniqueId } from '../../../utils'
   import lx from '@/common/lx/lxReport'
-  // import { mapModule } from '@/module/module-manage/vue'
-  // import { PRODUCT_TAG_COUNT } from '@/module/subModule/product/moduleTypes'
   import RelSample from '@/views/merchant/batch-management/new-batch-rel/components/rel-sample'
   import LocalStorage, { KEYS } from '@/common/local-storage'
 
@@ -82,9 +80,6 @@
         // 目前默认支持多分类，之后根据配置来判断
         return 5
       },
-      // ...mapModule('product', {
-      //   maxTagCount: PRODUCT_TAG_COUNT
-      // }),
       // 展示在页面中的都是待创建的商品
       remainingProductCount () {
         return Object.values(this.tagGroupProduct).reduce((prev, { productList }) => {
@@ -113,7 +108,7 @@
                 return {
                   tabId: product.tabId, // tabId 特殊处理，从之前缓存中匹配
                   ...(this.productInfoMap[id] || product),
-                  tagList: this.autoFillTag ? product.tagList : [], // 默认分类不自动填充
+                  selectedTagList: this.autoFillTag ? product.tagList : [], // 默认分类不自动填充
                   addedPoiIds: product.addedPoiIds || this.productInfoMap[id].addedPoiIds,
                   relatedPoiIds: product.relatedPoiIds || this.productInfoMap[id].relatedPoiIds,
                   totalPoiIds: product.totalPoiIds || this.productInfoMap[id].totalPoiIds,
@@ -144,7 +139,6 @@
         handleModifySku: 'modifySku',
         resetCreatedProductCount: 'resetCreatedProductCount',
         resetCreatedProductIdList: 'resetCreatedProductIdList',
-        // handleSingleCreate: 'singleCreate',
         handleBatchCreate: 'batchCreate',
         destroy: 'destroy'
       }),

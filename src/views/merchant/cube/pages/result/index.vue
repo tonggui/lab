@@ -19,6 +19,7 @@
   import ResultBanner from '@/components/result-banner'
   import { getCubeTaskStatus, getCubeTaskConfirm } from '@/data/repos/merchantCube'
   import { BATCH_REL_TASK_RESULT_STATUS } from '@/data/enums/batch'
+  import { ErrorJumper } from '../../utils'
 
   export default {
     name: 'result',
@@ -39,6 +40,7 @@
       handleClickBtn () {
         if (this.url) window.location.href = this.url
       },
+      @ErrorJumper
       async getRunningStatusStatus () {
         const { taskId, processResult } = await getCubeTaskStatus()
         const {

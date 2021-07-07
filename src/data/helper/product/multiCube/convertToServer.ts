@@ -30,7 +30,7 @@ export const convertMultiCubeProduct = (product: MultiCubeProduct) => {
 }
 
 export const convertMultiCubeSaveProduct = (product) => {
-  const tagIds = convertCategoryTemplateTag(product.tagList || []).map(item => item.tagId)
+  const tagIds = convertCategoryTemplateTag(product.selectedTagList || []).map(item => item.tagId)
   const skuList = product.skuList.filter(sku => sku.editable)
   const convertSkuList = convertProductSkuList(skuList).map(item => {
     item['merchantSkuId'] = item.id

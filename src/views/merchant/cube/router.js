@@ -86,5 +86,24 @@ export default [
         cid: ''
       }
     }
+  },
+  {
+    name: 'merchantCubeError',
+    path: 'error',
+    components: {
+      default: () => import(
+        /* webpackChunkName: "merchant-cube-list" */ './pages/error'
+        ),
+      breadCrumb: () => import(
+        /* webpackChunkName: "cube-breadcrumb-center" */ './components/cube-breadcrumb-center'
+        )
+    },
+    meta: {
+      id: 'merchantCubeError',
+      title: '错误',
+      pv: {
+        cid: ''
+      }
+    }
   }
 ]

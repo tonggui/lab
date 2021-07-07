@@ -108,7 +108,7 @@
       }
     },
     methods: {
-      ...mapActions(['deSelectProduct', 'clearSelected']),
+      ...mapActions(['deSelectProduct', 'clearSelected', 'deleteSelectProduct']),
       handleClose () {
         this.$emit('on-drawer-close')
       },

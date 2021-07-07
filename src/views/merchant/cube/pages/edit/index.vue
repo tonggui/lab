@@ -27,7 +27,7 @@
     },
     methods: {
       ...mapActions({
-        handleDelete: 'deSelectProduct'
+        handleDelete: 'deleteSelectProduct'
       }),
       handleGoBack () {
         this.$router.back()

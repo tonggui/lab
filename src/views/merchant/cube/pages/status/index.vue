@@ -19,6 +19,7 @@
   import ProcessStatus from '@/components/process-status'
   import { getCubeTaskStatus } from '@/data/repos/merchantCube'
   import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
+  import { ErrorJumper } from '@/views/merchant/cube/utils'
 
   const RUNNING_STATUS = {
     'PRODUCT_CREATE': 201,
@@ -39,6 +40,7 @@
       ProcessStatus
     },
     methods: {
+      @ErrorJumper
       async getRunningStatusStatus () {
         const { taskId, status, processStatus } = await getCubeTaskStatus()
         const {

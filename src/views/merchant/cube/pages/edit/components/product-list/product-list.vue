@@ -134,8 +134,8 @@
           width: 192,
           required: true,
           render: (h, { row, skuIndex }) => {
-            const handleChange = (tagList) => this.handleModifyProduct({ params: { tagList }, product: row })
-            return h(Tag, { props: { maxCount: this.maxTagCount || 1, tagList: row.tagList, source: this.sourceTagList }, on: { change: handleChange } })
+            const handleChange = (selectedTagList) => this.handleModifyProduct({ params: { selectedTagList }, product: row })
+            return h(Tag, { props: { maxCount: this.maxTagCount || 1, tagList: row.selectedTagList, source: this.sourceTagList }, on: { change: handleChange } })
           }
         }, {
           title: '关联分店',
@@ -316,28 +316,19 @@
           }
           return
         }
-        this.$emit('batch-create', productList, this.createCallback((error) => {
-          errorInfo = error || {}
-          const errorCount = Object.keys(errorInfo).length
-          if (errorCount === createTotal) {
+        this.$emit('batch-create', productList, this.createCallback((successCount = productList.length) => {
+          if (!successCount) {
             this.$Message.warning('选择商品全部创建失败')
+          } else if (successCount < createTotal) {
+            this.$Message.warning('选择商品部分创建成功')
           } else {
             this.$Message.success('任务创建成功')
-            // const successCount = createTotal - errorCount
             const successProductList = productList.filter(p => {
               const id = getUniqueId(p)
               return !errorInfo[id]
             })
-            // if (successCount === createTotal) {
-            //   this.$Message.success(`已成功创建${productList.length}个商品`)
-            // } else {
-            //   this.$Message.warning(`已成功创建${successCount}个商品，其余${errorCount}个创建失败`)
-            // }
-            // 是否全部创建成功
-            // this.triggerCreateCallback(this.total === successCount)
             this.deleteCallback(successProductList)
           }
-          this.errorInfo = errorInfo
           this.loading = false
           this.$router.push({ name: 'merchantCubeProcessStatus' })
         }, (err) => {
@@ -437,7 +428,6 @@
         this.pagination = page
       },
       handleModifyProduct (data) {
-        console.log('data', data)
         this.$emit('modify-product', data)
       },
       handleModifySku (data) {

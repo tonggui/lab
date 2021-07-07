@@ -19,7 +19,11 @@ module.exports = {
   },
   parserOptions: {
     parser: 'babel-eslint',
-    sourceType: 'module'
+    sourceType: 'module',
+    ecmaFeatures:{
+      // 支持装饰器
+      legacyDecorators: true
+    }
   },
   overrides: [
     {

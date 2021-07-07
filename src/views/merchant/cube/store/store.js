@@ -38,7 +38,7 @@ export default {
           return item.__id__ === product.__id__
         })
         let currentScope = state.multiCubeList.currentScope
-        if (selected) {
+        if (selected === 'selected') {
           // 将当前范围下未关联的门店&&可关联门店 加入待关联门店中
           if (currentScope.poiId !== -1) {
             product['addedPoiIds'].push(currentScope.poiId)
@@ -55,7 +55,7 @@ export default {
           } else {
             map[id].productList = arrayUniquePush(productList, product, (p) => p.__id__)
           }
-        } else {
+        } else if (selected === 'deselected') {
           // 从待关联门店中移除当前范围下未关联的门店
           product.totalPoiIds.forEach(item => {
             arrayRemoveItem(product['addedPoiIds'], item)
@@ -64,6 +64,8 @@ export default {
           if (product['addedPoiIds'].length === 0) {
             map[id].productList = arrayUniquePop(productList, product, (p) => p.__id__)
           }
+        } else {
+          map[id].productList = arrayUniquePop(productList, product, (p) => p.__id__)
         }
       })
       commit('setClassifySelectedProducts', map)
@@ -96,17 +98,19 @@ export default {
           const totalPoiIds = _.result(_.find(rowProductList, item => {
             return item.__id__ === product.__id__
           }), 'totalPoiIds')
-          console.log(product.totalPoiIds)
           product.totalPoiIds = totalPoiIds
         })
       }
       commit('setClassifySelectedProducts', map)
     },
     selectProduct ({ dispatch }, productList) {
-      dispatch('toggleSelectProduct', { productList, selected: true })
+      dispatch('toggleSelectProduct', { productList, selected: 'selected' })
     },
     deSelectProduct ({ dispatch }, productList) {
-      dispatch('toggleSelectProduct', { productList, selected: false })
+      dispatch('toggleSelectProduct', { productList, selected: 'deselected' })
+    },
+    deleteSelectProduct ({ dispatch }, productList) {
+      dispatch('toggleSelectProduct', { productList, selected: 'delete' })
     },
     clearSelected ({ commit }) {
       commit('setClassifySelectedProducts', {})
