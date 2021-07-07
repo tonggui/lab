@@ -12,6 +12,7 @@
 </template>
 <script>
   import { fetchSubmitBatchCreateByProduct } from '@/data/repos/batch'
+  import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
   import OrderFormItem from '@components/order-form-item'
   import ProductForm from './form'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
@@ -21,6 +22,7 @@
   import lx from '@/common/lx/lxReport'
   import { getProductChangInfo } from '@/common/utils'
   import { uuid } from '@utiljs/guid'
+  import { debounce, get } from 'lodash'
 
   export default {
     name: 'new-batch-product-create',
@@ -38,14 +40,39 @@
     },
     data () {
       return {
-        product: {},
-        context: {
+        isUpcValid: true,
+        product: {}
+      }
+    },
+    watch: {
+      'product.skuList' (newSkuList = [], oldSkuList = []) {
+        const newSkuUpcCode = get(newSkuList.find(item => item.editable), 'upcCode', '').trim()
+        const oldSkuUpcCode = get(oldSkuList.find(item => item.editable), 'upcCode', '').trim()
+
+        if (newSkuUpcCode && newSkuUpcCode !== oldSkuUpcCode) {
+          this.getUpcIsValid(newSkuUpcCode)
+        } else if (!newSkuUpcCode) {
+          this.isUpcValid = true
+        }
+      }
+    },
+    mounted () {
+      this.createTime = Date.now()
+      FillTime.fillStartTime = +new Date()
+      window.addEventListener('beforeunload', this.pageLeave)
+    },
+    computed: {
+      context () {
+        return {
           field: {
             [SPU_FIELD.LIMIT_SALE]: {
               visible: false
             },
             [SPU_FIELD.PRODUCT_VIDEO]: {
               visible: false
+            },
+            [SPU_FIELD.UPC_IMAGE]: {
+              required: this.isUpcValid
             }
           },
           features: {
@@ -55,12 +82,14 @@
         }
       }
     },
-    mounted () {
-      this.createTime = Date.now()
-      FillTime.fillStartTime = +new Date()
-      window.addEventListener('beforeunload', this.pageLeave)
-    },
     methods: {
+      getUpcIsValid: debounce(async function (upcCode) {
+        try {
+          this.isUpcValid = !!await fetchGetSpInfoByUpc(upcCode)
+        } catch (err) {
+          this.isUpcValid = false
+        }
+      }, 200),
       handleValidate (cb) {
         let error
         if (this.poiIdList.length <= 0) {
