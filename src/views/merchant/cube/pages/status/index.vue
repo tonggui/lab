@@ -42,7 +42,7 @@
       async getRunningStatusStatus () {
         const { taskId, status, processStatus } = await getCubeTaskStatus()
         const {
-          runningStatus,
+          runningStatus = 201,
           mainStatus,
           poiStatus
         } = processStatus || {}

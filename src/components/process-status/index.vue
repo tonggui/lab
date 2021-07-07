@@ -46,12 +46,12 @@
       },
       inlineBtnText: {
         type: String,
-        default: '返回"商品列表'
+        default: '返回"商品列表"'
       },
       processText: String,
       processBtnText: {
         type: String,
-        default: '返回"商品列表'
+        default: '返回"商品列表"'
       },
       succeedNum: Number,
       totalNum: Number,

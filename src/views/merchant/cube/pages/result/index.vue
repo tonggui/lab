@@ -37,8 +37,7 @@
     },
     methods: {
       handleClickBtn () {
-        if (this.url) return
-        window.location.href = this.url
+        if (this.url) window.location.href = this.url
       },
       async getRunningStatusStatus () {
         const { taskId, processResult } = await getCubeTaskStatus()
