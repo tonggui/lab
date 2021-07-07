@@ -2,6 +2,7 @@ import { Message } from '@roo-design/roo-vue'
 import validator, { regMap } from './validator'
 import { REG_TYPE, VALUE_TYPE, RENDER_TYPE } from '@/data/enums/category'
 import { newCustomValuePrefix } from '@/data/helper/category/operation'
+import TimeCounters from '@/common/lx/lxReport/lxTime'
 
 // 参考：src/views/components/product-form/components/category-attrs/config.js
 function getRegTip (regTypes) {
@@ -55,6 +56,7 @@ const createInput = (attr, components) => {
     },
     events: {
       'on-blur' ($event) {
+        TimeCounters.setEndTime(this.self.key, +new Date())
         const val = $event.target.value.trim()
         if (!val) {
           return
@@ -63,6 +65,9 @@ const createInput = (attr, components) => {
         if (error) {
           Message.warning(`${name}${error}`)
         }
+      },
+      'on-focus' ($event) {
+        TimeCounters.setTime('categoryAttrs', +new Date(), 's2e', { id: this.self.key, label: this.self.label })
       }
     }
   }
@@ -101,6 +106,14 @@ const createSelect = (attr, components) => {
       attr,
       source: attr.options,
       multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT
+    },
+    events: {
+      'blur' () {
+        TimeCounters.setEndTime(this.self.key, +new Date())
+      },
+      'focus' () {
+        TimeCounters.setTime('categoryAttrs', +new Date(), 's2e', { id: this.self.key, label: this.self.label })
+      }
     }
   }
 }
@@ -134,6 +147,14 @@ const createCascade = (attr, components) => {
       source: attr.options,
       attr,
       multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT
+    },
+    events: {
+      'focus' ($event) {
+        TimeCounters.setTime('categoryAttrs', +new Date(), 's2e', { id: this.self.key, label: this.self.label })
+      },
+      'close' ($event) {
+        TimeCounters.setEndTime(this.self.key, +new Date())
+      }
     }
   }
 }
@@ -172,7 +193,15 @@ const createBrand = (attr, components) => {
           return !!this.getContext('allowBrandApply')
         }
       }
-    }]
+    }],
+    events: {
+      'focus' ($event) {
+        TimeCounters.setTime('categoryAttrs', +new Date(), 's2e', { id: this.self.key, label: this.self.label })
+      },
+      'close' ($event) {
+        TimeCounters.setEndTime(this.self.key, +new Date())
+      }
+    }
   }
 }
 

@@ -202,7 +202,7 @@ export default ({ Component }) => (Api) => {
           } else {
             cb(null, err)
           }
-          window.Owl.addError({ name: 'saveError', msg: `请求之后：product:${JSON.stringify(this.product)}, response: ${JSON.stringify(response)}, context:${JSON.stringify(context)}, error: ${err}` }, { level: 'warn' })
+          window.Owl.addError({ name: 'saveError', msg: `请求之后：product:${JSON.stringify(this.product)}, response: ${JSON.stringify(response)}, context:${JSON.stringify(context)}, error: ${JSON.stringify(err)}` }, { level: 'warn' })
         }
       },
       async handleRevocation (product, cb) {

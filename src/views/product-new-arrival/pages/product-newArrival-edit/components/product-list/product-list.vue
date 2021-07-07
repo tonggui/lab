@@ -261,6 +261,7 @@
         return new Promise((resolve) => {
           this.$emit('single-create', product, this.createCallback((error) => {
             const id = getUniqueId(product)
+            console.log(product)
             this.errorInfo[id] = {}
             const isLastProduct = this.total <= 1
             // 成功
