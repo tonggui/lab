@@ -149,7 +149,7 @@ export const submitBatchCreateByExcel = (params: {
   }
   return httpClient.upload('retail/batch/w/v3/saveProductAndMedicineByExcel', query, {
     headers
-  })
+  }, { hasServerTime: true })
 }
 /**
  * 批量删除

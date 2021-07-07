@@ -33,7 +33,7 @@ export const isIncompleteProductInfo = (product) => {
   })
 }
 
-export const getLxParams = (item) => {
+export const getLxParams = (item, response) => {
   try {
     const priorityTag = getPriorityTag(item.tagList || [])
     const category1Id = get(priorityTag, 'id', '')

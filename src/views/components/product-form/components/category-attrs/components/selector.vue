@@ -2,6 +2,7 @@
   <div class="category-attr-selector">
     <CustomSelector
       v-bind="$attrs"
+      v-on="$listeners"
       :value="val"
       :valueKey="valueKey"
       :labelKey="labelKey"

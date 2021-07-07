@@ -28,7 +28,7 @@ import { getIsSinglePoi } from '@/views/batch-management/helper'
 const routeList = [
   {
     name: 'merchantReset',
-    path: 'reset',
+    path: '/reset',
     component: () =>
       import(
         /* webpackChunkName: "merchant_reset" */ '../views/merchant-status-page/reset'
@@ -36,7 +36,7 @@ const routeList = [
   },
   {
     name: 'merchantResetSelect',
-    path: 'resetSelect',
+    path: '/resetSelect',
     component: () =>
       import(
         /* webpackChunkName: "merchant_reset_select" */ '../views/merchant-status-page/reset-select'
@@ -44,7 +44,7 @@ const routeList = [
   },
   {
     name: 'merchantClose',
-    path: 'close',
+    path: '/close',
     component: () =>
       import(
         /* webpackChunkName: "merchant_close" */ '../views/merchant-status-page/close'

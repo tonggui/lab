@@ -126,7 +126,8 @@ export default ({ Component }) => (Api) => {
           const response = await fetchSubmitProduct(product, params, extra, others)
           return {
             ...response,
-            traceId
+            traceId,
+            isFetchSubmit: true
           }
         } else {
           return res
@@ -171,6 +172,7 @@ export default ({ Component }) => (Api) => {
         let response = null
         try {
           this.product = product
+          // window.owl('message', { product, ...context, type: 'saveError' })
           /**
            * 加入兜底逻辑
            * TODO 由于数据分析发现接口请求已上报埋点，但是前端漏报，猜测是否因为（response后cb前）报错，导致未上报前端埋点
@@ -179,18 +181,28 @@ export default ({ Component }) => (Api) => {
           if (config && typeof config === 'object') {
             noMessage = config.noMessage
           }
+          /**
+           * 避免上报语句导致请求失败，无需中断执行！
+           */
+          try {
+            window.Owl.addError({ name: 'saveError', msg: `请求之前：product:${JSON.stringify(this.product)}, context:${JSON.stringify(context)}` }, { level: 'warn' })
+          } catch (e) {
+            console.log('避免上报语句导致请求失败，无需中断执行！')
+          }
           response = await this.fetchSubmitEditProduct(context)
+          window.Owl.addError({ name: 'saveError', msg: `请求之后：product:${JSON.stringify(this.product)}, response: ${JSON.stringify(response)}, context:${JSON.stringify(context)}` }, { level: 'warn' })
           if (response && !noMessage) this.$Message.success('编辑商品信息成功')
           cb(response)
         } catch (err) {
           /**
            * TODO 如果response存在，则判定接口请求成功，保证前后端埋点一致性，判断为返回结果正确，允许走入后续流程，保证前端埋点正常上报
            */
-          if (response && response.traceId) {
+          if (response && response.isFetchSubmit) {
             cb(response)
           } else {
             cb(null, err)
           }
+          window.Owl.addError({ name: 'saveError', msg: `请求之后：product:${JSON.stringify(this.product)}, response: ${JSON.stringify(response)}, context:${JSON.stringify(context)}, error: ${JSON.stringify(err)}` }, { level: 'warn' })
         }
       },
       async handleRevocation (product, cb) {
