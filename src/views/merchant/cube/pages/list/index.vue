@@ -1,5 +1,5 @@
 <template>
-  <div class="cube-container">
+  <div class="merchant-cube-list-container">
     <ErrorBoundary
       type="loading"
       :error="pageError"
@@ -65,7 +65,6 @@
         }
       },
       pageError () {
-        console.log('this.tagListError', this.tagListError)
         return this.error && this.tagListError && this.productListError
       },
       selectedIdList () {
@@ -113,10 +112,10 @@
           return prev
         }, [])
       }
-    },
-    mounted () {
-      this.handleGetScopeData()
     }
+    // mounted () {
+    //   this.handleGetScopeData()
+    // }
   }
 </script>
 <style lang="less">
@@ -125,7 +124,7 @@
 }
 </style>
 <style lang="less" scoped>
-.cube-container {
+.merchant-cube-list-container {
   height: 100%;
   overflow: hidden;
   /deep/ .container {

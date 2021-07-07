@@ -110,6 +110,7 @@
                   ...(this.productInfoMap[id] || product),
                   selectedTagList: this.autoFillTag ? product.tagList : [], // 默认分类不自动填充
                   addedPoiIds: product.addedPoiIds || this.productInfoMap[id].addedPoiIds,
+                  tagList: product.tagList,
                   relatedPoiIds: product.relatedPoiIds || this.productInfoMap[id].relatedPoiIds,
                   totalPoiIds: product.totalPoiIds || this.productInfoMap[id].totalPoiIds,
                   productLabelIdList: product.productLabelIdList || this.productInfoMap[id].productLabelIdList

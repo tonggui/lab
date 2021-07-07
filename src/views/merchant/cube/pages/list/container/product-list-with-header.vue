@@ -48,11 +48,11 @@
 <script>
   import ProductListPage from '@/views/components/layout/product-list-page'
   import Header from '@/components/header-layout'
-  import ProductSearch from '../components/product-search'
+  import ProductSearch from '@/views/product-recommend/pages/product-recommend-list/components/product-search'
   import SelectedProductButtonOperations from '../components/selected-product-button-operations'
   import DeleteProductsModal from '../../../components/delete-products-modal'
-  import ErrorPage from '../components/error'
-  import EmptyPage from '../components/empty'
+  import ErrorPage from '@/views/product-recommend/pages/product-recommend-list/components/error'
+  import EmptyPage from '@/views/product-recommend/pages/product-recommend-list/components/empty'
   import { fetchMultiCubeCheckProducts } from '@/data/repos/merchantCube'
   import TagList from './tag-list'
   import Tabs from './product-tabs'
@@ -160,8 +160,8 @@
       }
     },
     async mounted () {
-      await this.getTabList()
       await this.getScopeList()
+      await this.getTabList()
       await this.getData()
     },
     beforeDestroy () {

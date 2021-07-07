@@ -43,7 +43,7 @@ export default {
   },
   actions: {
     async getScopeList ({ dispatch, commit }) {
-      let cityList = []
+      const cityList = []
       const optionsShop = await scope.getList() || []
       commit('setRowScopeList', [...optionsShop])
       optionsShop.unshift({ id: -1, name: '全国所有门店', cityId: -1, cityName: '全国' })

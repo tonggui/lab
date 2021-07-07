@@ -1,6 +1,5 @@
 import {
   fetchGetPoiScopeList,
-  fetchSubmitMultiCreateRecommendProduct,
   fetchGetMultiRecommendProductList,
   getCubeBatchSaveProduct,
   fetchGetProductMultiCubeTabList,
@@ -23,7 +22,6 @@ export default {
     }
   },
   multiCubeEdit: {
-    batchCreate: getCubeBatchSaveProduct,
-    singleCreate: fetchSubmitMultiCreateRecommendProduct
+    batchCreate: getCubeBatchSaveProduct
   }
 }

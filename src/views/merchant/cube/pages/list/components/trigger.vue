@@ -11,6 +11,7 @@
   </div>
 </template>
 <script>
+  import { get } from 'lodash'
   import { helper } from '@/views/merchant/cube/store'
 
   const { mapState } = helper()
@@ -54,33 +55,36 @@
       this.getScopeTips()
     },
     methods: {
-      getCitiesList (pois) {
+      getCitiesList (poiIds) {
         const cityIds = new Map()
         let tmp = {}
-        pois.forEach(item => {
-          tmp = this.rowScopeList.find(i => i.id === item)
+        poiIds.forEach(poiId => {
+          tmp = this.rowScopeList.find(i => i.id === poiId)
           if (tmp && tmp.cityName) {
-            if (!cityIds.has(tmp.cityName)) {
-              cityIds.set(tmp.cityName, item)
-            } else {
-              let arr = Array.isArray(cityIds.get(tmp.cityName)) ? cityIds.get(tmp.cityName) : []
-              arr.push(item)
-              cityIds.set(tmp.cityName, arr)
-            }
+            const ids = cityIds.get(tmp.cityName) || []
+            ids.push(poiId)
+            cityIds.set(tmp.cityName, ids)
+            // if (!cityIds.has(tmp.cityName)) {
+            //   cityIds.set(tmp.cityName, poiId)
+            // } else {
+            //   let arr = Array.isArray(cityIds.get(tmp.cityName)) ? cityIds.get(tmp.cityName) : []
+            //   arr.push(poiId)
+            //   cityIds.set(tmp.cityName, arr)
+            // }
           }
         })
         return cityIds
       },
       getScopeTips () {
-        let pois = this.addedPoiIds.concat(this.relatedPoiIds)
-        const alreadyCities = this.getCitiesList(pois)
-        if (alreadyCities.size >= this.scopeList.length - 1 && pois.length >= this.rowScopeList.length) {
+        const poiIds = this.addedPoiIds.concat(this.relatedPoiIds)
+        const alreadyCities = this.getCitiesList(poiIds)
+        if (alreadyCities.size >= this.scopeList.length - 1 && poiIds.length >= this.rowScopeList.length) {
           this.displayContent = '全国所有门店'
         } else {
           let cityCount = 0
           let poiCount = 0
           let cityName = ''
-          let firstPoiId = ''
+          let firstPoiId
           for (let key of alreadyCities.keys()) {
             if (cityCount <= 3) {
               cityName += cityCount > 0 ? '、' : ''
@@ -93,11 +97,10 @@
             if (poiCount === 1) {
               for (let key of alreadyCities.keys()) {
                 firstPoiId = alreadyCities.get(key)
+                firstPoiId = Array.isArray(firstPoiId) && firstPoiId.length ? firstPoiId[0] : firstPoiId
                 break
               }
-              let poiName = this.rowScopeList.find(ele => {
-                return ele.id === firstPoiId
-              }).name
+              const poiName = get(this.rowScopeList.find(ele => ele.id === firstPoiId), 'name', '')
               this.displayContent = `${poiName}`
             } else this.displayContent = `${cityName}${poiCount}个门店`
           } else this.displayContent = `${cityName}等${cityCount}个城市共${poiCount}个门店`
@@ -106,6 +109,7 @@
     }
   }
 </script>
+
 <style lang="less" scoped>
   .trigger-display {
     display: flex;

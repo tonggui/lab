@@ -12,7 +12,6 @@ import {
 } from '@/data/merchantApi/cube'
 import { Pagination } from '@/data/interface/common'
 import { MultiCubeProduct } from '@/data/interface/product'
-import { submitSingleCreateNewArrivalProduct } from '@/data/api/product'
 export const getCubeTaskStatus = () => apiCubeTaskStatus()
 
 export const getCubeTaskConfirm = (taskId) => apiCubeTaskConfirm({ taskId })
@@ -48,11 +47,11 @@ export const fetchGetMultiRecommendProductList =
     cityId, poiId, keyword, pagination, firstTagId, tabId, secondTagId
   })
 
-export const fetchSubmitMultiCreateRecommendProduct = (product: MultiCubeProduct, extra, poiId) => submitSingleCreateNewArrivalProduct({
-  product,
-  extra,
-  poiId
-})
+// export const fetchSubmitMultiCreateRecommendProduct = (product: MultiCubeProduct, extra, poiId) => submitSingleCreateNewArrivalProduct({
+//   product,
+//   extra,
+//   poiId
+// })
 
 // 创建商品前校验
 export const fetchMultiCubeCheckProducts = (productList: MultiCubeProduct[]) => multiCubeCheckProducts({ productList })

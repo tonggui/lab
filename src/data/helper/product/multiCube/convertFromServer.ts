@@ -72,8 +72,8 @@ export const convertMultiCubeEditProduct = (product): MultiCubeProduct => {
     hotSaleDetailsMap: hotSaleDetailsMap,
     isExist: Number(isExist) === 1,
     isHqExist: isHqExist === 1,
-    relatedPoiIds,
-    totalPoiIds,
+    relatedPoiIds: relatedPoiIds || [],
+    totalPoiIds: totalPoiIds || [],
     merchantSpuId
   }
   return multiCubeProduct
