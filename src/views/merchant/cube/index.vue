@@ -23,8 +23,9 @@
       '$route': {
         immediate: true,
         handler () {
+          const baseUrl = process.env.VUE_APP_BASE_URL || '/reuse/sc/product/views'
           const route = this.$router.match(window.location.pathname)
-          if (route && route.name !== 'merchantCubeList') this.style = { height: '100vh' }
+          if (route && route.path && route.path.replace(baseUrl, '') !== '/merchant/cube/list') this.style = { height: '100vh' }
           else this.style = {}
         }
       }

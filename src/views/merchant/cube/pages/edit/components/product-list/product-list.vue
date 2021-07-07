@@ -63,7 +63,7 @@
   } from '../../../../utils'
   import { isIncompleteProductInfo, getLxParams, listParams } from '@/views/product-new-arrival/utils'
   import lx from '@/common/lx/lxReport'
-  import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
+  // import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
   import PoiSelect from '../../../list/components/poi-select'
   import validate from './validate'
 
@@ -322,90 +322,92 @@
           if (errorCount === createTotal) {
             this.$Message.warning('选择商品全部创建失败')
           } else {
-            const successCount = createTotal - errorCount
+            this.$Message.success('任务创建成功')
+            // const successCount = createTotal - errorCount
             const successProductList = productList.filter(p => {
               const id = getUniqueId(p)
               return !errorInfo[id]
             })
-            if (successCount === createTotal) {
-              this.$Message.success(`已成功创建${productList.length}个商品`)
-            } else {
-              this.$Message.warning(`已成功创建${successCount}个商品，其余${errorCount}个创建失败`)
-            }
+            // if (successCount === createTotal) {
+            //   this.$Message.success(`已成功创建${productList.length}个商品`)
+            // } else {
+            //   this.$Message.warning(`已成功创建${successCount}个商品，其余${errorCount}个创建失败`)
+            // }
             // 是否全部创建成功
-            this.triggerCreateCallback(this.total === successCount)
+            // this.triggerCreateCallback(this.total === successCount)
             this.deleteCallback(successProductList)
           }
           this.errorInfo = errorInfo
           this.loading = false
+          this.$router.push({ name: 'merchantCubeProcessStatus' })
         }, (err) => {
           console.error(err)
           this.loading = false
           this.$Message.error(err.message)
         }))
       },
-      async handleSingleCreate (product) {
-        return new Promise((resolve) => {
-          this.$emit('single-create', product, this.createCallback((error) => {
-            const id = getUniqueId(product)
-            this.errorInfo[id] = {}
-            const isLastProduct = this.total <= 1
-            // 成功
-            if (!error) {
-              lx.mv({
-                bid: 'b_shangou_online_e_qwst9shs_mv',
-                val: {
-                  ...getLxParams(product),
-                  op_res: Number(product.productStatus) ? (product.productStatus === NEW_ARRIVAL_PRODUCT_STATUS.OFFSHELF ? 0 : 1) : ''
-                }
-              })
-              this.$Message.success('已成功上架1个商品')
-              this.deleteCallback([product])
-              this.triggerCreateCallback(isLastProduct)
-              resolve()
-              return
-            }
-            if (error.code === 5102) {
-              this.$Modal.info({
-                title: '操作商品被删除',
-                content: isLastProduct ? '抱歉！你选择的商品已被平台删除，请选择其他商品上架。' : '抱歉！你选择的商品已被平台删除，请编辑其他商品。',
-                centerLayout: true,
-                iconType: '',
-                onText: '我知道了',
-                onOk: () => {
-                  this.deleteCallback([product])
-                  if (isLastProduct) {
-                    this.$nextTick(() => this.$router.back())
-                  }
-                }
-              })
-              resolve()
-              return
-            }
-            if (error.code === 1012) {
-              this.$Modal.info({
-                width: 300,
-                title: '店内存在UPC相同商品',
-                content: '抱歉!⻔店已存在与所操作的商品相同UPC的商品，不可重复上架。',
-                centerLayout: true,
-                iconType: '',
-                onText: '我知道了',
-                onOk: () => {
-                  this.deleteCallback([product])
-                }
-              })
-              resolve()
-              return
-            }
-            this.$Message.error(error.message)
-            resolve()
-          }, (err) => {
-            console.error(err)
-            this.$Message.error(err.message)
-            resolve()
-          }))
-        })
-      },
+      // async handleSingleCreate (product) {
+      //   return new Promise((resolve) => {
+      //     this.$emit('single-create', product, this.createCallback((error) => {
+      //       const id = getUniqueId(product)
+      //       this.errorInfo[id] = {}
+      //       const isLastProduct = this.total <= 1
+      //       // 成功
+      //       if (!error) {
+      //         lx.mv({
+      //           bid: 'b_shangou_online_e_qwst9shs_mv',
+      //           val: {
+      //             ...getLxParams(product),
+      //             op_res: Number(product.productStatus) ? (product.productStatus === NEW_ARRIVAL_PRODUCT_STATUS.OFFSHELF ? 0 : 1) : ''
+      //           }
+      //         })
+      //         this.$Message.success('已成功上架1个商品')
+      //         this.deleteCallback([product])
+      //         this.triggerCreateCallback(isLastProduct)
+      //         resolve()
+      //         return
+      //       }
+      //       if (error.code === 5102) {
+      //         this.$Modal.info({
+      //           title: '操作商品被删除',
+      //           content: isLastProduct ? '抱歉！你选择的商品已被平台删除，请选择其他商品上架。' : '抱歉！你选择的商品已被平台删除，请编辑其他商品。',
+      //           centerLayout: true,
+      //           iconType: '',
+      //           onText: '我知道了',
+      //           onOk: () => {
+      //             this.deleteCallback([product])
+      //             if (isLastProduct) {
+      //               this.$nextTick(() => this.$router.back())
+      //             }
+      //           }
+      //         })
+      //         resolve()
+      //         return
+      //       }
+      //       if (error.code === 1012) {
+      //         this.$Modal.info({
+      //           width: 300,
+      //           title: '店内存在UPC相同商品',
+      //           content: '抱歉!⻔店已存在与所操作的商品相同UPC的商品，不可重复上架。',
+      //           centerLayout: true,
+      //           iconType: '',
+      //           onText: '我知道了',
+      //           onOk: () => {
+      //             this.deleteCallback([product])
+      //           }
+      //         })
+      //         resolve()
+      //         return
+      //       }
+      //       this.$Message.error(error.message)
+      //       resolve()
+      //     }, (err) => {
+      //       console.error(err)
+      //       this.$Message.error(err.message)
+      //       resolve()
+      //     }))
+      //   })
+      // },
       handleBatchSelect (selected, productList) {
         this.selectIdList = this.triggerSelectByList(selected, productList)
       },

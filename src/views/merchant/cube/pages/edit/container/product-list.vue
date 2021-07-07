@@ -2,7 +2,7 @@
   <div class="merchant-cube-edit-list">
     <div class="merchant-cube-edit-list-title">
       完善商品信息
-      <small>本次已上架<span class="merchant-cube-edit-list-title-num">{{ createdProductCount }}</span>个商品，剩余<span class="merchant-cube-edit-list-title-num">{{ remainingProductCount }}</span>个商品待上架</small>
+      <small>已创建<span class="merchant-cube-edit-list-title-num">{{ createdProductCount }}</span>个商品，剩余<span class="merchant-cube-edit-list-title-num">{{ remainingProductCount }}</span>个商品待创建</small>
     </div>
     <div class="merchant-cube-edit-list-content">
       <ProductEmpty v-if="empty">
@@ -208,7 +208,9 @@
         })
       },
       async handleBatchCreateConfirm (productList) {
-        await this.handleModalVisible()
+        const hasAddedPoiIds = productList.some(product => product.addedPoiIds && product.addedPoiIds.length)
+
+        if (hasAddedPoiIds) await this.handleModalVisible()
         return this.handleRequest(productList)
       },
       handleDelete (productList) {

@@ -1,5 +1,5 @@
 import { fetchMultiCubeDefaultStock } from '@/data/repos/merchantCube'
-import { fetchGetTagList } from '@/data/repos/medicineMerchantCategory'
+import { fetchGetTagList } from '@/data/repos/merchantCategory'
 import ProductList from './product-list'
 // import { WithProductStock } from '@/views/product-recommend/pages/product-recommend-edit/components/product-list'
 import WithAsyncTask from '@/hoc/withAsyncTask'

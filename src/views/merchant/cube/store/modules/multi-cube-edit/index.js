@@ -101,8 +101,9 @@ export default {
       return error
     },
     async batchCreate ({ commit, state }, productList) {
-      const errorProductList = await api.multiCubeEdit.batchCreate(productList)
-      const successCount = productList.length - errorProductList.length
+      const addProductCount = await api.multiCubeEdit.batchCreate(productList)
+      const errorProductList = []
+      const successCount = (productList.length || addProductCount) - errorProductList.length
       const createdProductCount = state.createdProductCount + successCount
       commit('setCreatedProductCount', createdProductCount)
       return errorProductList.reduce((prev, { product, code, message }) => {

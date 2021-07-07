@@ -10,7 +10,7 @@
       tip="马上创建完毕，请您耐心等待~"
       inline-btn-text="返回'商品库'"
       not-inline-btn-text="返回'商品库'"
-      on-click-btn="handleClickBtn"
+      @on-click-btn="handleClickBtn"
     />
   </div>
 </template>
@@ -42,7 +42,7 @@
       async getRunningStatusStatus () {
         const { taskId, status, processStatus } = await getCubeTaskStatus()
         const {
-          runningStatus,
+          runningStatus = 201,
           mainStatus,
           poiStatus
         } = processStatus || {}
