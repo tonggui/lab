@@ -237,3 +237,11 @@ export const judgeArray = (arr1, arr2) => {
 export const getIntersection = (arr1, arr2) => {
   return arr1.filter(item => arr2.indexOf(item) !== -1)
 }
+
+// 合并两个数组并去重
+export const uniqueArr = (arr1, arr2) => {
+  // 合并两个数组
+  arr1.push(...arr2)
+  // 去重
+  return Array.from(new Set(arr1))
+}

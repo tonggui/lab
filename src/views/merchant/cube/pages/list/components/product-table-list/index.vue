@@ -46,12 +46,13 @@
 
 <script>
   import DoubleColumnsTableList from './double-columns-table-list'
-  import { getProductQualificationStatus } from '@/views/product-recommend/utils'
+  import { getProductQualificationStatus } from '../../../../utils'
   import { handleToast } from '@/views/product-recommend/pages/product-recommend-list/components/qualification-tip'
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
   import { helper } from '@/views/merchant/cube/store'
+  import _ from 'lodash'
   const { mapState } = helper()
   export default {
     name: 'product-table-list',
@@ -83,9 +84,9 @@
         return Object.values(this.classifySelectedProducts)
       },
       displayContentScope () {
-        if (this.currentScope.poiId !== -1 || this.currentScope.poiId !== '') {
+        if (this.currentScope.poiId !== -1 && this.currentScope.poiId !== '') {
           return '选择'
-        } else if (this.currentScope.cityId !== '' || this.currentScope.cityId !== -1) {
+        } else if (this.currentScope.cityId !== '' && this.currentScope.cityId !== -1) {
           return '选择城市下所有'
         } else return '全国所有'
       },
@@ -224,59 +225,77 @@
           items = items.slice(0, this.maxSelected)
         }
         if (this.classifySelectedProductsInfo.length > 0) {
-          items.forEach(item => {
-            this.displayTips(item, true)
-          })
+          // 找对应的项并判断是否有toast提示
+          this.getDisplayItem(items, true)
         }
         this.$emit('on-select', items)
       },
       handleDeSelect (deSelectItem) {
         this.$emit('on-de-select', deSelectItem)
         // 当剔除关联后该商品待关联门店数>=1，则toast提示
-        deSelectItem.addedPoiIds && deSelectItem.addedPoiIds.length > 0 && this.displayTips(deSelectItem, false)
+        // 找对应的项并判断是否有toast提示
+        console.log(this.classifySelectedProductsInfo)
+        this.getDisplayItem(deSelectItem, false)
       },
-      displayTips (item, type) {
-        // console.log('===o')
-        let target = {}
-        this.classifySelectedProductsInfo.forEach(({ productList }) => {
-          target = productList.find(({ __id__ }) => {
-            return item.id === __id__
+      getDisplayItem (items, type) {
+        items.forEach(item => {
+          let target = {}
+          this.classifySelectedProductsInfo.forEach(({ productList }) => {
+            target = productList.find(({ __id__ }) => {
+              return item.__id__ === __id__
+            })
           })
-        })
-        // console.log(target)
-        // console.log(this.rowScopeList)
-        if (target) {
-          // console.log('=====')
-          let pois = type === true ? target['addedPoiIds'].concat(target['relatedPoiIds']) : target['addedPoiIds']
-          const alreadyCities = this.getCitiesList(pois)
-          const totalCities = this.getCitiesList(target.totalPoiIds)
-          if (alreadyCities.size === totalCities.size && pois.length === item.totalPoiIds.length && type === true) {
-            this.displayContent = '全国所有门店'
-          } else {
-            let cityCount = 0
-            let poiCount = 0
-            let cityName = ''
-            for (let key of alreadyCities.keys()) {
-              cityName += cityCount > 0 ? '、' : ''
-              if (cityCount <= 3) {
-                cityName += key
-                cityCount++
-                poiCount += Array.isArray(alreadyCities.get(key)) ? alreadyCities.get(key).length : 1
-              } else break
+          console.log('---00', target)
+          if (target) {
+            if (type || (!type && target.addedPoiIds && target.addedPoiIds.length > 0)) {
+              this.displayTips(_.cloneDeep(target), type)
             }
-            if (alreadyCities.size === 1) {
-              if (poiCount === 1) {
-                let poiName = this.rowScopeList.find(i => i.id === item.id).name
-                this.displayContent = `${poiName}`
-              } else this.displayContent = `${cityName}${poiCount}个门店`
-            } else this.displayContent = `${cityName}等${cityCount}个城市共${poiCount}个门店`
           }
-          let selContent = `已选列表存在该商品，该商品关联门店范围将修改为${this.displayContent}，且商品关联门店自动变更为${this.displayContentScope}门店`
-          let deSelContent = `由于该商品在${this.displayContent}待创建，已选列表仍然保留该商品`
-          this.$Message.info({
-            content: type === true ? selContent : deSelContent
-          })
+        })
+      },
+      // 选择城市内容+商品已关联城市去重后的总城市数量XX 及 选择门店内容+商品已关联门店去重后的总门店数量YY 判断**如何展示
+      displayTips (target, type) {
+        console.log('111', target)
+        let pois = type === true ? _.union(_.union(target['addedPoiIds'], target['totalPoiIds']), target['relatedPoiIds']) : target['addedPoiIds']
+        const alreadyCities = this.getCitiesList(pois)
+        console.log(alreadyCities)
+        // 当XX=该连锁商家覆盖城市总数，YY=该连锁商家覆盖门店总数，**为全国所有门店
+        if (pois.length === this.rowScopeList.length && type === true) {
+          this.displayContent = '全国所有门店'
+        } else {
+          let cityCount = 0
+          let poiCount = 0
+          let cityName = ''
+          let firstPoiId = ''
+          // 当XX>1，**为##、##、##等XX个城市共YY个门店 ，##为选择城市内容+商品已关联城市去重后的城市名称列表，不足3个全部显示，超过3个仅显示3个
+          for (let key of alreadyCities.keys()) {
+            if (cityCount <= 3) {
+              cityName += cityCount > 0 ? '、' : ''
+              cityName += key
+            }
+            cityCount++
+            poiCount += Array.isArray(alreadyCities.get(key)) ? alreadyCities.get(key).length : 1
+          }
+          // 当XX=1，YY>1，**为##YY个门店，##为选择城市内容+商品已关联城市去重后的城市名称列表
+          if (alreadyCities.size === 1) {
+            if (poiCount === 1) {
+              // 当XX=1，YY=1，**为##，##为选择门店内容+商品已关联门店去重后的门店名称列表
+              for (let key of alreadyCities.keys()) {
+                firstPoiId = alreadyCities.get(key)
+                break
+              }
+              let poiName = this.rowScopeList.find(ele => {
+                return ele.id === firstPoiId
+              }).name
+              this.displayContent = `${poiName}`
+            } else this.displayContent = `${cityName}${poiCount}个门店`
+          } else this.displayContent = `${cityName}等${cityCount}个城市共${poiCount}个门店`
         }
+        let selContent = `已选列表存在该商品，该商品关联门店范围将修改为${this.displayContent}`
+        let deSelContent = `由于该商品在${this.displayContent}待创建，已选列表仍然保留该商品`
+        this.$Message.info({
+          content: type === true ? selContent : deSelContent
+        })
       },
       getCitiesList (pois) {
         const cityIds = new Map()
@@ -284,7 +303,7 @@
         pois.forEach(item => {
           tmp = this.rowScopeList.find(i => i.id === item)
           if (!cityIds.has(tmp.cityName)) {
-            cityIds.set(tmp.cityName, [].push(item))
+            cityIds.set(tmp.cityName, item)
           } else {
             let arr = Array.isArray(cityIds.get(tmp.cityName)) ? cityIds.get(tmp.cityName) : []
             arr.push(item)

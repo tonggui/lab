@@ -51,17 +51,19 @@ export default {
             })
           }
           if (existProduct) {
+            // 已在已选列表
             existProduct['addedPoiIds'] = product['addedPoiIds']
           } else {
             map[id].productList = arrayUniquePush(productList, product, (p) => p.__id__)
           }
         } else {
           // 从待关联门店中移除当前范围下未关联的门店
-          product.totalPoiIds.forEach(item => {
-            arrayRemoveItem(product['addedPoiIds'], item)
+          console.log(product)
+          existProduct.totalPoiIds.forEach(item => {
+            arrayRemoveItem(existProduct['addedPoiIds'], item)
           })
-          // 待关联门店数=0，已选商品列表移除该商品
-          if (product['addedPoiIds'].length === 0) {
+          // 待关联门店数=0，已选商品列表移除该商品 || 选择城市全部，已选商品列表移除该商品，已选商品数量-1
+          if (existProduct['addedPoiIds'].length === 0 || (currentScope.cityId === -1 && currentScope.poiId === -1)) {
             map[id].productList = arrayUniquePop(productList, product, (p) => p.__id__)
           }
         }
