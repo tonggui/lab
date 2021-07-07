@@ -45,7 +45,7 @@
       }),
       activeItemList () {
         return this.children.filter((item) => {
-          return this.curScopePoiIdMap[item.id] === 1
+          return this.curScopePoiIdMap[item.__id__] === 1
         })
       }
     }

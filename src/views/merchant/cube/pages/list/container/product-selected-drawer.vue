@@ -14,9 +14,9 @@
       </span>
       <Select label="按关联分店筛选" style="width:150px; margin:0px 10px" line
               v-model="selectScope.cityId" filterable clearable placeholder="请选择或输入城市名搜索">
-        <Option v-for="item in scopeList" :value="item.cityId" :key="item.cityId" >{{item.cityName}}</Option>
+        <Option v-for="item in scopeListOptions" :value="item.cityId" :key="item.cityId" >{{item.cityName}}</Option>
       </Select>
-      <Select style="width:150px" v-model="selectScope.poiId" :disabled="selectScope.cityId === -1" placeholder="请选择或输入分店名搜索" filterable clearable line>
+      <Select style="width:150px" v-model="selectScope.poiId" :disabled="selectScope.cityId === -1 || !selectScope.cityId" placeholder="请选择或输入分店名搜索" filterable clearable line>
         <Option v-for="item in shopList" :value="item.id" :key="item.id">{{item.name}}</Option>
       </Select>
 <!--      <Button type="primary" style="margin:0px 10px" @click="handleFilterScope">筛选</Button>-->
@@ -57,10 +57,17 @@
 <script>
   import SelectedClassifyProductList from '../components/selected-classify-product-list'
   import { helper } from '../../../store'
-  import { covertObjectToSequenceArr } from '../../../utils'
-  // import { cloneDeep } from 'lodash'
+  import { covertObjectToSequenceArr, uniqueArr } from '../../../utils'
+  import _ from 'lodash'
   const { mapActions, mapState } = helper()
-
+  const countryPoi = {
+    cityName: '全国',
+    cityId: -1,
+    poiList: [{
+      id: -1,
+      name: '全国所有门店'
+    }]
+  }
   export default {
     name: 'product-selected-drawer',
     props: {
@@ -73,8 +80,8 @@
     data () {
       return {
         selectScope: {
-          cityId: -1,
-          poiId: -1
+          cityId: '',
+          poiId: ''
         },
         curScopePoiIdMap: {}
       }
@@ -86,17 +93,36 @@
         currentPoiIds: state => state.multiCubeList.currentPoiIds,
         dataSourceList: 'classifySelectedProducts'
       }),
+      scopeListOptions () {
+        let poiIdList = []
+        let flag = false
+        for (let key in this.dataSourceList) {
+          let dataItem = this.dataSourceList[key].productList
+          dataItem.forEach(item => {
+            let poiIds = item.relatedPoiIds.slice().concat(item.addedPoiIds.slice())
+            poiIdList = uniqueArr(poiIdList, poiIds)
+            let pois = _.union(item['addedPoiIds'], item['relatedPoiIds'])
+            // 当该连锁商家 待关联门店 和 已关联门店 的门店总数 === 该账号下覆盖的所有门店 --->全国
+            if (!flag && pois.length === this.rowScopeList.length) {
+              flag = true
+            }
+          })
+        }
+        const cityList = this.getCitiesList(poiIdList)
+        if (flag) {
+          cityList.unshift(countryPoi)
+        }
+        return cityList
+      },
       showDataSourceList () {
         this.handleFilterScope()
         return covertObjectToSequenceArr(this.dataSourceList)
       },
       shopList () {
-        let tmp = this.scopeList.filter(item => {
-          if (item.cityId === this.selectScope.cityId) {
-            return item.poiList
-          }
+        let tmp = this.scopeListOptions.find(item => {
+          return item.cityId === this.selectScope.cityId
         })
-        return tmp && tmp[0] ? tmp[0].poiList : []
+        return tmp && tmp.poiList ? tmp.poiList : []
       }
     },
     components: {
@@ -105,6 +131,14 @@
     watch: {
       total (val) {
         if (val <= 0) this.handleClose()
+      },
+      'selectScope.cityId': {
+        immediate: true,
+        handler (value) {
+          if (!value) {
+            this.selectScope.poiId = ''
+          }
+        }
       }
     },
     methods: {
@@ -146,24 +180,28 @@
         if (this.total > 0) this.$emit('on-click-create')
       },
       handleFilterScope () {
-        let self = this
         this.curScopePoiIdMap = {}
+        // 选中城市/门店
         let choosePoiList = this.choosePoiList()
         const map = {}
         for (let key in this.dataSourceList) {
           let dataItem = this.dataSourceList[key].productList
           dataItem.forEach(item => {
-            let poiIds = item.relatedPoiIds.slice().concat(item.addedPoiIds.slice())
-            poiIds.forEach(ele => {
-              // 不是全国范围则筛选
-              if (self.selectScope.cityId !== -1 && self.selectScope.cityId !== undefined) {
+            if (this.selectScope.cityId !== -1) {
+              let poiIds = item.relatedPoiIds.slice().concat(item.addedPoiIds.slice())
+              poiIds.forEach(ele => {
                 if (choosePoiList.indexOf(ele) !== -1) {
-                  map[item.id] = 1
+                  map[item.__id__] = 1
                 }
-              } else {
-                map[item.id] = 1
+              })
+            } else {
+              // 全国
+              let pois = item.relatedPoiIds.slice().concat(item.addedPoiIds.slice())
+              // 当该连锁商家 待关联门店 和 已关联门店 的门店总数 === 该账号下覆盖的所有门店 --->全国
+              if (pois.length >= this.rowScopeList.length) {
+                map[item.__id__] = 1
               }
-            })
+            }
           })
         }
         this.curScopePoiIdMap = map
@@ -171,33 +209,73 @@
       // handleFilterScope () {
       //   if (this.selectScope.cityId !== '' && this.selectScope.cityId !== undefined) {
       //     let choosePoiList = this.choosePoiList()
+      //     console.log(choosePoiList)
       //     for (let key in this.dataSourceList) {
       //       let dataItem = cloneDeep(this.dataSourceList[key])
       //       dataItem.productList.filter(item => {
       //         let poiIds = item.relatedPoiIds.slice().concat(item.addedPoiIds.slice())
       //         // 已/待关联门店只需有一个id在当前所选择的门店范围内即可
-      //         return poiIds.some(id => {
-      //           return choosePoiList.includes(id)
+      //         return poiIds.some(__id__ => {
+      //           return choosePoiList.includes(__id__)
       //         })
       //       })
       //       this.curScopePoiIdMap[key] = dataItem
       //     }
+      //     console.log(this.curScopePoiIdMap)
       //     return this.curScopePoiIdMap
       //   } else return this.dataSourceList
       // },
+
+      // 当前筛选框所有门店list
       choosePoiList () {
-        if (this.selectScope.cityId !== -1 && this.selectScope.cityId !== undefined) {
+        if (this.selectScope.cityId && this.selectScope.cityId !== -1) {
           let poiList = []
-          if (this.selectScope.poiId === -1 || this.selectScope.poiId === undefined) {
+          // 关联门店为城市
+          if (!this.selectScope.poiId) {
             poiList = this.scopeList.find(item => {
               return item.cityId === this.selectScope.cityId
             }).poiList || []
             return poiList.map(item => item.id)
           } else {
+            // 门店
             poiList.push(this.selectScope.poiId)
             return poiList
           }
-        } else return this.rowScopeList.map(item => item.id)
+        } else if (this.selectScope.cityId === -1) {
+          return []
+        } else {
+          // 不进行筛选，全部门店的全集
+          return this.rowScopeList.map(item => item.id)
+        }
+      },
+      getCitiesList (pois) {
+        const cityList = []
+        let city = {}
+        pois.forEach(id => {
+          city = this.rowScopeList.find(i => i.id === id)
+          if (city && city.cityName) {
+            let isExist = cityList.some(ele => ele.cityId === city.cityId)
+            if (!isExist) {
+              const item = {
+                cityName: city.cityName,
+                cityId: city.cityId,
+                poiList: [{
+                  id: city.id,
+                  name: city.name
+                }]
+              }
+              cityList.push(item)
+            } else {
+              _.find(cityList, item => {
+                return item.cityId === city.cityId
+              }).poiList.push({
+                id: city.id,
+                name: city.name
+              })
+            }
+          }
+        })
+        return cityList
       }
     }
   }

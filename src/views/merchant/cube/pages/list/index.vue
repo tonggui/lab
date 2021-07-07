@@ -25,7 +25,7 @@
 <script>
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
   import ProductListWithHeader from './container/product-list-with-header'
-  import SelectedScopeShop from './components/selected-scope-shop'
+  import SelectedScopeShop from './components/select-scope'
   import { helper } from '../../store'
   import { get } from 'lodash'
 
