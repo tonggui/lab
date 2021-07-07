@@ -88,6 +88,7 @@ class TimeCounter {
       this._totalTime += this.calculateTotalTime()
       this._timePoint = val || +new Date()
     }
+    console.log('this-time', this)
   }
   set endTime (val) {
     this._endTimePoint = val
