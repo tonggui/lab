@@ -8,9 +8,10 @@
           <Radio :label="1">指定城市或分店</Radio>
         </span>
       </RadioGroup>
+      <span v-show="displayShop.cityId !== -1">所选{{cityOrPoiDisplay}}为: {{ displayShop.name }}</span>
     </div>
     <div class="display-tip">
-        当前基于美团平台“{{ displayShop.name }}”商品搜索及销售数据进行推荐。所选商品默认关联本账号“全部分店”，如需变更请在“已选商品”或“完善商品信息”中修改
+        当前基于美团平台“{{ displayShop.name }}”商品搜索及销售数据进行推荐。所选商品默认关联{{recommendDisplay}}，如需变更请在“已选商品”或“完善商品信息”中修改
     </div>
     <SelectedScopeShop :scopeVisible="scopeVisible" :scope="scope"  @updateScope="updateScope" @setDisplayShop="contentScopeStatus"
                        @on-confirm='confirmSubmit' @on-cancel="cancel"/>
@@ -33,6 +34,7 @@
         scopeVisible: false,
         displayShop: {
           name: '全国',
+          cityId: -1,
           id: -1
         }
       }
@@ -51,7 +53,15 @@
       ...mapState({
         scopeLists: 'scopeList',
         currentScopeId: 'currentScope'
-      })
+      }),
+      cityOrPoiDisplay () {
+        return this.displayShop.id === -1 ? '分店' : '城市'
+      },
+      recommendDisplay () {
+        if (this.displayShop.cityId !== -1) {
+          return this.displayShop.id === -1 ? this.displayShop.name + '全部分店' : this.displayShop.name
+        } else return '本账号全部分店'
+      }
     },
     methods: {
       ...mapActions(['setCurrentScope', 'getData']),
@@ -77,6 +87,7 @@
         } else {
           let displayShop = {
             name: '全国',
+            cityId: -1,
             id: -1
           }
           this.contentScopeStatus(displayShop)
