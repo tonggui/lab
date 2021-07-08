@@ -33,14 +33,14 @@ export const isIncompleteProductInfo = (product) => {
   })
 }
 
-export const getLxParams = (item, response) => {
+export const getLxParams = (item, response = {}) => {
   try {
     const priorityTag = getPriorityTag(item.tagList || [])
     const category1Id = get(priorityTag, 'id', '')
     const category1Children = get(priorityTag, 'children', [])
     return {
       product_label_id: (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
-      spu_id: item.id || '',
+      spu_id: response.spuId || item.id || '',
       st_spu_id: item.spId || '',
       page_source: window.page_source || 0,
       category1_id: category1Id,
