@@ -147,7 +147,7 @@
         this.$emit('on-drawer-close')
       },
       handleItemUnselect (title, item) {
-        this.deSelectProduct([item])
+        this.deleteSelectProduct([item])
       },
       handleEmptySelected () {
         this.$Modal.open({
