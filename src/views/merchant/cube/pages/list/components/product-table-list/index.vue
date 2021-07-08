@@ -348,9 +348,12 @@
       }
       .visible-switch {
         font-size: 14px;
-        color: #676A78;
         line-height: 14px;
-        text-decoration: underline;
+        text-decoration: none;
+        font-weight: 400;
+        font-family: PingFangSC-Regular;
+        color: #999999;
+        text-align: right;
       }
     }
   }

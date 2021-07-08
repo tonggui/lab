@@ -1,18 +1,16 @@
 <template>
-  <div style="background：rgb(247, 248, 250);padding-bottom: 10px">
-    <Card :bordered="false">
-      <span style="margin: 0 30px">选择推荐商品范围</span>
+  <div class="select-scope" style="background：rgb(247, 248, 250);">
+    <div class="scope-card">
+      <span class="scope-span">选择推荐商品范围</span>
       <RadioGroup v-model="scope" type="button" @on-change="handleStatusChange" >
         <Radio :label="-1">全国</Radio>
         <span @click="handleStatusClick">
           <Radio :label="1">指定城市或分店</Radio>
         </span>
       </RadioGroup>
-    </Card>
+    </div>
     <div class="display-tip">
-      <Card>
         当前基于美团平台“{{ displayShop.name }}”商品搜索及销售数据进行推荐。所选商品默认关联本账号“全部分店”，如需变更请在“已选商品”或“完善商品信息”中修改
-      </Card>
     </div>
     <SelectedScopeShop :scopeVisible="scopeVisible" :scope="scope"  @updateScope="updateScope" @setDisplayShop="contentScopeStatus"
                        @on-confirm='confirmSubmit' @on-cancel="cancel"/>
@@ -104,7 +102,27 @@
 </script>
 
 <style scoped>
+.select-scope{
+  font-weight: 300;
+  font-family: PingFangSC-Semibold;
+  font-size: 14px;
+  color: #222222;
+  text-align: left;
+}
+.scope-card{
+  background: #fff;
+  box-shadow: 0 0 6px 0 #F3F3F4;
+  padding: 30px 70px;
+  margin-bottom: 10px;
+  border-radius: 2px;
+}
+.scope-span{
+  margin-right: 20px;
+}
 .display-tip{
+  background: #fff;
+  padding: 22px 70px;
   margin-top: 10px;
+  border-bottom: 1px solid #E9EAF2;
 }
 </style>
