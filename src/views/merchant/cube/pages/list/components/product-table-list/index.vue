@@ -140,7 +140,7 @@
         immediate: true,
         handler (v) {
           if (v.cityId === -1 || v.cityId === '') {
-            this.displayTip = '全国'
+            this.displayTip = '全国所有'
           } else if (v.poiId === -1 || v.poiId === '') {
             let cityName = this.rowScopeList && this.rowScopeList.find(item => item.cityId === v.cityId).cityName
             this.displayTip = cityName + '所有'
@@ -240,10 +240,11 @@
       getDisplayItem (items, type) {
         items.forEach(item => {
           let target = {}
-          this.classifySelectedProductsInfo.forEach(({ productList }) => {
-            target = productList.find(({ __id__ }) => {
-              return item.__id__ === __id__
+          this.classifySelectedProductsInfo.some(({ productList }) => {
+            target = productList.find(ele => {
+              return item.__id__ === ele.__id__
             })
+            if (target) return true
           })
           console.log('---00', target)
           if (target) {
