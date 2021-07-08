@@ -18,7 +18,7 @@
 <script>
   import ResultBanner from '@/components/result-banner'
   import { getCubeTaskStatus, getCubeTaskConfirm } from '@/data/repos/merchantCube'
-  import { BATCH_REL_TASK_RESULT_STATUS } from '@/data/enums/batch'
+  import { BATCH_TASK_RESULT_STATUS } from '@/data/enums/batch'
   import { ErrorJumper } from '../../utils'
 
   export default {
@@ -51,8 +51,8 @@
 
         if (taskId <= 0) this.$router.push({ name: 'merchantCubeList' })
         this.taskId = taskId
-        this.type = resultStatus === BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS ? 'success' : 'fail'
-        this.part = resultStatus === BATCH_REL_TASK_RESULT_STATUS.PART_SUCCESS
+        this.type = resultStatus === BATCH_TASK_RESULT_STATUS.ALL_SUCCESS ? 'success' : 'fail'
+        this.part = resultStatus === BATCH_TASK_RESULT_STATUS.PART_SUCCESS
         this.url = failedUrl
         this.succeedNum = succeedNum
       },
