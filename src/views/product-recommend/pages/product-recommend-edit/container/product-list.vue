@@ -133,18 +133,14 @@
     mounted () {
       this.createTime = +new Date()
       lx.mv({ bid: 'b_shangou_online_e_9jwrm32g_mv', val: { spu_num: this.remainingProductCount } }, 'productCube')
-      window.addEventListener('beforeunload', () => {
-        this.leaveReport()
-      })
+      window.addEventListener('beforeunload', this.leaveReport())
     },
     beforeDestroy () {
       this.leaveReport()
       this.resetCreatedProductCount()
       this.resetCreatedProductIdList()
       this.destroy()
-      window.removeEventListener('beforeunload', () => {
-        this.leaveReport()
-      })
+      window.removeEventListener('beforeunload', this.leaveReport())
     }
   }
 </script>
