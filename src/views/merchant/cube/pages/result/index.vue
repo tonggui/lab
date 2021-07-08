@@ -19,6 +19,7 @@
   import ResultBanner from '@/components/result-banner'
   import { getCubeTaskStatus, getCubeTaskConfirm } from '@/data/repos/merchantCube'
   import { BATCH_TASK_RESULT_STATUS } from '@/data/enums/batch'
+  // import LocalStorage, { KEYS as STORAGE_KEYS } from '@/common/local-storage'
   import { ErrorJumper } from '../../utils'
 
   export default {
@@ -56,20 +57,27 @@
         this.url = failedUrl
         this.succeedNum = succeedNum
       },
+      handleTipModal (name) {
+        // if () {
+        //   this.$Modal.info({
+        //     title: '温馨提示',
+        //     content: '若您后续还想查看失败商品&分店明细，可通过"商品首页-任务进度"查看',
+        //     onOk: () => {
+        //       this.$router.push({ name })
+        //     }
+        //   })
+        // } else {
+        //   this.$router.push({ name })
+        // }
+        this.$router.push({ name })
+      },
       async jumpToCube () {
         await getCubeTaskConfirm(this.taskId)
-        // TODO 首次
-        this.$Modal.info({
-          title: '温馨提示',
-          content: '若您后续还想查看失败商品&分店明细，可通过"商品首页-任务进度"查看',
-          onOk: () => {
-            this.$router.push({ name: 'merchantCubeList' })
-          }
-        })
+        this.handleTipModal('merchantCubeList')
       },
       async jumpToCenter () {
         await getCubeTaskConfirm(this.taskId)
-        this.$router.push({ name: 'merchantList' })
+        this.handleTipModal('merchantList')
       }
     },
     mounted () {

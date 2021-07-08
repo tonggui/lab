@@ -38,6 +38,7 @@
   import lx from '@/common/lx/lxReport'
   import RelSample from '@/views/merchant/batch-management/new-batch-rel/components/rel-sample'
   import LocalStorage, { KEYS } from '@/common/local-storage'
+  import { get } from 'lodash'
 
   const { mapState, mapActions } = helper('multiCubeEdit')
   const { mapActions: mapRootActions } = helper()
@@ -54,7 +55,7 @@
       return {
         relInfo: REL_INFO,
         relModalVisible: false,
-        type: 'all',
+        type: get(LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING], 'type', 'all'),
         createProduct: []
       }
     },
@@ -125,10 +126,10 @@
         return !this.groupList || this.groupList.length <= 0
       },
       autoSetting () {
-        return LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING]
+        return get(LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING], 'autoSetting', false)
       },
       relInfoDesc () {
-        return REL_INFO[this.type]
+        return REL_INFO[get(LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING], 'type', 'all')]
       }
     },
     methods: {
@@ -145,9 +146,10 @@
       }),
       handleRequest (productList) {
         const params = {}
-        if (this.type === 'all') {
+        const type = get(LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING], 'type', 'all')
+        if (type === 'all') {
           params.syncType = 1
-        } else if (this.type === 'exclude') {
+        } else if (type === 'exclude') {
           params.syncType = 1
           params.excludeSyncContent = [8, 9]
         } else {
@@ -157,7 +159,8 @@
         return this.handleBatchCreate(params)
       },
       handleAutoSettingModal (resolve, reject) {
-        let autoSetting = LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING]
+        let autoSetting = get(LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING], 'autoSetting', false)
+        let type = get(LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING], 'type', 'all')
         this.$Modal.open({
           className: 'merchant-cube-edit-setting-modal',
           width: 800,
@@ -166,8 +169,12 @@
           centerLayout: true,
           title: '请确认关联后商品信息更新范围',
           render: () => {
+            console.log('type', type)
             return <div>
-              <RadioGroup value={this.type} vOn:on-change={(val) => { this.type = val }}>
+              <RadioGroup
+                value={type}
+                vOn:on-change={(val) => { this.type = type = val }}
+              >
                 <Radio label="all">
                   <span>全部信息</span>
                 </Radio>
@@ -181,11 +188,12 @@
               <RelSample type={this.type} class="sample"/>
               <Checkbox
                 value={autoSetting}
-                vOn:on-change={(val) => { autoSetting = val }}>开启默认设置</Checkbox>
+                vOn:on-change={(val) => { autoSetting = val }}
+              >开启默认设置</Checkbox>
             </div>
           },
           onOk: () => {
-            LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING] = autoSetting
+            LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING] = { autoSetting, type }
             if (resolve) resolve()
           },
           onCancel: () => {
@@ -195,7 +203,7 @@
       },
       handleModalVisible (visble) {
         return new Promise((resolve, reject) => {
-          if (!LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING]) {
+          if (!get(LocalStorage[KEYS.MERCHANT_CUBE_RANGE_AUTO_SETTING], 'autoSetting', false)) {
             this.handleAutoSettingModal(resolve, reject)
           } else {
             resolve()

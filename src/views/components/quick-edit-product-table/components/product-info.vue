@@ -54,7 +54,11 @@
     },
     watch: {
       product (val) {
-        if (val.productStatus && Object.values(NEW_ARRIVAL_PRODUCT_STATUS).includes(val.productStatus)) {
+        if (val.isHqExist) {
+          this.bindItem = {
+            'marker-type': PRODUCT_MARK.MERCHANT_EXIST
+          }
+        } else if (val.productStatus && Object.values(NEW_ARRIVAL_PRODUCT_STATUS).includes(val.productStatus)) {
           if (val.productStatus === NEW_ARRIVAL_PRODUCT_STATUS.OFFSHELF) {
             this.bindItem = {
               'marker-type': PRODUCT_MARK.SUSPENDED_SALE
@@ -74,8 +78,8 @@
         productNameExample: PRODUCT_NAME_EXAMPLE
       }),
       showMarker () {
-        const { isExist } = this.product
-        return this.type === TYPE.EXIST || (this.type === TYPE.NEW_ARRIVAL_MIX && isExist)
+        const { isExist, isHqExist } = this.product
+        return this.type === TYPE.EXIST || (this.type === TYPE.NEW_ARRIVAL_MIX && isExist) || (this.type === TYPE.MERCHANT_CENTER && isHqExist)
       },
       // 只有新商品 展示 标品/非标品标志
       showNoSpMarker () {

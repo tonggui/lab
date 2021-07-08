@@ -12,7 +12,7 @@
     name: 'cube-steps',
     data () {
       return {
-        list: stepConfig.map(item => ({ id: item.meta.id, title: item.meta.title, name: item.name, path: item.path })),
+        list: stepConfig.filter(step => step.visible !== false).map(item => ({ id: item.meta.id, title: item.meta.title, name: item.name, path: item.path })),
         current: 0
       }
     },
