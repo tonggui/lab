@@ -56,7 +56,7 @@ const createInput = (attr, components) => {
     },
     events: {
       'on-blur' ($event) {
-        TimeCounters.setEndTime(this.self.key, +new Date())
+        this.self.required && TimeCounters.setEndTime(this.self.key, +new Date())
         const val = $event.target.value.trim()
         if (!val) {
           return
@@ -67,7 +67,8 @@ const createInput = (attr, components) => {
         }
       },
       'on-focus' ($event) {
-        TimeCounters.setTime('categoryAttrs', +new Date(), 's2e', { id: this.self.key, label: this.self.label })
+        console.log(this)
+        this.self.required && TimeCounters.setTime('categoryAttrs', +new Date(), 's2e', { id: this.self.key, label: this.self.label })
       }
     }
   }
@@ -109,10 +110,10 @@ const createSelect = (attr, components) => {
     },
     events: {
       'blur' () {
-        TimeCounters.setEndTime(this.self.key, +new Date())
+        this.self.required && TimeCounters.setEndTime(this.self.key, +new Date())
       },
       'focus' () {
-        TimeCounters.setTime('categoryAttrs', +new Date(), 's2e', { id: this.self.key, label: this.self.label })
+        this.self.required && TimeCounters.setTime('categoryAttrs', +new Date(), 's2e', { id: this.self.key, label: this.self.label })
       }
     }
   }
@@ -150,10 +151,10 @@ const createCascade = (attr, components) => {
     },
     events: {
       'focus' ($event) {
-        TimeCounters.setTime('categoryAttrs', +new Date(), 's2e', { id: this.self.key, label: this.self.label })
+        this.self.required && TimeCounters.setTime('categoryAttrs', +new Date(), 's2e', { id: this.self.key, label: this.self.label })
       },
       'close' ($event) {
-        TimeCounters.setEndTime(this.self.key, +new Date())
+        this.self.required && TimeCounters.setEndTime(this.self.key, +new Date())
       }
     }
   }
@@ -196,10 +197,10 @@ const createBrand = (attr, components) => {
     }],
     events: {
       'focus' ($event) {
-        TimeCounters.setTime('categoryAttrs', +new Date(), 's2e', { id: this.self.key, label: this.self.label })
+        this.self.required && TimeCounters.setTime('categoryAttrs', +new Date(), 's2e', { id: this.self.key, label: this.self.label })
       },
       'close' ($event) {
-        TimeCounters.setEndTime(this.self.key, +new Date())
+        this.self.required && TimeCounters.setEndTime(this.self.key, +new Date())
       }
     }
   }
