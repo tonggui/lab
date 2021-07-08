@@ -142,6 +142,9 @@
       this.resetCreatedProductCount()
       this.resetCreatedProductIdList()
       this.destroy()
+      window.removeEventListener('beforeunload', () => {
+        this.leaveReport()
+      })
     }
   }
 </script>
