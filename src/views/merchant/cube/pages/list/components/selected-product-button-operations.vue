@@ -54,10 +54,14 @@
 .selected-product-button-operations {
   flex-grow: 1;
   padding-right: 25px;
+  font-weight: 200;
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  text-align: right;
   .un-select {
     font-family: PingFangSC-Regular;
     font-size: 14px;
-    color: #cccccc;
+    color: #666666;
     line-height: 14px;
     margin-right: 16px;
   }
@@ -80,7 +84,6 @@
     font-size: 14px;
     color: #222222;
     cursor: pointer;
-    font-weight: 500;
     font-family: PingFangSC-Medium;
     margin-left: 24px;
     margin-bottom: 6px;

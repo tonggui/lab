@@ -147,17 +147,19 @@
               })[0]
               displayShop = {
                 name: tmp.cityName,
-                id: tmp.cityId
+                cityId: tmp.cityId,
+                id: -1
               }
             } else {
               const scope = { cityId: self.currentScope.cityId, poiId: self.currentScope.poiId }
               await self.$emit('updateScope', scope)
               displayShop = self.shopList.filter(item => item.id === self.currentScope.poiId)[0]
+              displayShop.cityId = self.currentScope.cityId
             }
             self.$emit('setDisplayShop', displayShop)
             self.$emit('on-confirm')
             self.visible = false
-            self.$Message.info('更换范围成功')
+            self.$Message.info('推荐列表已生成，快选择商品开始创建吧')
             resolve()
           } else {
             reject(new Error())
@@ -173,7 +175,7 @@
             poiId: this.currentScopeId.poiId
           }
         }
-        this.$Message.info('取消')
+        // this.$Message.info('取消')
       }
     }
   }
