@@ -111,6 +111,7 @@
 
           this.$emit('submit')
         } catch (err) {
+          this.createFail = true
           errorHandler(err)({
             isBusinessClient: this.isBusinessClient,
             confirm: this.handleConfirm
@@ -120,14 +121,16 @@
         }
       },
       pageLeave () {
-        lx.mc({
-          cid: 'c_fd6n21x7',
-          bid: 'b_shangou_online_e_7cxe0v96_mc',
-          val: {
-            list: getProductChangInfo(this.product),
-            op_type: this.product.spId ? 1 : 0
-          }
-        })
+        if (this.createFail) {
+          lx.mc({
+            cid: 'c_fd6n21x7',
+            bid: 'b_shangou_online_e_7cxe0v96_mc',
+            val: {
+              list: getProductChangInfo(this.product),
+              op_type: this.product.spId ? 1 : 0
+            }
+          })
+        }
       }
     },
     beforeDestroy () {
