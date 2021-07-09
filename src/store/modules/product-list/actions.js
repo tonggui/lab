@@ -11,7 +11,9 @@ export default (api) => ({
         sorter: state.sorter,
         ...param
       }
+      console.log('青丘之', state.status)
       const result = await api.getList(query, state.pagination, state.statusList)
+      console.log('返回值', result)
       const { pageSize, current } = state.pagination
       const { total } = result.pagination
       /**

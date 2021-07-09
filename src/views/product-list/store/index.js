@@ -104,12 +104,22 @@ export default {
     getData ({ getters, dispatch, commit }) {
       const tagId = getters['tagList/currentTagId']
       commit('product/setTagId', tagId)
-      // TODO: 新增库存不足展开Tab
-      if (!storage[KEYS.PRODUCT_STOCK_INSUFFICIENT_COUNT]) {
-        commit('product/setStatus', PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
-      }
       dispatch('getTagList')
+      // // TODO: 新增库存不足展开Tab
+      // if (!storage[KEYS.PRODUCT_STOCK_INSUFFICIENT_COUNT]) {
+      //   commit('product/setStatus', PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
+      // }
       dispatch('getProductList')
+      // TODO: 新增库存不足展开Tab, 非首次并且数量大于0
+      const stockInsufficientInfo = getters['product/statusList'].find(i => i.id === PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
+      console.log(getters['product/statusList'])
+      console.log(stockInsufficientInfo)
+      console.log(stockInsufficientInfo.count)
+      if (!storage[KEYS.PRODUCT_STOCK_INSUFFICIENT_COUNT] && stockInsufficientInfo.count > 0) {
+        console.log('到这里了')
+        commit('product/setStatus', PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
+        dispatch('getProductList')
+      }
       commit('setInit', false)
     },
     /*
