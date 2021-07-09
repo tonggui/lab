@@ -92,10 +92,10 @@ export default {
         biz: '魔方新建（单店）',
         ext: get(product, 'productLabelIdList', []).join(',') || ''
       })
-      if (!error) {
+      if (!error.code) {
         commit('setCreatedProductCount', state.createdProductCount + 1)
         const list = state.createdProductIdList || []
-        list.push(product.id || product.__id__)
+        list.push(error.spuId || product.id || product.__id__)
         commit('setCreatedProductIdList', list)
       }
       return error

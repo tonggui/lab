@@ -96,7 +96,7 @@ export default {
       if (error && !error.code) {
         commit('setCreatedProductCount', state.createdProductCount + 1)
         const list = state.createdProductIdList || []
-        list.push(product.id || product.__id__)
+        list.push(error.spuId || product.id || product.__id__)
         commit('setCreatedProductIdList', list)
       }
       return error
