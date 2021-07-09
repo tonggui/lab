@@ -4,7 +4,7 @@
     title="选择一个指定城市或分店"
     @on-ok="confirmSubmit"
     @on-cancel="cancel" :mask-closable="false">
-    <Form ref="currentScope" :model="currentScope" :label-width="80">
+    <Form ref="currentScope" :model="currentScope" :label-width="80" :rules="formRules" >
       <div class="operation-info-tip">
           <span>
             <Icon type="info-outline" class="icon" />选择后，平台将为您推荐“指定城市”或“分店所在商圈”的热销商品。选择商品时，默认关联“指定城市的全部分店”或“指定分店”（可点击“已选择商品”或进入下一步“完善商品信息”修改）。
@@ -21,25 +21,25 @@
         </RadioGroup>
       </FormItem>
       <template v-if="currentScope.scopeStatus === 0">
-        <FormItem label="指定城市" prop="cityId" style="width:350px">
+        <FormItem label="指定城市" prop="cityId" style="width:350px" :key="'cityId' + currentScope.scopeStatus">
           <Select line
                   v-model="currentScope.cityId"
                   filterable clearable placeholder="请选择或输入城市名搜索">
-            <Option v-for="item in scopeList" :value="item.cityId" :key="item.cityId" >{{item.cityName}}</Option>
+            <Option v-for="item in scopeList" :value="item.cityId" :key="currentScope.scopeStatus + item.cityId" >{{item.cityName}}</Option>
           </Select>
         </FormItem>
       </template>
       <template v-if="currentScope.scopeStatus === 1">
-        <FormItem label="指定城市" prop="cityId" style="width:350px">
+        <FormItem label="指定城市" prop="cityId" style="width:350px" :key="'cityId' + currentScope.scopeStatus">
           <Select line
                   v-model="currentScope.cityId"
                   filterable clearable placeholder="请选择或输入城市名搜索">
-            <Option v-for="item in scopeList" :value="item.cityId" :key="item.cityId" >{{item.cityName}}</Option>
+            <Option v-for="item in scopeList" :value="item.cityId" :key="currentScope.scopeStatus + item.cityId" >{{item.cityName}}</Option>
           </Select>
         </FormItem>
-        <FormItem label="指定分店" prop="poiId" style="width:350px" >
+        <FormItem label="指定分店" prop="poiId" style="width:350px" :key="'poiId' + currentScope.scopeStatus">
           <Select v-model="currentScope.poiId" :disabled="shopDisabled" placeholder="请选择或输入分店名搜索" filterable clearable line>
-            <Option v-for="item in shopList" :value="item.id" :key="item.id">{{item.name}}</Option>
+            <Option v-for="item in shopList" :value="item.id" :key="currentScope.scopeStatus + item.id">{{item.name}}</Option>
           </Select>
         </FormItem>
       </template>
@@ -71,7 +71,15 @@
           cityId: '',
           poiId: ''
         },
-        visible: this.scopeVisible
+        visible: this.scopeVisible,
+        formRules: {
+          cityId: [
+            { required: true, message: '请选择城市', trigger: 'blur' }
+          ],
+          poiId: [
+            { required: false, message: '请选择分店', trigger: 'blur' }
+          ]
+        }
       }
     },
     watch: {
@@ -81,10 +89,30 @@
           this.visible = val
         }
       },
+      'currentScope.scopeStatus': {
+        immediate: true,
+        handler (v) {
+          if (this.$refs && this.$refs.currentScope) {
+            if (v === 0) {
+              this.formRules.cityId = [
+                { required: true, message: '请选择城市', trigger: 'blur' }
+              ]
+            } else {
+              this.formRules.cityId = [
+                { required: true, message: '请选择城市', trigger: 'blur' }
+              ]
+              this.formRules.poiId = [
+                { required: true, message: '请选择分店', trigger: 'blur' }
+              ]
+            }
+          }
+        }
+      },
       'currentScope.cityId': {
         immediate: true,
         handler (v) {
           if (typeof v === 'undefined' || v === '') {
+            this.currentScope.poiId = ''
             this.shopDisabled = true
           } else this.shopDisabled = false
         }
@@ -135,6 +163,11 @@
       },
       confirmSubmit () {
         let self = this
+        // self.$refs['currentScope'].validate(async valid => {
+        //   if (valid) {
+        //     console.log('---')
+        //   }
+        // })
         return new Promise(async (resolve, reject) => {
           if (self.currentScope.cityId && ((self.currentScope.scopeStatus === 1 && self.currentScope.poiId) ||
             (self.currentScope.scopeStatus === 0))) {
@@ -168,14 +201,16 @@
       },
       cancel () {
         this.$emit('on-cancel')
-        if (this.scope === 1) {
-          this.currentScope = {
-            scopeStatus: this.currentScopeId.poiId === -1 ? 0 : 1,
-            cityId: this.currentScopeId.cityId,
-            poiId: this.currentScopeId.poiId
+        this.$nextTick(() => {
+          this.$refs.currentScope.resetFields()
+          if (this.scope === 1) {
+            this.currentScope = {
+              scopeStatus: this.currentScopeId.poiId === -1 ? 0 : 1,
+              cityId: this.currentScopeId.cityId,
+              poiId: this.currentScopeId.poiId
+            }
           }
-        }
-        // this.$Message.info('取消')
+        })
       }
     }
   }
