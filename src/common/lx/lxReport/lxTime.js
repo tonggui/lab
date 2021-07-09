@@ -150,6 +150,15 @@ const LABELS = {
 }
 const TimeCounters = {
   timers: {},
+  removeTime (key) {
+    if (this.timers.hasOwnProperty(key)) {
+      delete this.timers[key]
+    }
+  },
+  clearTime (key) {
+    if (!this.timers[key]) { console.error('不存在'); return }
+    this.timers[key].clearTime()
+  },
   getTotal (key) {
     if (!this.timers[key]) { console.error('不存在'); return 0 }
     return this.timers[key].getTotal() || 0

@@ -320,7 +320,7 @@
             this.errorInfo[id] = {}
             const isLastProduct = this.total <= 1
             // 成功
-            if (!error) {
+            if (!error || !error.code) {
               this.$Message.success('已成功创建1个商品')
               this.deleteCallback([product])
               this.triggerCreateCallback(isLastProduct)
