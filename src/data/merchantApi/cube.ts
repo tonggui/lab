@@ -108,7 +108,7 @@ export const getMultiCubeTabList = ({ cityId, poiId } : { cityId:number, poiId?:
   }).then(data => {
     data = data['cubeTabInfoVoList'] || []
     return data.map(tab => {
-      tab.id = `${tab.id}`;
+      tab.id = `${tab.id}`
       return tab
     })
   })
@@ -116,10 +116,11 @@ export const getMultiCubeTabList = ({ cityId, poiId } : { cityId:number, poiId?:
 /**
  * 获取上新推荐数据店内分类
  */
-export const getMultiCubeTagList = ({ cityId, poiId, tabId } : { cityId:number, poiId: number, tabId: number}) => httpClient.post('/hqcc/cube/r/tagList', {
+export const getMultiCubeTagList = ({ cityId, poiId, tabId, keyword } : { cityId:number, poiId: number, tabId: number, keyword: string}) => httpClient.post('/hqcc/cube/r/tagList', {
   cityId,
   poiId,
-  tabId
+  tabId,
+  keyword
 }).then(data => {
   const {
     tagList,

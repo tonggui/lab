@@ -22,7 +22,7 @@ export default (api) => {
           const currentScope = get(rootState, 'productMultiCubeRecommend.multiCubeList.currentScope')
           commit('setLoading', true)
           commit('setError', false)
-          const { tagList, tagInfo } = await api.getList({ tabId: state.tabId, cityId: currentScope.cityId, poiId: currentScope.poiId })
+          const { tagList, tagInfo } = await api.getList({ tabId: state.tabId, cityId: currentScope.cityId, poiId: currentScope.poiId, ...query })
           const { productTotal } = tagInfo
           commit('setProductCount', productTotal)
           commit('setList', tagList)
