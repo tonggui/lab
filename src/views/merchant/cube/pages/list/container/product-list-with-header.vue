@@ -3,7 +3,7 @@
     <ProductListPage class="product-list-container">
       <Header slot="header" class="header-slot-tabs">
         <Tabs slot="left" class="header-left-with-tabs" @on-change="getData">
-          <ProductSearch @on-search="handleSearch" :searchValue="keyword" slot="tabs-extra" style="margin-right: 0" />
+          <ProductSearch @on-search="handleSearch" :searchValue="keyword" slot="tabs-extra" :needSuggest="false" style="margin-right: 0" />
         </Tabs>
       </Header>
       <template slot="content">

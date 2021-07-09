@@ -32,7 +32,7 @@ export const fetchGetPoiScopeList = () => getMultiCubeScopeList()
  * @param keyword
  * @param poiId
  */
-export const fetchGetMultiCubeTagList = ({ tabId, cityId, poiId } : { tabId: number, cityId:number, poiId: number}) => getMultiCubeTagList({ tabId, cityId, poiId })
+export const fetchGetMultiCubeTagList = ({ tabId, cityId, poiId, keyword } : { tabId: number, cityId:number, poiId: number, keyword: string}) => getMultiCubeTagList({ tabId, cityId, poiId, keyword })
 
 /**
  * 商品上新tab列表

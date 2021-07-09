@@ -1,6 +1,6 @@
 <template>
   <div class="search-container">
-    <Search @search="handleSearch" :placeholder="placeholder" :fetch-data="getSuggestionList" :width="300" :value="searchValue" />
+    <Search @search="handleSearch" :placeholder="placeholder" :needSuggest="needSuggest" :fetch-data="getSuggestionList" :width="300" :value="searchValue" />
   </div>
 </template>
 <script>
@@ -19,6 +19,10 @@
       searchValue: {
         type: String,
         default: ''
+      },
+      needSuggest: {
+        type: Boolean,
+        default: true
       }
     },
     components: {
@@ -26,8 +30,10 @@
     },
     methods: {
       async getSuggestionList (keyword) {
-        const list = await fetchRecommendSearchSuggestion(keyword)
-        return list
+        if (this.needSuggest) {
+          const list = await fetchRecommendSearchSuggestion(keyword)
+          return list
+        } else return []
       },
       handleSearch (item) {
         this.$emit('on-search', item)
