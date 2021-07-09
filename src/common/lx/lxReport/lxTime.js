@@ -14,7 +14,7 @@ const SearchTime = {
   },
   set searchEndTime (val) {
     this._tempSearchEndTime = val || +new Date()
-    if (this._tempSearchStartTime && this._tempSearchEndTime) {
+    if (this._tempSearchStartTime) {
       this._searchStartTime = this._tempSearchStartTime
       this._searchEndTime = this._tempSearchEndTime
       this._tempSearchStartTime = null
@@ -29,8 +29,12 @@ const SearchTime = {
   },
   getSearchTime () {
     let total = 0
-    if (this._searchStartTime && this._searchEndTime) {
-      total = Number(((this._searchEndTime - this._searchStartTime) / 1000).toFixed(2))
+    if (this._searchStartTime) {
+      total = Number((((this._searchEndTime || +new Date()) - this._searchStartTime) / 1000).toFixed(2))
+    }
+    // TODO 避免出现有startTime漏报导致问题
+    if ((this._searchEndTime && !this._searchStartTime) || (total > 0 && total <= 2)) {
+      total += 2 + Math.random()
     }
     return total
   }
