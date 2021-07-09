@@ -37,9 +37,9 @@ const editableMap = {
   [TYPE.MERCHANT_CENTER]: {
     [FELID.PRICE]: true,
     [FELID.STOCK]: true,
-    [FELID.WEIGHT]: (product) => product.isHqExist || !product.isSp,
-    [FELID.NAME]: (product) => product.isHqExist || !product.isSp,
-    [FELID.SPECNAME]: (product) => product.isHqExist || !product.isSp
+    [FELID.WEIGHT]: (product) => product.isHqExist ? product.isHqExist : !product.isSp,
+    [FELID.NAME]: (product) => product.isHqExist ? product.isHqExist : !product.isSp,
+    [FELID.SPECNAME]: (product) => product.isHqExist ? product.isHqExist : !product.isSp
   }
 }
 

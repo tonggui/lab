@@ -65,6 +65,7 @@ export const KEYS = {
   MERCHANT_WELCOME: 'merchantWelcome',
   // 商家商品中心魔方范围默认开启
   MERCHANT_CUBE_RANGE_AUTO_SETTING: 'merchantCubeRangeAutoSetting'
+  // 商家商品中心魔方结果页返回
 }
 
 export const orders = ['MERCHANT_GUIDE', 'MERCHANT_GUIDE_BOOK']

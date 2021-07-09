@@ -78,6 +78,10 @@ export const ProductMark = {
   [PRODUCT_MARK.MISSING_INFORMATION]: {
     type: 'normal',
     name: '信息缺失'
+  },
+  [PRODUCT_MARK.MERCHANT_EXIST]: {
+    type: 'normal',
+    name: '总部已存在'
   }
 }
 

@@ -103,3 +103,16 @@ export enum BATCH_REL_MATCH_TYPE {
   PRODUCT_NUM = '4',
   PRODUCT_NAME = '5'
 }
+
+/**
+ * 批量任务处理结果状态
+ * 600: 成功
+ * 602: 部分成功
+ * 601: 失败
+ **/
+export enum BATCH_TASK_RESULT_STATUS {
+    // PROCESSING = 200, // 处理中
+    ALL_SUCCESS = 600,
+    FAIL = 601,
+    PART_SUCCESS = 602
+}

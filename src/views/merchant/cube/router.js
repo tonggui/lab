@@ -90,6 +90,7 @@ export default [
   {
     name: 'merchantCubeError',
     path: 'error',
+    visible: false,
     components: {
       default: () => import(
         /* webpackChunkName: "merchant-cube-list" */ './pages/error'

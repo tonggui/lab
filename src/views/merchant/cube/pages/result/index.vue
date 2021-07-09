@@ -18,7 +18,8 @@
 <script>
   import ResultBanner from '@/components/result-banner'
   import { getCubeTaskStatus, getCubeTaskConfirm } from '@/data/repos/merchantCube'
-  import { BATCH_REL_TASK_RESULT_STATUS } from '@/data/enums/batch'
+  import { BATCH_TASK_RESULT_STATUS } from '@/data/enums/batch'
+  // import LocalStorage, { KEYS as STORAGE_KEYS } from '@/common/local-storage'
   import { ErrorJumper } from '../../utils'
 
   export default {
@@ -51,25 +52,32 @@
 
         if (taskId <= 0) this.$router.push({ name: 'merchantCubeList' })
         this.taskId = taskId
-        this.type = resultStatus === BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS ? 'success' : 'fail'
-        this.part = resultStatus === BATCH_REL_TASK_RESULT_STATUS.PART_SUCCESS
+        this.type = resultStatus === BATCH_TASK_RESULT_STATUS.ALL_SUCCESS ? 'success' : 'fail'
+        this.part = resultStatus === BATCH_TASK_RESULT_STATUS.PART_SUCCESS
         this.url = failedUrl
         this.succeedNum = succeedNum
       },
+      handleTipModal (name) {
+        // if () {
+        //   this.$Modal.info({
+        //     title: '温馨提示',
+        //     content: '若您后续还想查看失败商品&分店明细，可通过"商品首页-任务进度"查看',
+        //     onOk: () => {
+        //       this.$router.push({ name })
+        //     }
+        //   })
+        // } else {
+        //   this.$router.push({ name })
+        // }
+        this.$router.push({ name })
+      },
       async jumpToCube () {
         await getCubeTaskConfirm(this.taskId)
-        // TODO 首次
-        this.$Modal.info({
-          title: '温馨提示',
-          content: '若您后续还想查看失败商品&分店明细，可通过"商品首页-任务进度"查看',
-          onOk: () => {
-            this.$router.push({ name: 'merchantCubeList' })
-          }
-        })
+        this.handleTipModal('merchantCubeList')
       },
       async jumpToCenter () {
         await getCubeTaskConfirm(this.taskId)
-        this.$router.push({ name: 'merchantList' })
+        this.handleTipModal('merchantList')
       }
     },
     mounted () {
