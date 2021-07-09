@@ -5,9 +5,9 @@ import api from './api'
 import { isEditLimit } from '@/common/product/editLimit'
 import { findFirstLeaf, sleep } from '@/common/utils'
 import { allProductTag } from '@/data/constants/poi'
-import { PRODUCT_BATCH_OP, PRODUCT_STATUS } from '@/data/enums/product'
+import { PRODUCT_BATCH_OP } from '@/data/enums/product'
 import store from '@/store'
-import storage, { KEYS } from '@/common/local-storage'
+// import storage, { KEYS } from '@/common/local-storage'
 
 const tagListStoreInstance = createSortTagListStore(api.tag)
 const productListStoreInstance = createSortProductListStore(api.product)
@@ -105,21 +105,17 @@ export default {
       const tagId = getters['tagList/currentTagId']
       commit('product/setTagId', tagId)
       dispatch('getTagList')
-      // // TODO: 新增库存不足展开Tab
-      // if (!storage[KEYS.PRODUCT_STOCK_INSUFFICIENT_COUNT]) {
-      //   commit('product/setStatus', PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
-      // }
       dispatch('getProductList')
-      // TODO: 新增库存不足展开Tab, 非首次并且数量大于0
-      const stockInsufficientInfo = getters['product/statusList'].find(i => i.id === PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
-      console.log(getters['product/statusList'])
-      console.log(stockInsufficientInfo)
-      console.log(stockInsufficientInfo.count)
-      if (!storage[KEYS.PRODUCT_STOCK_INSUFFICIENT_COUNT] && stockInsufficientInfo.count > 0) {
-        console.log('到这里了')
-        commit('product/setStatus', PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
-        dispatch('getProductList')
-      }
+      // if (!storage[KEYS.PRODUCT_STOCK_INSUFFICIENT_COUNT]) {
+      //   setTimeout(() => {
+      //     const stockInsufficientInfo = getters['product/statusList'].find(i => i.id === PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
+      //     console.log(stockInsufficientInfo, '后来的')
+      //     if (stockInsufficientInfo.count > 0) {
+      //       commit('product/setStatus', PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
+      //       dispatch('getProductList')
+      //     }
+      //   }, 3000)
+      // }
       commit('setInit', false)
     },
     /*

@@ -171,6 +171,7 @@ export const getProductInfoList = ({
     pagination,
     statusList
   })
+  // store.commit('product/statusList', product.statusList)
   if (needTag) {
     const tagList = convertTagWithSortListFromServer(data.tagList)
     return {

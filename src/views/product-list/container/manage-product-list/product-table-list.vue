@@ -46,6 +46,8 @@
   import { createNamespacedHelpers } from 'vuex'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
   import ProductEmptyContent from './product-empty-content'
+  import { PRODUCT_STATUS } from '@/data/enums/product'
+  import storage, { KEYS } from '@/common/local-storage'
 
   const { mapState, mapActions } = createNamespacedHelpers('productList/product')
 
@@ -65,7 +67,20 @@
         'sorter',
         'tagId',
         'error'
-      ])
+      ]),
+      stockInsufficientNum () {
+        // 动态计算库存不足Tab的数量
+        const stockInsufficientInfo = this.statusList.find(i => i.id === PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
+        return stockInsufficientInfo.count
+      }
+    },
+    watch: {
+      stockInsufficientNum (val) {
+        // 监听数量变化，无缓存时判断数量是否大于0，切换到库存不足Tab
+        if (!storage[KEYS.PRODUCT_STOCK_INSUFFICIENT_COUNT] && val > 0) {
+          this.handleTabChange(PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
+        }
+      }
     },
     components: {
       ProductTableList: withPromiseEmit(ProductTableList),
