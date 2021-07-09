@@ -40,7 +40,8 @@ const FillTime = {
   _fillStartTime: null,
   _fillEndTime: null,
   get fillStartTime () {
-    return this._fillEndTime
+    if (!this._fillStartTime) this._fillStartTime = +new Date()
+    return this._fillStartTime
   },
   set fillStartTime (val) {
     this._fillStartTime = val || +new Date()
@@ -57,8 +58,8 @@ const FillTime = {
   },
   getFillTime () {
     let total = 0
-    if (this._fillStartTime && this._fillEndTime) {
-      total = Number(((this._fillEndTime - this._fillStartTime) / 1000).toFixed(2))
+    if (this._fillStartTime) {
+      total = Number((((this._fillEndTime || +new Date()) - this._fillStartTime) / 1000).toFixed(2))
     }
     return total
   }
@@ -175,7 +176,9 @@ function clearAllTime () {
 
 export const install = (router) => {
   router.beforeEach((to, _from, next) => {
-    clearAllTime()
+    setTimeout(() => {
+      clearAllTime()
+    }, 200)
     next()
   })
   // router.afterEach((to, _from, next) => {
