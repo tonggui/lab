@@ -100,9 +100,9 @@
         return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
           productList.forEach(({ __id__, relatedPoiIds, addedPoiIds, totalPoiIds }) => {
             // 当前商品在所选范围下可关联的所有门店 是否在该商品的 待关联门店范围 和 已关联门店范围内
-            let flag = totalPoiIds.every(item => {
+            let flag = totalPoiIds ? totalPoiIds.every(item => {
               return addedPoiIds.indexOf(item) > -1 || relatedPoiIds.indexOf(item) > -1
-            })
+            }) : false
             // console.log(flag)
             if (flag) {
               prev.push({ __id__, relatedPoiIds, addedPoiIds })

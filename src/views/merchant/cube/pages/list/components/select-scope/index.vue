@@ -55,7 +55,7 @@
         currentScopeId: 'currentScope'
       }),
       cityOrPoiDisplay () {
-        return this.displayShop.id === -1 ? '分店' : '城市'
+        return this.displayShop.id === -1 ? '城市' : '分店'
       },
       recommendDisplay () {
         if (this.displayShop.cityId !== -1) {
