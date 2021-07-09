@@ -279,6 +279,7 @@
         })
       },
       handleSelectorFocus () {
+        if (!SearchTime.searchStartTime) SearchTime.searchStartTime = +new Date()
         if (this.$_blurHandlerId) {
           clearTimeout(this.$_blurHandlerId)
           this.$_blurHandlerId = 0

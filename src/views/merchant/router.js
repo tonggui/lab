@@ -17,7 +17,7 @@ import { MERCHANT_OPEN_STATUS } from '@/data/enums/product'
 import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
 import MerchantCube from './cube/router'
 import { isAssociateMedicineMerchant } from '@/module/helper/utils'
-// import { getCubeTaskStatus } from '@/data/repos/merchantCube'
+import { bridgeJump } from '@/common/bridge/bridgeJump'
 
 export default [
   {
@@ -64,7 +64,7 @@ export default [
           next()
         } else {
           LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] = false
-          window.location.href = '/reuse/sc/product/views/seller/center/merchant'
+          bridgeJump('/reuse/sc/product/views/seller/center/merchant')
         }
       } catch (err) {
         next()

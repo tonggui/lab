@@ -266,6 +266,54 @@ export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrVa
     //   return nextId - prevId
     // })
 }
+
+/**
+ * 清洗类目 /shangou/r/attrValueSug 属性（新版字段）
+ * @param list
+ * @param attr
+ */
+const formatList = [
+  1200000088, // 品牌
+]
+export const convertSugCategoryList = (list: any[], attr?): CategoryAttrValue[] => {
+  return (list || [])
+    .map((attrValue, index) => {
+      attrValue = attrValue || {}
+      attr = attr || {}
+      let node = {} as CategoryAttrValue
+      if (formatList.includes(attr.attrCode)) {
+        node = {
+          id: attrValue.valueId || `${attrValuePrefix}${attrValue.value}`,
+          name: attrValue.value,
+          text: attrValue.text || attrValue.value,
+          textEffected: true,
+          isCustomized: !attrValue.valueId,
+          namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],
+          idPath: attrValue.valueIdPath ? attrValue.valueIdPath.split(',').map(id => +id).filter(id => !!id) : [],
+          sequence: index + 1,
+          isLeaf: (+attrValue.isLeaf) === 1,
+          parentId: attr.id || attrValue.attrId,
+          parentName: attr.name || attrValue.attrName,
+          selected: attrValue.selected === 1
+        }
+      } else {
+        node = {
+          id: attrValue.valueId || `${attrValuePrefix}${attrValue.value}`,
+          name: attrValue.value,
+          isCustomized: !attrValue.valueId,
+          namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],
+          idPath: attrValue.valueIdPath ? attrValue.valueIdPath.split(',').map(id => +id).filter(id => !!id) : [],
+          sequence: index + 1,
+          isLeaf: (+attrValue.isLeaf) === 1,
+          parentId: attr.id || attrValue.attrId,
+          parentName: attr.name || attrValue.attrName,
+          selected: attrValue.selected === 1
+        }
+      }
+      return node
+    })
+}
+
 /**
  * 清洗药品类目属性值
  * @param attrValue

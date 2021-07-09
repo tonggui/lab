@@ -3,7 +3,7 @@
     <slot :columns="columns" />
   </div>
 </template>
-<script>
+<script lang="jsx">
   import {
     PRODUCT_MAX_STOCK,
     ProductUnit,
@@ -14,11 +14,13 @@
   import SpecName from './components/cell/specName'
   import InputBlurTrim from './components/cell/input-blur-trim'
   import SkuWeight from './components/cell/weight'
+  import InputNumberDivEvent from '@/components/input-number-div-events'
   import { get, isFunction, isPlainObject } from 'lodash'
   import { weightOverflow } from './helper'
   import ValidateInput from '@/components/input/ValidateInput'
   import WithNoUpcSwitch from '@/hoc/withNoUpcSwitch'
   import TimeCounters from '@/common/lx/lxReport/lxTime'
+  import { getPermissions } from '@/views/components/permission-bth/getPermissionMixin'
 
   const isDisabled = (row, disabledMap, key) => !!row.id && !!disabledMap[key]
 
@@ -63,12 +65,14 @@
       skuCount: Number,
       fieldStatus: Object,
       disabled: Boolean,
+      needPermission: Boolean,
       disabledExistSkuColumnMap: {
         type: Object,
         default: () => ({})
       },
       extraColumnConfig: Object
     },
+    mixins: [getPermissions('MODIFY_PRICE', 'MODIFY_STOCK', 'MODIFY_ON_AND_OFF_SHELVES')],
     computed: {
       specNameCol () {
         const base = {
@@ -109,13 +113,15 @@
           }
           callback(error)
         }
+        let isInputFocus = false
+        let divFocus = false
         return {
           ...base,
           required,
           __hide__: !visible,
           rules: [{
             validator: validate,
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
           render: (h, { row }) => (
             <InputSelectGroup
@@ -127,14 +133,38 @@
               max={30000}
               min={0}
               disabled={{
-                input: this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'price'),
-                select: this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'priceUnit')
+                input: !this.permissions['MODIFY_PRICE'] || this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'price'),
+                select: !this.permissions['MODIFY_PRICE'] || this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'priceUnit')
               }}
               separtor='/'
               placeholder="请输入"
-              vOn:on-focus={() => TimeCounters.setTime('price', +new Date(), 's2e')}
-              vOn:on-blur={() => TimeCounters.stopTime('price')}
-              vOn:on-change={() => TimeCounters.setEndTime('price', +new Date())}
+              vOn:on-focus={() => {
+                isInputFocus = true
+                if (!divFocus) {
+                  TimeCounters.setTime('price', +new Date(), 's2e')
+                }
+                divFocus = false
+              }}
+              vOn:on-div-focus={() => {
+                divFocus = true
+                TimeCounters.setTime('price', +new Date(), 's2e')
+                isInputFocus = false
+              }}
+              vOn:on-blur={() => {
+                TimeCounters.stopTime('price')
+                isInputFocus = false
+                divFocus = false
+              }}
+                vOn:on-div-blur={() => {
+                  if (!isInputFocus && divFocus) {
+                    TimeCounters.stopTime('price')
+                  }
+                  isInputFocus = false
+                  divFocus = false
+              }}
+              vOn:on-change={() => {
+                TimeCounters.setEndTime('price', +new Date())
+              }}
             >
               <span slot="prefix" style="margin-right: 5px">¥</span>
             </InputSelectGroup>
@@ -185,6 +215,8 @@
           id: 'stock'
         }
         const { visible, required, disabled } = getStatus(this.fieldStatus, base.id)
+        let isInputFocus = false
+        let divFocus = false
         return {
           ...base,
           required,
@@ -201,20 +233,42 @@
               }
               callback(error)
             },
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
           render: (h, { row }) => {
             const freightStock = row.enableStockEditing !== false
-            return <InputNumber
-              placeholder='请输入'
-              precision={0}
-              max={PRODUCT_MAX_STOCK}
-              min={-1}
-              disabled={ this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'stock') || !freightStock}
-              vOn:on-focus={() => TimeCounters.setTime('stock', +new Date(), 's2e')}
-              vOn:on-blur={() => TimeCounters.stopTime('stock')}
-              vOn:on-change={() => TimeCounters.setEndTime('stock', +new Date())}
-            />
+            return <InputNumberDivEvent
+                placeholder='请输入'
+                precision={0}
+                max={PRODUCT_MAX_STOCK}
+                min={-1}
+                disabled={ !this.permissions['MODIFY_STOCK'] || this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'stock') || !freightStock}
+                vOn:on-focus={() => {
+                  isInputFocus = true
+                  if (!divFocus) {
+                    TimeCounters.setTime('stock', +new Date(), 's2e')
+                  }
+                  divFocus = false
+                }}
+                vOn:on-blur={() => {
+                  TimeCounters.stopTime('stock')
+                  isInputFocus = false
+                  divFocus = false
+                }}
+                vOn:on-div-focus={() => {
+                  divFocus = true
+                  TimeCounters.setTime('stock', +new Date(), 's2e')
+                  isInputFocus = false
+                }}
+                vOn:on-div-blur={() => {
+                  if (!isInputFocus && divFocus) {
+                    TimeCounters.stopTime('stock')
+                  }
+                  isInputFocus = false
+                  divFocus = false
+                }}
+                vOn:on-change={() => TimeCounters.setEndTime('stock', +new Date())}
+              />
           }
         }
       },
@@ -278,6 +332,8 @@
 
       minOrderCountCol () {
         const { visible, required, disabled } = getStatus(this.fieldStatus, 'minOrderCount')
+        let isInputFocus = false
+        let divFocus = false
         return {
           name: '起购数',
           id: 'minOrderCount',
@@ -295,14 +351,37 @@
               }
               callback(error)
             },
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
-          render: (h) => <InputNumber
+          render: (h) => <InputNumberDivEvent
             disabled={this.disabled || disabled}
             style="width:100%"
             min={1}
-            vOn:on-focus={() => TimeCounters.setTime('minCount', +new Date(), 's2e')}
-            vOn:on-blur={() => TimeCounters.stopTime('minCount')}
+            max={50}
+            vOn:on-focus={() => {
+              isInputFocus = true
+              if (!divFocus) {
+                TimeCounters.setTime('minCount', +new Date(), 's2e')
+              }
+              divFocus = false
+            }}
+            vOn:on-div-focus={() => {
+              divFocus = true
+              TimeCounters.setTime('minCount', +new Date(), 's2e')
+              isInputFocus = false
+            }}
+            vOn:on-blur={() => {
+              TimeCounters.stopTime('minCount')
+              isInputFocus = false
+              divFocus = false
+            }}
+            vOn:on-div-blur={() => {
+              if (!isInputFocus && divFocus) {
+                TimeCounters.stopTime('minCount')
+              }
+              isInputFocus = false
+              divFocus = false
+            }}
             vOn:on-change={() => TimeCounters.setEndTime('minCount', +new Date()) }
           />
         }
@@ -376,7 +455,9 @@
               TimeCounters.stopTime('upc')
               this.$emit('upc-blur', row, index)
             }}
-            vOn:on-focus={() => TimeCounters.setTime('upc', +new Date())}
+              vOn:on-focus={() => {
+              TimeCounters.setTime('upc', +new Date(), 's2e')
+            }}
           />
         }
       },

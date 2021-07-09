@@ -1,5 +1,6 @@
 <template>
-  <Columns
+  <div>
+    <Columns
     @delete="handleDelete"
     @edit-product="handleEdit"
     @edit-sku="handleEditSku"
@@ -15,6 +16,8 @@
         :columns="columns"
         :pagination="pagination"
         :loading="loading"
+        :batch-operation="batchOperation"
+        @batch="handleBatchOperation"
         @page-change="handlePageChange"
         @tab-change="handleStatusChange"
         class="product-table-list"
@@ -28,6 +31,17 @@
       </ProductTableList>
     </template>
   </Columns>
+  <BatchModal
+    :range="batch.range"
+    :tag-list="tagList"
+    :loading="batch.loading"
+    :value="batch.visible"
+    :type="batch.type"
+    :count="batch.selectIdList.length"
+    @cancel="handleBatchModalCancel"
+    @submit="handleBatchModalSubmit"
+  />
+  </div>
 </template>
 <script>
   import ProductTableList from '@components/product-list-table'
@@ -36,7 +50,10 @@
   import { createCallback } from '@/common/vuex'
   import localStorage, { KEYS } from '@/common/local-storage'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
-  import { MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
+  import { MERCHANT_PRODUCT_STATUS, PRODUCT_BATCH_OP } from '@/data/enums/product'
+  import { batchOperation } from './constants'
+  import BatchModal from '../batch-modal'
+  import { noop } from 'lodash'
 
   export default {
     name: 'product-list-table-container',
@@ -46,6 +63,7 @@
       loading: Boolean,
       statusList: [Array, Boolean],
       status: [Number, String],
+      tagList: Array,
       createCallback: {
         type: Function,
         default: createCallback
@@ -55,7 +73,69 @@
         default: true
       }
     },
+    data () {
+      return {
+        batch: {
+          loading: false,
+          type: undefined,
+          visible: false,
+          selectIdList: [],
+          callback: noop,
+          tip: {},
+          range: {}
+        }
+      }
+    },
+    computed: {
+      batchOperation () {
+        return batchOperation
+      }
+    },
     methods: {
+      handleBatchModalCancel () {
+        this.batch.visible = false
+      },
+      handleBatchModalSubmit (type, params) {
+        if (type === PRODUCT_BATCH_OP.MOD_TAG) {
+          this.batch.range[PRODUCT_BATCH_OP.MOD_TAG] = params.range || this.batch.range[PRODUCT_BATCH_OP.MOD_TAG]
+          this.$emit('batch', {
+            type: params.type,
+            data: {
+              tagIds: params.tagIdList,
+              selectAll: params.range,
+              poiIds: params.poiIdList
+            },
+            idList: this.batch.selectIdList
+          }, this.createCallback((data) => {
+            this.$Message.success('修改分类成功')
+          }, (err) => {
+            this.$Message.success(err.message || err.msg || '修改分类失败')
+          }))
+        } else if (type === PRODUCT_BATCH_OP.DELETE) {
+          this.batch.range[PRODUCT_BATCH_OP.DELETE] = params.range || this.batch.range[PRODUCT_BATCH_OP.MOD_TAG]
+          this.$emit('delete', {
+            product: this.batch.selectIdList,
+            params
+          }, this.createCallback((data) => {
+            this.$Message.success('批量删除成功')
+          }, (err) => {
+            this.$Message.success(err.message || err.msg || '批量删除失败')
+          }))
+        }
+      },
+      handleBatchOperation (op, selectIdList) {
+        // if (op.id === PRODUCT_BATCH_OP.MOD_TAG) {
+        //   // 修改分类
+        //   this.batch.type = PRODUCT_BATCH_OP.MOD_TAG
+        // } else if (op.id === PRODUCT_BATCH_OP.DELETE) {
+        //   // 批量删除
+        //   this.batch.type = PRODUCT_BATCH_OP.DELETE
+        // }
+        if (!Object.values(PRODUCT_BATCH_OP).includes(op.id)) return
+        this.batch.type = op.id
+        this.batch.selectIdList = selectIdList
+        this.batch.visible = true
+      },
       isShowTabPane (item) {
         if (item.id === MERCHANT_PRODUCT_STATUS.MISSING_INFORMATION) {
           // 如果当前查询条件为缺失商品，则非空场景下也显示
@@ -124,7 +204,8 @@
     },
     components: {
       Columns: withPromiseEmit(Columns),
-      ProductTableList
+      ProductTableList,
+      BatchModal
     }
   }
 </script>

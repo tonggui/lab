@@ -20,6 +20,9 @@ store.subscribeAction({
       case `${moduleName}/tagList/sort`:
         store.commit(`${moduleName}/setTagSorted`, true)
         break
+      case `${moduleName}/product/batch`:
+        store.dispatch(`${moduleName}/productDelete`)
+        break
     }
   }
 })

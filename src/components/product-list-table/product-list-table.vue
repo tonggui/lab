@@ -40,6 +40,7 @@
               <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top" transfer>
                 <Checkbox :disabled="disabled" :value="selectAll" :indeterminate="hasSelected && !selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
                   <span style="margin-left: 20px">全选本页</span>
+                  <span>（已选{{selectedIdList.length}}个商品）</span>
                 </Checkbox>
               </Tooltip>
               <ButtonGroup>

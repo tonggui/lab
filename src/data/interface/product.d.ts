@@ -139,8 +139,10 @@ declare interface ProductInfo {
   stockoutAutoClearStock: boolean; // 是否设置缺货库存自动清零
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
   category: BaseCategory; // 商品分类
-  isMedicare: boolean // 是否是医保商品
+  isMedicare: boolean; // 是否是医保商品
   limitRuleId: number; // 商品限购Id
+  isMedicare: boolean; // 是否是医保商品
+  isComplianceUnderAudit: boolean; // 合规审核中
 }
 
 // 商品基本信息
@@ -358,6 +360,7 @@ declare interface Product extends BaseProduct {
     timeZone: TimeZone,
   }; // 商品可售时间
   pictureContentList?: string[]; // 图文详情
+  picContentSyncPoi?: boolean; // 商品图片同步门店
   spPictureContentList?: string[]; // 品牌商图片详情
   spPictureContentSwitch?: boolean; // 品牌商图片详情是否展示给买家
   video?: ProductVideo; // 商品视频

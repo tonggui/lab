@@ -41,7 +41,8 @@
   import LocalStorage, { KEYS } from '@/common/local-storage'
   import moment from 'moment'
   import { BATCH_REL_TASK_STATUS, BATCH_REL_TASK_RESULT_STATUS } from '@/data/enums/batch'
-  import { jumpTo } from '@components/link'
+  // import { jumpTo } from '@components/link'
+  import { bridgeJump } from '@/common/bridge/bridgeJump'
 
   export default {
     name: 'product-relate',
@@ -78,7 +79,7 @@
         }
       },
       handleGoToTask () {
-        jumpTo(`/reuse/sc/product/views/seller/center/productImport`)
+        bridgeJump('/reuse/sc/product/views/seller/center/productImport')
       }
     },
     mounted () {

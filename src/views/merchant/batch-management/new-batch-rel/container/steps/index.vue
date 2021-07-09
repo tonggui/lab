@@ -90,14 +90,14 @@
         try {
           const { wmPoiIds, ...left } = transferDataToServer(this.data)
           const traceId = uuid()
+          const response = await fetchSubmitNewBatchRel(wmPoiIds, left, traceId)
           lx.mc({
             bid: 'b_shangou_online_e_y80tyqr3_mc',
             val: {
-              select_time: new Date().getTime(),
+              select_time: new Date(response && response.serverTime ? response.serverTime : Date.now()).getTime(),
               trace_id: traceId
             }
           })
-          await fetchSubmitNewBatchRel(wmPoiIds, left, traceId)
           this.data = cloneDeep(Object.assign({}, productInitValue, poiInitValue))
           cb()
           await this.checkRunningStatus()

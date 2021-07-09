@@ -143,6 +143,7 @@
             }
           },
           features: {
+            needPicSync: !(this.productInfo.pictureContentList && this.productInfo.pictureContentList.length),
             navigation: true,
             spuId: this.spuId,
             // TODO 审核暂不支持，所以写死，融合的时候去掉
@@ -303,7 +304,7 @@
                   source_id: 2,
                   viewtime: `${(SearchTime.getSearchTime() + FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}, ${SearchTime.getSearchTime()}, ${(FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}`,
                   list: TimeCounters.getResult(),
-                  select_time: +new Date(),
+                  select_time: +new Date(response && response.serverTime ? response.serverTime : Date.now()).getTime(),
                   trace_id: response.traceId || ''
                 }
               })

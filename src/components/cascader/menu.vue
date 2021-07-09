@@ -30,7 +30,8 @@
         </template>
         <template v-else>
           <div class="name">
-            <span v-html="highlight(item.data.name, keyword)" />
+            <span v-if="!item.data.textEffected" v-html="highlight(item.data.name, keyword)" />
+            <span v-else v-html="highlight(item.data.text, keyword)" />
             <Icon style="margin-left: 4px" :size="16" type="lock" v-if="item.data.locked" />
           </div>
           <Icon type="loading" v-if="item.loading" />
