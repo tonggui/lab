@@ -270,6 +270,7 @@
         const cb = (response, err) => {
           response = response || {}
           if (err) {
+            this.createFail = true
             lx.mc({
               bid: 'b_a3y3v6ek',
               val: {
@@ -328,7 +329,7 @@
         }
       },
       pageLeave () {
-        if (!this.spuId) {
+        if (!this.spuId && this.createFail) {
           lx.mc({
             cid: 'c_shangou_online_e_0jqze6bd',
             bid: 'b_shangou_online_e_7cxe0v96_mc',

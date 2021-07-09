@@ -365,6 +365,7 @@
           const spChangeInfoDecision = this.getSpChangeInfoDecision()
           let bid = 'null'
           if (err) {
+            this.createFail = true
             const { _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = this.$refs.form.form.getPluginContext()
             LX.mc({
               bid: 'b_a3y3v6ek',
@@ -450,7 +451,7 @@
         }
       },
       pageLeave () {
-        if (!this.spuId) {
+        if (!this.spuId && this.createFail) {
           LX.mc({
             cid: 'c_4s0z2t6p',
             bid: 'b_shangou_online_e_7cxe0v96_mc',
