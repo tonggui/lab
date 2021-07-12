@@ -2,12 +2,12 @@
   <Modal :value="value" :closable="true" @on-cancel="$emit('on-click-reselect')" :width="modalWidth" class="delete-products-modal-container">
     <slot name="header">
       <div slot="header" class="delete-products-modal-header">
-        {{ isAllDeleted ? '选择商品被删除' : '部分选择商品被删除' }}
+        {{ isAllDeleted ? '选中商品被删除' : '部分选中商品被删除' }}
       </div>
     </slot>
     <slot name="content">
       <div class="delete-products-modal-content">
-        {{ isAllDeleted ? '抱歉！你选择的商品已被平台删除，请重新选择。' : '抱歉！所选商品中有' + dataSource.length + '件商品已被平台删除，请重新选择。' }}
+        {{ isAllDeleted ? '你选择的商品全部已被平台删除，请重新选择。' : '你选中的如下商品已被平台删除，请确认是否继续创建。' }}
         <ul v-if="!isAllDeleted" :class="{ 'single': dataSource.length === 1 }">
           <li v-for="item in dataSource" :key="item.__id__">
             <ProductInfo :product="item" />
@@ -17,13 +17,13 @@
     </slot>
     <div slot="footer" class="delete-products-modal-footer">
       <slot name="footer">
-        <Button v-if="isAllDeleted" @click="$emit('on-click-reselect')" type="primary">知道了</BUtton>
+        <Button v-if="isAllDeleted" @click="$emit('on-click-reselect')" type="primary">我知道了</BUtton>
         <template v-else>
           <Button @click="$emit('on-click-reselect')">
             重新选择
           </Button>
           <Button type="primary" @click="$emit('on-click-create')">
-            继续创建其他
+            继续创建
           </Button>
         </template>
       </slot>

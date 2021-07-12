@@ -74,7 +74,7 @@
     },
     computed: {
       hotSaleTabInfo () {
-        if (this.product.hotSaleDetailsMap) {
+        if (this.product.hotSaleDetailsMap && JSON.stringify(this.product.hotSaleDetailsMap) !== '{}') {
           let info = Object.keys(this.product.hotSaleDetailsMap)[0]
           return info + this.product.hotSaleDetailsMap[info]
         } else return ''
@@ -114,7 +114,7 @@
           } else {
             return ''
           }
-        } else {
+        } else if (this.product.totalPoiIds && this.product.totalPoiIds.length > 0) {
           // 选中时关联门店显示逻辑
           if (this.currentScope.cityId !== -1) {
             if (this.currentScope.poiId !== -1) {
@@ -129,6 +129,8 @@
           } else {
             return '默认关联全国所有门店'
           }
+        } else {
+          return ''
         }
       }
     }
