@@ -133,3 +133,6 @@ export const POI_BUSINESS_DAY = 'POI_BUSINESS_DAY'
 
 // 医药商家商品中心是不是总分模式
 export const HEAD_QUARTER_MODE = 'HEAD_QUARTER_MODE'
+
+// 商品中心魔方页面
+export const MERCHANT_CUBE_SWITCH = 'MERCHANT_CUBE_SWITCH'

@@ -34,7 +34,7 @@
 </template>
 
 <script>
-  import Steps from '../../components/steps'
+  import Steps from '@/components/steps'
   import StepProduct from './step-product/index'
   import StepPoi from './step-poi/index'
   import StepRel from './step-rel'

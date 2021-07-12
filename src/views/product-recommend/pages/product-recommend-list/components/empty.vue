@@ -24,6 +24,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  height: 55vh;
   .empty {
     .desc {
       font-family: PingFangSC-Medium;

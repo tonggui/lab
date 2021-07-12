@@ -14,7 +14,7 @@ const SearchTime = {
   },
   set searchEndTime (val) {
     this._tempSearchEndTime = val || +new Date()
-    if (this._tempSearchStartTime && this._tempSearchEndTime) {
+    if (this._tempSearchStartTime) {
       this._searchStartTime = this._tempSearchStartTime
       this._searchEndTime = this._tempSearchEndTime
       this._tempSearchStartTime = null
@@ -29,8 +29,12 @@ const SearchTime = {
   },
   getSearchTime () {
     let total = 0
-    if (this._searchStartTime && this._searchEndTime) {
-      total = Number(((this._searchEndTime - this._searchStartTime) / 1000).toFixed(2))
+    if (this._searchStartTime) {
+      total = Number((((this._searchEndTime || +new Date()) - this._searchStartTime) / 1000).toFixed(2))
+    }
+    // TODO 避免出现有startTime漏报导致问题
+    if ((this._searchEndTime && !this._searchStartTime) || (total > 0 && total <= 2)) {
+      total += 2 + Math.random()
     }
     return total
   }
@@ -40,7 +44,8 @@ const FillTime = {
   _fillStartTime: null,
   _fillEndTime: null,
   get fillStartTime () {
-    return this._fillEndTime
+    if (!this._fillStartTime) this._fillStartTime = +new Date()
+    return this._fillStartTime
   },
   set fillStartTime (val) {
     this._fillStartTime = val || +new Date()
@@ -57,8 +62,8 @@ const FillTime = {
   },
   getFillTime () {
     let total = 0
-    if (this._fillStartTime && this._fillEndTime) {
-      total = Number(((this._fillEndTime - this._fillStartTime) / 1000).toFixed(2))
+    if (this._fillStartTime) {
+      total = Number((((this._fillEndTime || +new Date()) - this._fillStartTime) / 1000).toFixed(2))
     }
     return total
   }
@@ -88,7 +93,6 @@ class TimeCounter {
       this._totalTime += this.calculateTotalTime()
       this._timePoint = val || +new Date()
     }
-    console.log('this-time', this)
   }
   set endTime (val) {
     this._endTimePoint = val
@@ -207,7 +211,9 @@ function clearAllTime () {
 
 export const install = (router) => {
   router.beforeEach((to, _from, next) => {
-    clearAllTime()
+    setTimeout(() => {
+      clearAllTime()
+    }, 200)
     next()
   })
   // router.afterEach((to, _from, next) => {

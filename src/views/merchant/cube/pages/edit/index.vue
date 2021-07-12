@@ -1,13 +1,66 @@
 <template>
-  <div>hello world</div>
+  <div class="merchant-cube-edit">
+    <ProductList
+      :tag-group-product="tagGroupProduct"
+      :auto-fill-tag="false"
+      @delete="handleDelete"
+      class="merchant-cube-edit-list"
+    />
+  </div>
 </template>
-
 <script>
+  import ProductList from './container/product-list'
+  import lx from '@/common/lx/lxReport'
+  import { helper } from '../../store'
+
+  const { mapState, mapActions } = helper()
+
   export default {
-    name: 'index'
+    name: 'merchant-cube-edit-page',
+    components: {
+      ProductList
+    },
+    computed: {
+      ...mapState({
+        tagGroupProduct: 'classifySelectedProducts'
+      })
+    },
+    methods: {
+      ...mapActions({
+        handleDelete: 'deleteSelectProduct'
+      }),
+      handleGoBack () {
+        this.$router.back()
+      }
+    },
+    mounted () {
+      this.createTime = +new Date()
+    },
+    beforeDestroy () {
+      lx.mv({
+        cid: 'c_shangou_online_e_m17be667',
+        bid: 'b_shangou_online_e_439bseot_mv',
+        val: {
+          viewtime: (+new Date() - this.createTime) / 1000
+        }
+      }, 'productCube')
+    }
   }
 </script>
-
-<style scoped>
-
+<style lang="less" scoped>
+  .merchant-cube-edit {
+    //height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    &-nav {
+      margin-bottom: 16px;
+      display: flex;
+      flex-shrink: 0;
+    }
+    &-list {
+      flex: 1;
+      overflow: hidden;
+    }
+  }
 </style>

@@ -64,8 +64,11 @@ export const KEYS = {
   // 商家商品中心任务进度
   MERCHANT_TASK_PROCESS: 'merchantTaskProcess',
   // 商家中心欢迎提示
-  MERCHANT_WELCOME: 'merchantWelcome'
-
+  MERCHANT_WELCOME: 'merchantWelcome',
+  // 商家商品中心魔方范围默认开启
+  MERCHANT_CUBE_RANGE_AUTO_SETTING: 'merchantCubeRangeAutoSetting',
+  // 商家商品中心魔方结果页返回
+  MERCHANT_CUBE_RESULT_TIP: 'merchantCubeResultTip'
 }
 
 export const orders = ['MERCHANT_GUIDE', 'MERCHANT_GUIDE_BOOK']

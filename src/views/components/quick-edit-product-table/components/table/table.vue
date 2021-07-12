@@ -47,6 +47,9 @@
         ref="pagination"
       />
     </div>
+    <div ref="footer">
+      <slot name="footer"></slot>
+    </div>
     <Loading v-if="loading" />
   </div>
 </template>
@@ -274,6 +277,7 @@
                   height = height - $pagination.$el.offsetHeight
                 }
                 height -= this.showHorizontalScrollBar ? this.scrollBarWidth : 0
+                if (this.$scopedSlots.footer) height -= this.$refs.footer.offsetHeight
                 this.tableFixedHeight = height
                 this.$nextTick(resolve)
               }

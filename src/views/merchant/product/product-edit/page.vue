@@ -305,7 +305,7 @@
                   source_id: 2,
                   viewtime: `${(SearchTime.getSearchTime() + FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}, ${SearchTime.getSearchTime()}, ${(FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}`,
                   list: TimeCounters.getResult(),
-                  select_time: +new Date(),
+                  select_time: +new Date(response && response.serverTime ? response.serverTime : Date.now()).getTime(),
                   trace_id: response.traceId || ''
                 }
               })

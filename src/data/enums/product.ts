@@ -9,7 +9,8 @@ export enum PRODUCT_MARK {
   NEED_TO_CHECK = 'needToCheck', // 待更新
   MERCHANT_DELETE = 'merchantDelete', // 总部删除
   AUDIT_REJECTED = 'auditRejected', // 审核驳回
-  AUDITING = 'auditing' // 审核中
+  AUDITING = 'auditing', // 审核中
+  MERCHANT_EXIST = 'merchantExist' // 总部已存在
 }
 
 export enum RELEASE_TYPE {
