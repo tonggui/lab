@@ -22,7 +22,8 @@ export const convertMultiCubeProduct = (product: MultiCubeProduct) => {
     tabId: product.tabId,
     productLabelIds: product.productLabelIdList || [],
     isExist: product.isExist ? 1 : 0,
-    isHqExist: product.isHqExist,
+    isHqExist: product.isHqExist ? 1 : 0,
+    merchantSpuId: product.merchantSpuId,
     relatedPoiIds: product.relatedPoiIds,
     totalPoiIds: product.totalPoiIds,
     addedPoiIds: product.addedPoiIds
