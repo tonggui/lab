@@ -270,7 +270,6 @@
         const cb = (response, err) => {
           response = response || {}
           if (err) {
-            this.createFail = true
             lx.mc({
               bid: 'b_a3y3v6ek',
               val: {
@@ -284,6 +283,7 @@
             })
             this.handleSubmitError(err)
           } else {
+            this.createSuccess = true
             FillTime.fillEndTime = +new Date()
             lx.mc({
               bid: 'b_a3y3v6ek',
@@ -329,7 +329,7 @@
         }
       },
       pageLeave () {
-        if (!this.spuId && this.createFail) {
+        if (!this.spuId && !this.createSuccess) {
           lx.mc({
             cid: 'c_shangou_online_e_0jqze6bd',
             bid: 'b_shangou_online_e_7cxe0v96_mc',

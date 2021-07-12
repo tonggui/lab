@@ -86,6 +86,7 @@
               traceId
             }
           })
+          this.createSuccess = true
           FillTime.fillEndTime = +new Date()
           lx.mv({
             bid: 'b_shangou_online_e_aifq7sdx_mv',
@@ -111,7 +112,6 @@
 
           this.$emit('submit')
         } catch (err) {
-          this.createFail = true
           errorHandler(err)({
             isBusinessClient: this.isBusinessClient,
             confirm: this.handleConfirm
@@ -121,7 +121,7 @@
         }
       },
       pageLeave () {
-        if (this.createFail) {
+        if (!this.createSuccess) {
           lx.mc({
             cid: 'c_fd6n21x7',
             bid: 'b_shangou_online_e_7cxe0v96_mc',
