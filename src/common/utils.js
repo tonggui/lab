@@ -232,7 +232,7 @@ const DEFAULT_SPU_ATTR_VALUE = {
   labels: '[]',
   attrList: '[]',
   sellStatus: 0,
-  saleType: ''
+  saleType: 1
 }
 
 const MERCHANT_SPU_ATTR_TEXT = Object.assign({}, DEFAULT_SPU_ATTR_TEXT, {
@@ -245,7 +245,7 @@ const MERCHANT_SPU_ATTR_TEXT = Object.assign({}, DEFAULT_SPU_ATTR_TEXT, {
 const MERCHANT_SPU_DEFAULT_VALUE = Object.assign({}, DEFAULT_SPU_ATTR_VALUE, {
   tagIds: '[]',
   saleTime: JSON.stringify('-'),
-  wmPoiIds: '',
+  wmPoiIds: '[]',
   pic: ''
 })
 
@@ -393,13 +393,12 @@ export const getProductChangInfo = (product, originProduct) => {
 
   product = productAttrTransfer(product)
   originProduct = productAttrTransfer(originProduct)
-  console.log('product', JSON.stringify(product), originProduct)
+  console.log('product', JSON.stringify(product))
   if (!originProduct) {
     output = newDataChange(product)
   } else {
     output = newAndOldDataCompare(product, originProduct)
   }
-  console.log('ladder', output)
   return output
 }
 
