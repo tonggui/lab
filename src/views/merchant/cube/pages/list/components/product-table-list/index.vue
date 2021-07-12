@@ -52,7 +52,7 @@
   import Header from '@/components/header-layout'
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
   import { helper } from '@/views/merchant/cube/store'
-  import _ from 'lodash'
+  import _, { get } from 'lodash'
   const { mapState } = helper()
   export default {
     name: 'product-table-list',
@@ -283,11 +283,10 @@
               // 当XX=1，YY=1，**为##，##为选择门店内容+商品已关联门店去重后的门店名称列表
               for (let key of alreadyCities.keys()) {
                 firstPoiId = alreadyCities.get(key)
+                firstPoiId = Array.isArray(firstPoiId) && firstPoiId.length ? firstPoiId[0] : firstPoiId
                 break
               }
-              let poiName = this.rowScopeList.find(ele => {
-                return ele.id === firstPoiId
-              }).name
+              const poiName = get(this.rowScopeList.find(ele => ele.id === firstPoiId), 'name', '')
               this.displayContent = `${poiName}`
             } else this.displayContent = `${cityName}${poiCount}个门店`
           } else this.displayContent = `${cityName}等${cityCount}个城市共${poiCount}个门店`
@@ -301,14 +300,13 @@
       getCitiesList (pois) {
         const cityIds = new Map()
         let tmp = {}
+        let self = this
         pois.forEach(item => {
-          tmp = this.rowScopeList.find(i => i.id === item)
-          if (!cityIds.has(tmp.cityName)) {
-            cityIds.set(tmp.cityName, item)
-          } else {
-            let arr = Array.isArray(cityIds.get(tmp.cityName)) ? cityIds.get(tmp.cityName) : []
-            arr.push(item)
-            cityIds.set(tmp.cityName, arr)
+          tmp = self.rowScopeList.find(i => i.id === item)
+          if (tmp && tmp.cityName) {
+            const ids = cityIds.get(tmp.cityName) || []
+            ids.push(item)
+            cityIds.set(tmp.cityName, ids)
           }
         })
         return cityIds
@@ -377,6 +375,7 @@
     border-bottom: 1px solid #E9EAF2;
   }
   .empty {
+    padding-top: 10px;
     width: 100%;
     display: flex;
     align-items: center;

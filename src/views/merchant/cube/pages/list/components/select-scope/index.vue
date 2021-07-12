@@ -11,7 +11,7 @@
       <span v-show="displayShop.cityId !== -1" style="margin-left: 20px">所选{{cityOrPoiDisplay}}为: {{ displayShop.name }}</span>
     </div>
     <div class="display-tip">
-        当前基于美团平台“{{ displayShop.name }}”商品搜索及销售数据进行推荐。所选商品默认关联{{recommendDisplay}}，如需变更请在“已选商品”或“完善商品信息”中修改
+      商品勾选后默认关联{{ displayShop.name }}，加入已选列表或完善商品信息时可调整关联门店范围
     </div>
     <SelectedScopeShop :scopeVisible="scopeVisible" :scope="scope"  @updateScope="updateScope" @setDisplayShop="contentScopeStatus"
                        @on-confirm='confirmSubmit' @on-cancel="cancel"/>

@@ -203,7 +203,8 @@
     font-family: PingFangSC-Regular;
   }
   /deep/ .product-list-page-layout-content {
-    min-height: calc(100% - 158px);
+    min-height:58vh;
+    overflow:hidden;
   }
   /deep/ .product-list-page-layout-product-list {
     display: flex;
