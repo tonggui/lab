@@ -208,7 +208,6 @@ export const getDateRange = ({ start, n = 0 }) => {
 const DEFAULT_SPU_ATTR_TEXT = {
   name: '名称',
   categoryId: '商品类目',
-  picture: '商品图片',
   upcImage: '条码图',
   video: '封面视频',
   skus: '规格变动',
@@ -224,7 +223,6 @@ const DEFAULT_SPU_ATTR_TEXT = {
 
 const DEFAULT_SPU_ATTR_VALUE = {
   name: '',
-  picture: '',
   upcImage: '',
   video: '{}',
   skus: '[]',
@@ -240,23 +238,27 @@ const DEFAULT_SPU_ATTR_VALUE = {
 const MERCHANT_SPU_ATTR_TEXT = Object.assign({}, DEFAULT_SPU_ATTR_TEXT, {
   tagIds: '店内分类',
   saleTime: '售卖时间',
-  wmPoiIds: '关联门店'
+  wmPoiIds: '关联门店',
+  pic: '商品图片'
 })
 
 const MERCHANT_SPU_DEFAULT_VALUE = Object.assign({}, DEFAULT_SPU_ATTR_VALUE, {
   tagIds: '[]',
   saleTime: JSON.stringify('-'),
-  wmPoiIds: ''
+  wmPoiIds: '',
+  pic: ''
 })
 
 const SPU_ATTR_TEXT = Object.assign({}, DEFAULT_SPU_ATTR_TEXT, {
   tagList: '店内分类',
-  shippingTimeX: '售卖时间'
+  shippingTimeX: '售卖时间',
+  picture: '商品图片'
 })
 
 const SPU_DEFAULT_VALUE = Object.assign({}, DEFAULT_SPU_ATTR_VALUE, {
   tagList: '[]',
-  shippingTimeX: JSON.stringify('-')
+  shippingTimeX: JSON.stringify('-'),
+  picture: ''
 })
 
 const SELL_ATTRS = {
