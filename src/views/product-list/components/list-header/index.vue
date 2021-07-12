@@ -52,7 +52,7 @@
     },
     data () {
       return {
-        showNewBatchCreate: true
+        showNewBatchCreate: false
       }
     },
     computed: {
