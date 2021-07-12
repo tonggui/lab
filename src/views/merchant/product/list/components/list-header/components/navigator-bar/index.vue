@@ -10,7 +10,7 @@
   </div>
 </template>
 <script>
-  import HeaderBar from '@/components/header-bar'
+  import HeaderBar from '@/components/header-bar-old'
   import DownloadModal from '@components/download-modal'
   import { mapModule } from '@/module/module-manage/vue'
   import {
