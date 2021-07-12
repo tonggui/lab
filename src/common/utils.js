@@ -231,8 +231,7 @@ const DEFAULT_SPU_ATTR_VALUE = {
   picContent: '',
   labels: '[]',
   attrList: '[]',
-  sellStatus: 0,
-  saleType: 1
+  sellStatus: 0
 }
 
 const MERCHANT_SPU_ATTR_TEXT = Object.assign({}, DEFAULT_SPU_ATTR_TEXT, {
@@ -246,7 +245,8 @@ const MERCHANT_SPU_DEFAULT_VALUE = Object.assign({}, DEFAULT_SPU_ATTR_VALUE, {
   tagIds: '[]',
   saleTime: JSON.stringify('-'),
   wmPoiIds: '[]',
-  pic: ''
+  pic: '',
+  saleType: '1'
 })
 
 const SPU_ATTR_TEXT = Object.assign({}, DEFAULT_SPU_ATTR_TEXT, {
@@ -258,7 +258,8 @@ const SPU_ATTR_TEXT = Object.assign({}, DEFAULT_SPU_ATTR_TEXT, {
 const SPU_DEFAULT_VALUE = Object.assign({}, DEFAULT_SPU_ATTR_VALUE, {
   tagList: '[]',
   shippingTimeX: JSON.stringify('-'),
-  picture: ''
+  picture: '',
+  saleType: 1
 })
 
 const SELL_ATTRS = {
