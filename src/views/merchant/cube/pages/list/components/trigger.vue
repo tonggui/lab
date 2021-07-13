@@ -105,7 +105,7 @@
               const poiName = get(this.rowScopeList.find(ele => ele.id === firstPoiId), 'name', '')
               this.displayContent = `${poiName}`
             } else this.displayContent = `${cityName}${poiCount}个门店`
-          } else this.displayContent = `${cityName}等${cityCount}个城市共${poiCount}个门店`
+          } else this.displayContent = `${cityCount > 3 ? cityName + '等' : cityName}${cityCount}个城市共${poiCount}个门店`
         }
       }
     }

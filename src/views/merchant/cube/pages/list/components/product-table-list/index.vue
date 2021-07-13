@@ -289,7 +289,7 @@
               const poiName = get(this.rowScopeList.find(ele => ele.id === firstPoiId), 'name', '')
               this.displayContent = `${poiName}`
             } else this.displayContent = `${cityName}${poiCount}个门店`
-          } else this.displayContent = `${cityName}等${cityCount}个城市共${poiCount}个门店`
+          } else this.displayContent = `${cityCount > 3 ? cityName + '等' : cityName}${cityCount}个城市共${poiCount}个门店`
         }
         let selContent = `已选列表存在该商品，该商品关联门店范围将修改为${this.displayContent}`
         let deSelContent = `由于该商品在${this.displayContent}待创建，已选列表仍然保留该商品`
