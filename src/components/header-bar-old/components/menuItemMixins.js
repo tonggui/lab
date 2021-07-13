@@ -39,10 +39,10 @@ export default {
         if (isBoolean(this.menu.badge)) {
           return { dot: true }
         } else if (isNumber(this.menu.badge)) {
-          return { count: this.menu.badge, 'overflow-count': 99, offset: [0, -10] }
+          return { count: this.menu.badge, 'overflow-count': 99 }
         } else if (isString(this.menu.badge)) {
-          return { text: this.menu.badge, offset: [0, -10] }
-        } else if (isPlainObject(this.menu.badge)) return { ...this.menu.badge, offset: [0, -10] }
+          return { text: this.menu.badge }
+        } else if (isPlainObject(this.menu.badge)) return this.menu.badge
       }
       return null
     },
@@ -62,10 +62,6 @@ export default {
     handleClick (e, bid) {
       lx.mc({ bid })
       this.$emit('click', this.menu)
-    },
-    handleClickSubmenu (menu, bid) {
-      lx.mc({ bid })
-      this.$emit('click', menu)
     },
     isComponent (component) {
       return isVueComponent(component)

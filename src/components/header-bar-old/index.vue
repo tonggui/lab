@@ -2,8 +2,7 @@
   import { isPlainObject, merge, defaultTo, cloneDeep } from 'lodash'
   import HeaderBar from './components/header-bar'
   import { leftMenu, rightMenu } from './config'
-  import { poiId } from '@/common/constants'
-  import { inBatchInsertNewGrey } from '@/data/api/batch'
+
   export default {
     name: 'header-bar-container',
     props: {
@@ -11,28 +10,14 @@
         type: Object,
         required: true
       },
-      disabled: Boolean,
-      needPermission: Boolean
-    },
-    data () {
-      return {
-        leftMenuExtInfo: {} // 左侧菜单动态信息
-      }
+      disabled: Boolean
     },
     components: {
       HeaderBar
     },
     computed: {
-      leftModuleMapWithExtInfo () { //
-        const _leftMenuExtInfo = (this.leftMenuExtInfo || {})
-        return Object.entries(this.moduleMap).reduce((dist, [key, value]) => {
-          if (!_leftMenuExtInfo[key]) return { ...dist, [key]: value }
-          if (isPlainObject(value)) return { ...dist, [key]: { ...value, ..._leftMenuExtInfo[key] } }
-          return { ...dist, [key]: { ..._leftMenuExtInfo[key], show: value } }
-        }, {})
-      },
       leftMenu () {
-        return this.reorder(this.filterMenu(cloneDeep(leftMenu), this.leftModuleMapWithExtInfo))
+        return this.reorder(this.filterMenu(cloneDeep(leftMenu), this.moduleMap))
       },
       rightMenu () {
         return this.reorder(this.filterMenu(rightMenu, this.moduleMap))
@@ -75,21 +60,13 @@
           })
       }
     },
-    mounted () {
-      inBatchInsertNewGrey(poiId).then(data => {
-        if (!data.inGrey) {
-          this.leftMenuExtInfo = { batchCreate: { link: '/reuse/sc/product/views/seller/center/new/create' } }
-        }
-      })
-    },
     render (h) {
       return h(HeaderBar, {
         on: this.$listeners,
         props: {
           left: this.leftMenu,
           right: this.rightMenu,
-          disabled: this.disabled,
-          needPermission: this.needPermission
+          disabled: this.disabled
         }
       })
     }

@@ -79,13 +79,14 @@
   }
   .nav-link {
     display: inline-block;
-    color: @text-color;
+    font-size: 12px;
+    color: #222222;
     text-align: left;
-    margin-left: 16px;
-    font-size: @font-size-base;
+    //margin-right: 16px;
     padding: 0;
-    line-height: 32px;
     cursor: pointer;
+    height: 100%;
+
     > span > * {
       display: inline;
     }
@@ -99,10 +100,10 @@
   }
   .boo-badge {
     /deep/ .boo-badge-count {
-      height: 18px;
-      line-height: 16px;
+      height: 16px;
+      line-height: 13px;
       padding: 0 4px;
-      font-weight: 700;
+      top: -4px;
     }
 
     &.line /deep/ .boo-badge-count {
