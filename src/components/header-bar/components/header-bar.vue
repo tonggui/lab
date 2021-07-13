@@ -25,7 +25,7 @@
               >
             </div>
             <div class="tip-link">
-              <a>如何选择？</a>
+              <a target="_blank" href="https://daxue.meituan.com/m/shangoushang/article/7581?mtdxSource=wmsj_l360gx">如何选择？</a>
             </div>
           </template>
         </Tooltip>
@@ -69,7 +69,7 @@
           </div>
           <div class="tip-link">
             <a @click="hideTip">我知道了 </a>
-            <a> 如何选择？</a>
+            <a target="_blank" href="https://daxue.meituan.com/m/shangoushang/article/7581?mtdxSource=wmsj_l360gx"> 如何选择？</a>
           </div>
         </template>
       </Tooltip>
