@@ -365,7 +365,6 @@
           const spChangeInfoDecision = this.getSpChangeInfoDecision()
           let bid = 'null'
           if (err) {
-            this.createFail = true
             const { _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = this.$refs.form.form.getPluginContext()
             LX.mc({
               bid: 'b_a3y3v6ek',
@@ -384,6 +383,7 @@
               confirm: this.handleConfirm
             })
           } else {
+            this.createSuccess = true
             FillTime.fillEndTime = +new Date()
             LX.mc({
               bid: 'b_a3y3v6ek',
@@ -451,7 +451,7 @@
         }
       },
       pageLeave () {
-        if (!this.spuId && this.createFail) {
+        if (!this.spuId && !this.createSuccess) {
           LX.mc({
             cid: 'c_4s0z2t6p',
             bid: 'b_shangou_online_e_7cxe0v96_mc',

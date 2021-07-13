@@ -268,7 +268,7 @@
                 divFocus = false
               }}
               vOn:on-change={(val) => {
-                TimeCounters.setEndTime('stock', +new Date()); if (val === 0) TimeCounters.removeTime('stock')
+                TimeCounters.setEndTime('stock', +new Date())
               }}
             />
           }

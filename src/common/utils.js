@@ -205,75 +205,62 @@ export const getDateRange = ({ start, n = 0 }) => {
   }
 }
 
-const MERCHANT_SPU_ATTR_TEXT = {
+const DEFAULT_SPU_ATTR_TEXT = {
   name: '名称',
   categoryId: '商品类目',
-  tagIds: '店内分类',
-  pic: '商品图片',
+  upcImage: '条码图',
   video: '封面视频',
   skus: '规格变动',
   categoryAttrMap: '类目属性',
   description: '文字详情',
   picContent: '图片详情',
-  labels: '商品标签',
-  saleTime: '售卖时间',
+  labels: '推荐标签',
   limitSale: '限购规则',
   attrList: '商品属性',
   sellStatus: '上/下架状态',
-  wmPoiIds: '关联门店'
+  saleType: '售卖方式'
 }
 
-const MERCHANT_SPU_DEFAULT_VALUE = {
+const DEFAULT_SPU_ATTR_VALUE = {
   name: '',
-  categoryId: 'undefined',
+  upcImage: '',
+  video: '{}',
+  skus: '[]',
+  categoryAttrMap: '{}',
+  description: '',
+  picContent: '',
+  labels: '[]',
+  attrList: '[]',
+  sellStatus: 0
+}
+
+const MERCHANT_SPU_ATTR_TEXT = Object.assign({}, DEFAULT_SPU_ATTR_TEXT, {
+  tagIds: '店内分类',
+  saleTime: '售卖时间',
+  wmPoiIds: '关联门店',
+  pic: '商品图片'
+})
+
+const MERCHANT_SPU_DEFAULT_VALUE = Object.assign({}, DEFAULT_SPU_ATTR_VALUE, {
   tagIds: '[]',
-  pic: '',
-  video: '{}',
-  skus: '[]',
-  categoryAttrMap: '{}',
-  description: '',
-  picContent: '',
-  labels: '[]',
   saleTime: JSON.stringify('-'),
-  limitSale: 'undefined',
-  attrList: '[]',
-  sellStatus: 0,
-  wmPoiIds: ''
-}
+  wmPoiIds: '[]',
+  pic: '',
+  saleType: '1'
+})
 
-const SPU_ATTR_TEXT = {
-  name: '名称',
-  categoryId: '商品类目',
+const SPU_ATTR_TEXT = Object.assign({}, DEFAULT_SPU_ATTR_TEXT, {
   tagList: '店内分类',
-  picture: '商品图片',
-  video: '封面视频',
-  skus: '规格变动',
-  categoryAttrMap: '类目属性',
-  description: '文字详情',
-  picContent: '图片详情',
-  labels: '商品标签',
   shippingTimeX: '售卖时间',
-  limitSale: '限购规则',
-  attrList: '商品属性',
-  sellStatus: '上/下架状态'
-}
+  picture: '商品图片'
+})
 
-const SPU_DEFAULT_VALUE = {
-  name: '',
-  categoryId: 'null',
+const SPU_DEFAULT_VALUE = Object.assign({}, DEFAULT_SPU_ATTR_VALUE, {
   tagList: '[]',
+  shippingTimeX: JSON.stringify('-'),
   picture: '',
-  video: '{}',
-  skus: '[]',
-  categoryAttrMap: '{}',
-  description: '',
-  picContent: '',
-  labels: '[]',
-  shippingTimeX: '-',
-  limitSale: 'undefined',
-  attrList: '[]',
-  sellStatus: '0'
-}
+  saleType: 1
+})
 
 const SELL_ATTRS = {
   spec: '售卖规格',
@@ -281,24 +268,29 @@ const SELL_ATTRS = {
   price: '价格',
   stock: '库存',
   weight: '重量',
-  // weightUnit: '重量单位',
   shelfNum: '店内码/货号',
   minOrderCount: '起购数',
-  ladderPrice: '包装费'
+  ladderPrice: '包装费',
+  sourceFoodCode: '货架码/位置'
 }
 
 const SELL_ATTRS_DEFAULT_VALUE = {
   spec: '',
   upc: '',
   price: '',
-  stock: '',
+  stock: 0,
   weight: -1,
-  // weightUnit: '克(g)',
   shelfNum: '',
   minOrderCount: 1,
-  ladderPrice: ''
+  ladderPrice: '',
+  sourceFoodCode: ''
 }
 
+/**
+ * 数据转化（通过接口层格式清洗）
+ * @param product
+ * @returns {*}
+ */
 const productAttrTransfer = (product) => {
   if (!product) return product
   const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = product
@@ -308,6 +300,12 @@ const productAttrTransfer = (product) => {
   return fn(newProduct, { showLimitSale: !!get(newProduct, 'limitSale.status', 0) })
 }
 
+/**
+ * 新旧数据对比（编辑）
+ * @param product
+ * @param originProduct
+ * @returns {*[]}
+ */
 const newAndOldDataCompare = (product, originProduct) => {
   const output = []
   const TEXT = getIsSingle() ? SPU_ATTR_TEXT : MERCHANT_SPU_ATTR_TEXT
@@ -350,6 +348,11 @@ const newAndOldDataCompare = (product, originProduct) => {
   return output
 }
 
+/**
+ * 数据对比 (新建)
+ * @param product
+ * @returns {*[]}
+ */
 const newDataChange = (product) => {
   const TEXT = getIsSingle() ? SPU_ATTR_TEXT : MERCHANT_SPU_ATTR_TEXT
   const output = []
@@ -366,7 +369,13 @@ const newDataChange = (product) => {
         }
       } else if (product[spuName]) {
         const VALUE = getIsSingle() ? SPU_DEFAULT_VALUE : MERCHANT_SPU_DEFAULT_VALUE
-        if (getIsSingle() && product[spuName] && product[spuName] !== VALUE[spuName]) output.push(TEXT[spuName])
+        if (spuName === 'categoryAttrMap' && product[spuName] && product[spuName] !== VALUE[spuName]) {
+          Object.values(product[spuName]).forEach(category => {
+            if (category['valueList'] && Array.isArray(category['valueList']) && category['valueList'].length) {
+              output.push(`${TEXT[spuName]}-${category['attrName'] || ''}`)
+            }
+          })
+        } else if (getIsSingle() && product[spuName] && product[spuName] !== VALUE[spuName]) output.push(TEXT[spuName])
         else if (!getIsSingle() && product[spuName] && JSON.stringify(product[spuName]) !== VALUE[spuName]) output.push(TEXT[spuName])
       }
     })
@@ -385,12 +394,12 @@ export const getProductChangInfo = (product, originProduct) => {
 
   product = productAttrTransfer(product)
   originProduct = productAttrTransfer(originProduct)
+  console.log('product', JSON.stringify(product))
   if (!originProduct) {
     output = newDataChange(product)
   } else {
     output = newAndOldDataCompare(product, originProduct)
   }
-
   return output
 }
 
