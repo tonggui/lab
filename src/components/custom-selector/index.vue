@@ -311,6 +311,7 @@
         if (!this.focus) {
           this.focus = true
           this.$refs.inputRef.focus()
+          this.$emit('focus')
         } else {
           e && e.stopPropagation()
         }
@@ -321,6 +322,7 @@
           this.search = ''
           this.resetActive()
           this.$refs.inputRef.focus()
+          this.$emit('focus')
         } else {
           this.$emit('change', [])
           this.hide(true)
@@ -367,6 +369,7 @@
         this.$refs.triggerRef.handleClose()
         this.$refs.inputRef.blur()
         this.$emit('close')
+        this.$emit('blur')
       }
     }
   }

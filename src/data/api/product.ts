@@ -819,11 +819,11 @@ export const submitSingleCreateRecommendProduct = ({ product, extra, poiId } : {
       })
     }
   }).then(data => {
-    const { code, message, failProduct } = (data || {}) as any
+    const { code, message, failProduct, spuId } = (data || {}) as any
     if (!failProduct) {
-      return null
+      return { spuId }
     }
-    return { code, message, product: convertRecommendEditProductFromServer(failProduct) }
+    return { spuId, code, message, product: convertRecommendEditProductFromServer(failProduct) }
   })
 }
 
@@ -912,11 +912,11 @@ export const submitSingleCreateNewArrivalProduct = ({ product, extra, poiId } : 
       })
     }
   }).then(data => {
-    const { code, message, failProduct } = (data || {}) as any
+    const { code, message, failProduct, spuId } = (data || {}) as any
     if (!failProduct) {
-      return null
+      return { spuId }
     }
-    return { code, message, product: convertNewArrivalEditProductFromServer(failProduct) }
+    return { spuId, code, message, product: convertNewArrivalEditProductFromServer(failProduct) }
   })
 }
 

@@ -51,6 +51,7 @@
   import { PRODUCT_SALE_TYPE } from '@/data/enums/product'
   import moment from 'moment'
   import preSaleImg from '@/assets/pre-sale-img.png'
+  import TimeCounters from '@/common/lx/lxReport/lxTime'
 
   const getToday = () => moment().startOf('day')
   export default {
@@ -86,6 +87,7 @@
           saleType: v,
           deliveryTime: (new Date(this.deliveryTime)).getTime()
         })
+        TimeCounters.setTime('sellType', +new Date(), 's2s')
       },
       handleDateChange (v) {
         this.$emit('change', {

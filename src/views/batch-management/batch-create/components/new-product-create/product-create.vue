@@ -86,6 +86,7 @@
               traceId
             }
           })
+          this.createSuccess = true
           FillTime.fillEndTime = +new Date()
           lx.mv({
             bid: 'b_shangou_online_e_aifq7sdx_mv',
@@ -120,14 +121,16 @@
         }
       },
       pageLeave () {
-        lx.mc({
-          cid: 'c_fd6n21x7',
-          bid: 'b_shangou_online_e_7cxe0v96_mc',
-          val: {
-            list: getProductChangInfo(this.product),
-            op_type: this.product.spId ? 1 : 0
-          }
-        })
+        if (!this.createSuccess) {
+          lx.mc({
+            cid: 'c_fd6n21x7',
+            bid: 'b_shangou_online_e_7cxe0v96_mc',
+            val: {
+              list: getProductChangInfo(this.product),
+              op_type: this.product.spId ? 1 : 0
+            }
+          })
+        }
       }
     },
     beforeDestroy () {
