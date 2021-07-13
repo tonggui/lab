@@ -13,7 +13,7 @@
 </template>
 <script>
   import { getProductCount, getGrey } from '@/data/repos/sellerCenter'
-  import { getRetailBatchInsertTask, finishBatchInsertNew } from '@/data/api/batch'
+  import { getRetailBatchInsertTask, finishBatchInsertNew, inBatchInsertNewGrey } from '@/data/api/batch'
   import { poiId } from '@/common/constants'
   import jumpTo from '@/components/link/jumpTo'
   import moment from 'moment'
@@ -29,9 +29,9 @@
     },
     computed: {
       alertdata () {
-        const { productCount, batchInfo } = this
+        const { productCount, batchInfo, inNewBatchGrey } = this
 
-        if (this.showBatchAlert && batchInfo) {
+        if (this.showBatchAlert && batchInfo && inNewBatchGrey) {
           const { taskId, infoMiss, ctime, status } = batchInfo
           if (taskId) {
             if (status === 0) {
@@ -178,20 +178,24 @@
       iGotIt (taskId) {
         this.showBatchAlert = false
         finishBatchInsertNew(taskId)
+      },
+      async init () {
+        getGrey(poiId).then(data => {
+          if (data && data.productManagerGray) {
+            getProductCount(poiId).then(data => {
+              this.productCount = data
+            })
+          }
+        })
+        const res = await inBatchInsertNewGrey(poiId)
+        this.inNewBatchGrey = (res || {}).inGrey
+        getRetailBatchInsertTask(poiId).then(data => {
+          this.batchInfo = data
+        })
       }
     },
     mounted () {
-      getGrey(poiId).then(data => {
-        if (data && data.productManagerGray) {
-          getProductCount(poiId).then(data => {
-            this.productCount = data
-          })
-        }
-      })
 
-      getRetailBatchInsertTask(poiId).then(data => {
-        this.batchInfo = data
-      })
     }
   }
 </script>
