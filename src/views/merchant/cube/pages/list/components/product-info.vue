@@ -21,7 +21,7 @@
         <div v-for="(item, index) in getSkus" :key="index">
           {{item}}
         </div>
-        <div>{{product.isSp ? `条形码 ${product.upcCode || ''}` : '规格、重量创建时可修改'}}</div>
+        <div>{{product.isSp ? `条形码 ${product.upcCode || ''}` : '商品名称、规格、重量可修改'}}</div>
         <QualificationTip lackQuaText="该商品需补充资质方可售卖" lackCateText="该商品需申请对应营业资质方可售卖" :product="product" />
       </div>
       <div class="recommend-product-info-hot-data" v-if="hotInfoDisabled">

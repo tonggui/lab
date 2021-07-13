@@ -52,7 +52,11 @@ export default {
           // }
           if (existProduct) {
             // 已在已选列表
-            existProduct['addedPoiIds'].push(...product['addedPoiIds'])
+            product['addedPoiIds'].forEach(id => {
+              if (existProduct['addedPoiIds'].indexOf(id) === -1) {
+                existProduct['addedPoiIds'].push(id)
+              }
+            })
             product['addedPoiIds'] = existProduct['addedPoiIds']
           } else {
             map[id].productList = arrayUniquePush(productList, product, (p) => p.__id__)
