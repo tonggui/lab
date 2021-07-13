@@ -81,7 +81,7 @@ export const ProductMark = {
   },
   [PRODUCT_MARK.MERCHANT_EXIST]: {
     type: 'normal',
-    name: '总部已存在'
+    name: '总部已创建'
   }
 }
 
