@@ -58,8 +58,9 @@
       getCitiesList (poiIds) {
         const cityIds = new Map()
         let tmp = {}
+        let self = this
         poiIds.forEach(poiId => {
-          tmp = this.rowScopeList.find(i => i.id === poiId)
+          tmp = self.rowScopeList.find(i => i.id === poiId)
           if (tmp && tmp.cityName) {
             const ids = cityIds.get(tmp.cityName) || []
             ids.push(poiId)
@@ -78,6 +79,7 @@
       getScopeTips () {
         const poiIds = this.addedPoiIds.concat(this.relatedPoiIds)
         const alreadyCities = this.getCitiesList(poiIds)
+        console.log(alreadyCities)
         if (alreadyCities.size >= this.scopeList.length - 1 && poiIds.length >= this.rowScopeList.length) {
           this.displayContent = '全国所有门店'
         } else {

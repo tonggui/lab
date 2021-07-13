@@ -1,9 +1,7 @@
 <template>
   <Modal class="select-scope-info"
-    v-model="visible"
-    title="选择一个指定城市或分店"
-    @on-ok="confirmSubmit"
-    @on-cancel="cancel" :mask-closable="false">
+    v-model="scopeVisible" :mask-closable="false" :closable="false"
+    title="选择一个指定城市或分店">
     <Form ref="currentScope" :model="currentScope" :label-width="80" :rules="formRules" >
       <div class="operation-info-tip">
           <span>
@@ -44,15 +42,22 @@
         </FormItem>
       </template>
     </Form>
+    <template slot="footer" >
+      <FooterButton @confirm="confirmSubmit" @cancel="cancel"/>
+    </template>
   </Modal>
 </template>
 
 <script>
   import { helper } from '@/views/merchant/cube/store'
+  import FooterButton from './footer-button'
   import { get } from 'lodash'
   const { mapState, mapActions } = helper('multiCubeList')
   export default {
     name: 'selected-scope-shop',
+    components: {
+      FooterButton
+    },
     props: {
       scopeVisible: {
         type: Boolean,
@@ -66,19 +71,17 @@
     data () {
       return {
         shopDisabled: true,
+        loading: false,
         currentScope: {
           scopeStatus: 0,
           cityId: '',
           poiId: ''
         },
-        visible: this.scopeVisible,
         formRules: {
           cityId: [
-            { required: true, message: '请选择城市', trigger: 'blur' }
+            { required: true, message: '请选择城市' }
           ],
-          poiId: [
-            { required: false, message: '请选择分店', trigger: 'blur' }
-          ]
+          poiId: []
         }
       }
     },
@@ -95,14 +98,14 @@
           if (this.$refs && this.$refs.currentScope) {
             if (v === 0) {
               this.formRules.cityId = [
-                { required: true, message: '请选择城市', trigger: 'blur' }
+                { required: true, message: '请选择城市' }
               ]
             } else {
               this.formRules.cityId = [
-                { required: true, message: '请选择城市', trigger: 'blur' }
+                { required: true, message: '请选择城市' }
               ]
               this.formRules.poiId = [
-                { required: true, message: '请选择分店', trigger: 'blur' }
+                { required: true, message: '请选择分店' }
               ]
             }
           }
@@ -162,21 +165,14 @@
         }
       },
       confirmSubmit () {
-        let self = this
-        // self.$refs['currentScope'].validate(async valid => {
-        //   if (valid) {
-        //     console.log('---')
-        //   }
-        // })
-        return new Promise(async (resolve, reject) => {
-          if (self.currentScope.cityId && ((self.currentScope.scopeStatus === 1 && self.currentScope.poiId) ||
-            (self.currentScope.scopeStatus === 0))) {
+        this.$refs['currentScope'].validate(async (valid) => {
+          if (valid) {
             let displayShop = ''
-            if (self.currentScope.scopeStatus === 0) {
-              const scope = { cityId: self.currentScope.cityId, poiId: -1 }
-              await self.$emit('updateScope', scope)
-              let tmp = self.scopeList.filter(item => {
-                return item.cityId === self.currentScope.cityId
+            if (this.currentScope.scopeStatus === 0) {
+              const scope = { cityId: this.currentScope.cityId, poiId: -1 }
+              await this.$emit('updateScope', scope)
+              let tmp = this.scopeList.filter(item => {
+                return item.cityId === this.currentScope.cityId
               })[0]
               displayShop = {
                 name: tmp.cityName,
@@ -184,23 +180,18 @@
                 id: -1
               }
             } else {
-              const scope = { cityId: self.currentScope.cityId, poiId: self.currentScope.poiId }
-              await self.$emit('updateScope', scope)
-              displayShop = self.shopList.filter(item => item.id === self.currentScope.poiId)[0]
-              displayShop.cityId = self.currentScope.cityId
+              const scope = { cityId: this.currentScope.cityId, poiId: this.currentScope.poiId }
+              await this.$emit('updateScope', scope)
+              displayShop = this.shopList.filter(item => item.id === this.currentScope.poiId)[0]
+              displayShop.cityId = this.currentScope.cityId
             }
-            self.$emit('setDisplayShop', displayShop)
-            self.$emit('on-confirm')
-            self.visible = false
-            self.$Message.info('推荐列表已生成，快选择商品开始创建吧')
-            resolve()
-          } else {
-            reject(new Error())
-          }
+            this.$emit('setDisplayShop', displayShop)
+            this.$emit('on-confirm')
+            this.$Message.info('推荐列表已生成，快选择商品开始创建吧')
+          } else return false
         })
       },
       cancel () {
-        this.$emit('on-cancel')
         this.$nextTick(() => {
           this.$refs.currentScope.resetFields()
           if (this.scope === 1) {
@@ -211,6 +202,7 @@
             }
           }
         })
+        this.$emit('on-cancel')
       }
     }
   }
@@ -223,6 +215,9 @@
     font-family: PingFangSC-Medium;
     font-size: 20px;
     color: #222222;
+  }
+  .boo-modal-footer {
+    padding: 0 20px 20px 20px;
   }
   .operation-info-tip {
     line-height: 25px;
