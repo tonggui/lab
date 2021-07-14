@@ -40,19 +40,24 @@ export default {
         let currentScope = state.multiCubeList.currentScope
         if (selected === 'selected') {
           // 将当前范围下未关联的门店&&可关联门店 加入待关联门店中
-          if (currentScope.poiId !== -1) {
-            product['addedPoiIds'].push(currentScope.poiId)
-          } else {
-            let canRelatePoiIds = product.totalPoiIds.filter(item => product['relatedPoiIds'].indexOf(item) === -1)
-            canRelatePoiIds.forEach(item => {
-              if (product['addedPoiIds'].indexOf(item) === -1) {
-                product['addedPoiIds'].push(item)
-              }
-            })
-          }
+          // if (currentScope.poiId !== -1) {
+          //   product['addedPoiIds'].push(...product.totalPoiIds)
+          // } else {
+          let canRelatePoiIds = product.totalPoiIds.filter(item => product['relatedPoiIds'].indexOf(item) === -1)
+          canRelatePoiIds.forEach(item => {
+            if (product['addedPoiIds'].indexOf(item) === -1) {
+              product['addedPoiIds'].push(item)
+            }
+          })
+          // }
           if (existProduct) {
             // 已在已选列表
-            existProduct['addedPoiIds'] = product['addedPoiIds']
+            product['addedPoiIds'].forEach(id => {
+              if (existProduct['addedPoiIds'].indexOf(id) === -1) {
+                existProduct['addedPoiIds'].push(id)
+              }
+            })
+            product['addedPoiIds'] = existProduct['addedPoiIds']
           } else {
             map[id].productList = arrayUniquePush(productList, product, (p) => p.__id__)
           }
