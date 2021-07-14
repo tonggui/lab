@@ -237,8 +237,13 @@ export const finishBatchInsertNew = (taskId: number) => {
  * 新版批量新建灰度
  * @param poiId
  */
-export const inBatchInsertNewGrey = (poiId: number) => {
-  return httpClient.post('retail/r/inBatchInsertNewGrey', {
+let inGreyCache
+export const inBatchInsertNewGrey = async (poiId: number) => {
+  if (inGreyCache !== undefined) return { inGrey: inGreyCache }
+  const res = await httpClient.post('retail/r/inBatchInsertNewGrey', {
     wmPoiId: poiId
   })
+  const { inGrey } : { inGrey: boolean } = res || {}
+  inGreyCache = inGrey
+  return { inGrey }
 }
