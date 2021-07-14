@@ -195,7 +195,7 @@
       }
     },
     mounted () {
-
+      this.init()
     }
   }
 </script>
