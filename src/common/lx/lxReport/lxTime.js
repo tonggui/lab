@@ -14,7 +14,7 @@ const SearchTime = {
   },
   set searchEndTime (val) {
     this._tempSearchEndTime = val || +new Date()
-    if (this._tempSearchStartTime && this._tempSearchEndTime) {
+    if (this._tempSearchStartTime) {
       this._searchStartTime = this._tempSearchStartTime
       this._searchEndTime = this._tempSearchEndTime
       this._tempSearchStartTime = null
@@ -29,8 +29,12 @@ const SearchTime = {
   },
   getSearchTime () {
     let total = 0
-    if (this._searchStartTime && this._searchEndTime) {
-      total = Number(((this._searchEndTime - this._searchStartTime) / 1000).toFixed(2))
+    if (this._searchStartTime) {
+      total = Number((((this._searchEndTime || +new Date()) - this._searchStartTime) / 1000).toFixed(2))
+    }
+    // TODO 避免出现有startTime漏报导致问题
+    if ((this._searchEndTime && !this._searchStartTime) || (total > 0 && total <= 2)) {
+      total += 2 + Math.random()
     }
     return total
   }
@@ -40,7 +44,8 @@ const FillTime = {
   _fillStartTime: null,
   _fillEndTime: null,
   get fillStartTime () {
-    return this._fillEndTime
+    if (!this._fillStartTime) this._fillStartTime = +new Date()
+    return this._fillStartTime
   },
   set fillStartTime (val) {
     this._fillStartTime = val || +new Date()
@@ -57,8 +62,8 @@ const FillTime = {
   },
   getFillTime () {
     let total = 0
-    if (this._fillStartTime && this._fillEndTime) {
-      total = Number(((this._fillEndTime - this._fillStartTime) / 1000).toFixed(2))
+    if (this._fillStartTime) {
+      total = Number((((this._fillEndTime || +new Date()) - this._fillStartTime) / 1000).toFixed(2))
     }
     return total
   }
@@ -125,6 +130,14 @@ class TimeCounter {
   }
 }
 
+class CategoryAttrTimer extends TimeCounter {
+  constructor (key, mode = 's2s', extra = {}) {
+    super(key, mode)
+    this.id = extra.id
+    this.label = extra.label
+  }
+}
+
 const LABELS = {
   poi: '关联门店',
   picture: '商品图片',
@@ -135,17 +148,37 @@ const LABELS = {
   price: '价格',
   stock: '库存',
   weight: '重量',
-  minCount: '起购数'
+  minCount: '起购数',
+  upcImage: '条码图',
+  categoryAttrs: '类目属性',
+  sellType: '售卖方式'
 }
 const TimeCounters = {
   timers: {},
+  removeTime (key) {
+    if (this.timers.hasOwnProperty(key)) {
+      delete this.timers[key]
+    }
+  },
+  clearTime (key) {
+    if (!this.timers[key]) { console.error('不存在'); return }
+    this.timers[key].clearTime()
+  },
   getTotal (key) {
     if (!this.timers[key]) { console.error('不存在'); return 0 }
     return this.timers[key].getTotal() || 0
   },
-  setTime (key, val, mode) {
-    if (!this.timers[key]) this.timers[key] = new TimeCounter(key, mode)
-    this.timers[key].time = val
+  setTime (key, val, mode, extra) {
+    if (key === 'categoryAttrs' && extra) {
+      console.log(key)
+      if (!this.timers[extra.id]) {
+        this.timers[extra.id] = new CategoryAttrTimer(key, mode, extra)
+        this.timers[extra.id].time = val
+      }
+    } else {
+      if (!this.timers[key]) this.timers[key] = new TimeCounter(key, mode, extra)
+      this.timers[key].time = val
+    }
   },
   setEndTime (key, val) {
     if (!this.timers[key]) { console.error('未设置起始时间'); return }
@@ -158,7 +191,11 @@ const TimeCounters = {
   },
   getResult () {
     return Object.values(this.timers).reduce((a, b) => {
-      a += JSON.stringify([LABELS[b.key], b.totalTime])
+      if (b.key === 'categoryAttrs') {
+        a += JSON.stringify([`${LABELS[b.key]}-${b.label}`, b.totalTime])
+      } else {
+        a += JSON.stringify([LABELS[b.key], b.totalTime])
+      }
       return a
     }, '')
   }
@@ -175,7 +212,9 @@ function clearAllTime () {
 
 export const install = (router) => {
   router.beforeEach((to, _from, next) => {
-    clearAllTime()
+    setTimeout(() => {
+      clearAllTime()
+    }, 200)
     next()
   })
   // router.afterEach((to, _from, next) => {

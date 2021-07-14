@@ -364,6 +364,7 @@
         }
         const cb = contextSafetyWrapper((response, err) => {
           const spChangeInfoDecision = this.getSpChangeInfoDecision()
+          let bid = 'null'
           if (err) {
             const { _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = this.$refs.form.form.getPluginContext()
             LX.mc({
@@ -377,11 +378,13 @@
                 page_source: 0
               }
             })
+            bid = 'b_a3y3v6ek'
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm
             })
           } else {
+            this.createSuccess = true
             FillTime.fillEndTime = +new Date()
             LX.mc({
               bid: 'b_a3y3v6ek',
@@ -394,6 +397,7 @@
                 page_source: 0
               }
             })
+            bid = 'b_a3y3v6ek'
             if (this.spuId) {
               if (window.page_source === 3) {
                 LX.mv({
@@ -406,6 +410,7 @@
                     task_id: (window.page_source_param && window.page_source_param.task_id)
                   }
                 })
+                bid = 'b_shangou_online_e_xe7mbypq_mv'
               } else {
                 LX.mv({
                   bid: 'b_shangou_online_e_61xp3hvd_mv',
@@ -415,6 +420,7 @@
                     select_time: +new Date(response && response.serverTime ? response.serverTime : Date.now()).getTime()
                   }
                 })
+                bid = 'b_shangou_online_e_61xp3hvd_mv'
               }
             } else {
               LX.mv({
@@ -431,11 +437,13 @@
                   select_time: +new Date(response && response.serverTime ? response.serverTime : Date.now()).getTime()
                 }
               })
+              bid = 'b_shangou_online_e_aifq7sdx_mv'
             }
             LXContext.destroyVm()
             this.popConfirmModal(response)
           }
           callback()
+          window.Owl.addError({ name: 'saveError', msg: `callback内：product:${JSON.stringify(this.product)}, response: ${JSON.stringify(response)}, page_source: ${window.page_source}, bid: ${bid}` }, { level: 'warn' })
         }, this)
         if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
           this.$emit('on-revocation', this.productInfo, cb)
@@ -444,7 +452,7 @@
         }
       },
       pageLeave () {
-        if (!this.spuId) {
+        if (!this.spuId && !this.createSuccess) {
           LX.mc({
             cid: 'c_4s0z2t6p',
             bid: 'b_shangou_online_e_7cxe0v96_mc',
