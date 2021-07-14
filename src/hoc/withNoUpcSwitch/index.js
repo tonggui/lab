@@ -22,6 +22,10 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     required: {
       type: Boolean,
       default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   inject: ['needAudit'],
@@ -63,17 +67,20 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
         style: {
           display: 'block',
           'text-decoration': 'underline',
-          'font-size': '12px'
+          'font-size': '12px',
+          color: this.disabled ? '#cccccc' : '#F89800',
+          cursor: this.disabled ? 'not-allowed' : 'pointer'
         },
         on: {
           click: () => {
+            if (this.disabled) return
             const buttonNm = this.isNeedAudit ? 0 : 1
             lx.mc({ bid: 'b_shangou_online_e_sd08qhxf_mc', val: { button_nm: 0 } })
             lx.mv({ bid: 'b_shangou_online_e_adry2q7n_mv', val: { button_nm: buttonNm } })
             this.$Modal.open({
               width: 420,
               title: `确定此商品没有条形码`,
-              content: '确定后，无需再填写条形码。若商品实际存在条形码，可能被审核驳回或自动下架',
+              content: '确定后，无需再填写条形码。若商品实际存在条形码，可能被审核驳回或自动下架。',
               closable: false,
               maskClosable: false,
               centerLayout: true,
@@ -95,10 +102,13 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
         style: {
           display: 'block',
           'text-decoration': 'underline',
-          'font-size': '12px'
+          'font-size': '12px',
+          color: this.disabled ? '#cccccc' : '#F89800',
+          cursor: this.disabled ? 'not-allowed' : 'pointer'
         },
         on: {
           click: () => {
+            if (this.disabled) return
             lx.mc({ bid: 'b_shangou_online_e_sd08qhxf_mc', val: { button_nm: 1 } })
             lx.mv({ bid: 'b_shangou_online_e_s8rn8oik_mv', val: { button_nm: 1 } })
             this.disable = false
@@ -111,10 +121,14 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   render (h) {
-    if (!hasFunc || !this.required || !this.data.editable) return forwardComponent(this, WrapperComponent)
+    if (!hasFunc || !this.required || !this.data.editable) {
+      return forwardComponent(this, WrapperComponent, { props: {
+        disabled: this.disabled
+      } })
+    }
     return h('div', [forwardComponent(this, WrapperComponent, {
       props: {
-        disabled: this.disable,
+        disabled: this.disabled || this.disable,
         value: this.disable ? '' : this.data.upcCode,
         placeholder: this.disable ? '商品没有条形码' : ''
       }
