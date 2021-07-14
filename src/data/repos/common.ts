@@ -138,7 +138,7 @@ export const fetchGetConfig = (categoryId: number, poiId: number) => getConfig({
           // TODO 此功能是否应该收敛到sku纬度?
           // 医药没有此功能
           // 商家商品中心暂不支持此功能
-          hasNoUpcSwitchFunc: POI_ID ? true : false
+          hasNoUpcSwitchFunc: POI_ID ? true : true
         }
       }
     }
