@@ -16,6 +16,7 @@
     },
     data () {
       return {
+        firstStatus: true,
         leftMenuExtInfo: {} // 左侧菜单动态信息
       }
     },
@@ -77,13 +78,14 @@
     },
     mounted () {
       inBatchInsertNewGrey(poiId).then(data => {
-        if (!data.inGrey) {
+        this.firstStatus = false
+        if (data.inGrey) {
           this.leftMenuExtInfo = { batchCreate: { link: '/reuse/sc/product/views/seller/center/new/create' } }
         }
       })
     },
     render (h) {
-      return h(HeaderBar, {
+      return this.firstStatus ? null : h(HeaderBar, {
         on: this.$listeners,
         props: {
           left: this.leftMenu,
