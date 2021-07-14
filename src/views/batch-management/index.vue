@@ -1,5 +1,5 @@
 <template>
-  <div class="batch-management" v-if="!firstStatus">
+  <div class="batch-management">
     <template v-if="showHeader">
       <template v-if="!isMedicineAccount && !isSinglePoi">
         <Alert type="success" class="batch-management-alert" closable>
@@ -113,9 +113,6 @@
         }
       },
       currentTab () {
-        const [firstItem] = this.menuList || []
-        const { key: firstKey } = firstItem || {}
-        if (!this.menuList.find(item => item.key === this.$route.name)) return firstKey
         return this.$route.name
       },
       showHeader () {
@@ -139,18 +136,23 @@
       renderTab (h, menu) {
         return <RouteLink to={menu.link}>{ menu.name }</RouteLink>
       },
-      async updateBatchGreyStatus () {
-        try {
-          const res = await inBatchInsertNewGrey(poiId)
-          this.isNewBatchGrey = (res || {}).inGrey
-          this.firstStatus = false
-        } catch (e) {
-          this.firstStatus = false
+      async init () {
+        if (!this.isSinglePoi) return
+        await this.updateBatchGreyStatus()
+        if (this.isNewBatchGrey && this.$route.name === KEYS.CREATE) {
+          this.$router.push({
+            ...this.$route,
+            name: KEYS.UPLOAD_IMAGE
+          })
         }
+      },
+      async updateBatchGreyStatus () {
+        const res = await inBatchInsertNewGrey(poiId)
+        this.isNewBatchGrey = (res || {}).inGrey
       }
     },
     mounted () {
-      this.updateBatchGreyStatus()
+      this.init()
     }
   }
 </script>
