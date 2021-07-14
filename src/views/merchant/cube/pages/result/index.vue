@@ -58,7 +58,7 @@
         this.succeedNum = succeedNum
       },
       handleTipModal (name) {
-        if (LocalStorage[KEYS.MERCHANT_CUBE_RESULT_TIP]) {
+        if (!LocalStorage[KEYS.MERCHANT_CUBE_RESULT_TIP]) {
           this.$Modal.info({
             title: '温馨提示',
             content: '若您后续还想查看失败商品&分店明细，可通过"商品首页-任务进度"查看',
@@ -70,7 +70,6 @@
         } else {
           this.$router.push({ name })
         }
-        this.$router.push({ name })
       },
       async jumpToCube () {
         await getCubeTaskConfirm(this.taskId)
