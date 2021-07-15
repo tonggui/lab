@@ -3,7 +3,7 @@ import { mapModule } from '@/module/module-manage/vue'
 import isPlainObject from 'lodash/isPlainObject'
 import {
   POI_BUSINESS_DAY,
-  POI_PRODUCT_CUBE_ENTRANCE,
+  ALL_POI_PRODUCT_CUBE_ENTRANCE_SWITCH,
   POI_PRODUCT_NEW_ARRIVAL_SWITCH
 } from '@/module/moduleTypes'
 import { inBatchInsertNewGrey } from '@/data/api/batch'
@@ -23,12 +23,13 @@ export default {
     ...mapModule({
       businessDays: POI_BUSINESS_DAY,
       newArrivalSwitch: POI_PRODUCT_NEW_ARRIVAL_SWITCH,
-      supportProductCube: POI_PRODUCT_CUBE_ENTRANCE
+      supportProductCube: ALL_POI_PRODUCT_CUBE_ENTRANCE_SWITCH
     }),
     computedCubeShow () {
       const { businessDays, onlineDayLimit } = this.businessDays
       // console.log('computedCubeShow', businessDays, onlineDayLimit, this.newArrivalSwitch.switch, this.supportProductCube)
       if ((this.newArrivalSwitch || {}).switch === undefined) return 0
+      if (this.supportProductCube === undefined) return 0
       if (businessDays > onlineDayLimit) return this.newArrivalSwitch.switch ? 2 : (this.supportProductCube ? 1 : 0)
       else return this.supportProductCube ? 1 : 0
     },
