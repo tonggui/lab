@@ -26,7 +26,7 @@ export default {
     }),
     computedCubeShow () {
       const { businessDays, onlineDayLimit } = this.businessDays
-      console.log('computedCubeShow', businessDays, onlineDayLimit, this.newArrivalSwitch.switch, this.supportProductCube)
+      // console.log('computedCubeShow', businessDays, onlineDayLimit, this.newArrivalSwitch.switch, this.supportProductCube)
       if ((this.newArrivalSwitch || {}).switch === undefined) return 0
       if (businessDays > onlineDayLimit) return this.newArrivalSwitch.switch ? 2 : (this.supportProductCube ? 1 : 0)
       else return this.supportProductCube ? 1 : 0
