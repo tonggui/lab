@@ -104,6 +104,8 @@
       line-height: 13px;
       padding: 0 4px;
       top: -4px;
+      // 此处迫不得已用important覆盖基础组件样式;
+      margin-right: -13px!important;
     }
 
     &.line /deep/ .boo-badge-count {

@@ -113,6 +113,7 @@
     POI_PRODUCT_NEW_ARRIVAL_SWITCH
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'header-bar',
@@ -126,6 +127,11 @@
       right: Array,
       disabled: Boolean,
       needPermission: Boolean
+    },
+    data () {
+      return {
+        firstStatus: true
+      }
     },
     computed: {
       ...mapModule({
@@ -147,6 +153,7 @@
             item.key === 'productLibrary' &&
             (this.newArrivalSwitch.switch || this.supportProductCube)
           ) {
+            this.reportMagicLx()
             return {
               key: 'productLibrary',
               label: '商品魔方',
@@ -154,7 +161,7 @@
               link: this.newArrivalSwitch.switch
                 ? { name: 'newArrivalList', query: this.$route.query }
                 : { name: 'productRecommend', query: this.$route.query },
-              bid: '',
+              bid: 'b_shangou_online_e_n2chi3yh_mc',
               description: '从商品魔方新建商品'
             }
           } else {
@@ -176,6 +183,12 @@
       },
       hideTip () {
         LocalStorage[KEYS.PRODUCT_NEW_CREATE] = true
+      },
+      reportMagicLx () {
+        if (!this.firstStatus) return
+
+        lx.mv({ bid: 'b_shangou_online_e_bvdvb4tt_mv' }, 'productCube') // 魔方二期入口曝光
+        this.firstStatus = false
       }
     }
   }

@@ -82,6 +82,9 @@
         if (data.inGrey) {
           this.leftMenuExtInfo = { batchCreate: { link: '/reuse/sc/product/views/seller/center/new/create' } }
         }
+      }).catch(e => {
+        this.firstStatus = false
+        throw e
       })
     },
     render (h) {
