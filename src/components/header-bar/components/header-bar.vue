@@ -25,7 +25,7 @@
               >
             </div>
             <div class="tip-link">
-              <a>如何选择？</a>
+              <a target="_blank" href="https://daxue.meituan.com/m/shangoushang/article/7581?mtdxSource=wmsj_l360gx">如何选择？</a>
             </div>
           </template>
         </Tooltip>
@@ -64,12 +64,10 @@
       >
         <div class="tip"></div>
         <template slot="content">
-          <div class="tooltip-content">
-            “新建商品功能”全部放到这里了哦～选择合适的建品方式，可节省您的宝贵时间。
-          </div>
+          <div class="tooltip-content">“新建商品功能”全部放到这里了哦～选择合适的建品方式，可节省您的宝贵时间。</div>
           <div class="tip-link">
             <a @click="hideTip">我知道了 </a>
-            <a> 如何选择？</a>
+            <a target="_blank" href="https://daxue.meituan.com/m/shangoushang/article/7581?mtdxSource=wmsj_l360gx"> 如何选择？</a>
           </div>
         </template>
       </Tooltip>

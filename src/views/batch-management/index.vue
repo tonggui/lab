@@ -1,5 +1,5 @@
 <template>
-  <div class="batch-management">
+  <div class="batch-management" v-if="!firstStatus">
     <template v-if="showHeader">
       <template v-if="!isMedicineAccount && !isSinglePoi">
         <Alert type="success" class="batch-management-alert" closable>
@@ -50,9 +50,17 @@
     SINGLE_BUSINESS,
     BATCH_UPLOAD_IMAGE
   } from '@/module/moduleTypes'
+  import { inBatchInsertNewGrey } from '@/data/api/batch'
+  import { poiId } from '@/common/constants'
 
   export default {
     name: 'batch-management',
+    data () {
+      return {
+        firstStatus: true,
+        isNewBatchGrey: false
+      }
+    },
     computed: {
       ...mapModule({
         isMerchantAccount: MERCHANT_ACCOUNT, // 账号是否开通商家商品中心
@@ -105,6 +113,9 @@
         }
       },
       currentTab () {
+        const [firstItem] = this.menuList || []
+        const { key: firstKey } = firstItem || {}
+        if (!this.menuList.find(item => item.key === this.$route.name)) return firstKey
         return this.$route.name
       },
       showHeader () {
@@ -116,7 +127,7 @@
           [KEYS.UPLOAD_IMAGE]: this.isSinglePoi && this.supportUploadImage,
           // 只有多店才有批量同步
           [KEYS.SYNC]: !this.isSinglePoi,
-          [KEYS.CREATE]: !this.isSinglePoi ? true : !window.isNewBatchCreate
+          [KEYS.CREATE]: !this.isSinglePoi ? true : !this.isNewBatchGrey
 
         })
       }
@@ -127,7 +138,19 @@
     methods: {
       renderTab (h, menu) {
         return <RouteLink to={menu.link}>{ menu.name }</RouteLink>
+      },
+      async updateBatchGreyStatus () {
+        try {
+          const res = await inBatchInsertNewGrey(poiId)
+          this.isNewBatchGrey = (res || {}).inGrey
+          this.firstStatus = false
+        } catch (e) {
+          this.firstStatus = false
+        }
       }
+    },
+    mounted () {
+      this.updateBatchGreyStatus()
     }
   }
 </script>
