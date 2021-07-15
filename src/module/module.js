@@ -375,7 +375,7 @@ const module = {
   [types.POI_PRODUCT_NEW_ARRIVAL_SWITCH]: createFelid(
     source.productNewArrivalSwitch,
     {
-      switch: false,
+      switch: undefined,
       tips: ''
     }
   ),
