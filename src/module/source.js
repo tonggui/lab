@@ -220,6 +220,15 @@ const source = {
       return fetchSettingBrandProductPromotionGray()
     },
     defaultValue: false
+  },
+  allCubeStatus: {
+    fetch: () => {
+      const poiProductCubeSwitch = fetchGetPoiProductCubeSwitch()
+      const poiAuditInfo = fetchGetPoiAuditInfo()
+      const arrivalSwitch = fetchGetProductNewArrivalSwitch()
+      return Promise.all([ poiAuditInfo, poiProductCubeSwitch, arrivalSwitch ])
+    },
+    defaultValue: []
   }
 }
 export default source
