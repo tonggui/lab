@@ -9,6 +9,7 @@ import {
 import { inBatchInsertNewGrey } from '@/data/api/batch'
 import { poiId } from '@/common/constants'
 import lx from '@/common/lx/lxReport'
+import CubeIcon from '@/assets/icons/productCube.svg'
 
 export default {
   name: 'LeftMenuGetter',
@@ -41,7 +42,7 @@ export default {
           return {
             key: 'productLibrary',
             label: '商品魔方',
-            icon: item.icon,
+            icon: CubeIcon,
             link: this.computedCubeShow === 2
               ? { name: 'newArrivalList', query: this.$route.query }
               : { name: 'productRecommend', query: this.$route.query },
