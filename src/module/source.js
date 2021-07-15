@@ -224,11 +224,21 @@ const source = {
     },
     defaultValue: false
   },
+
   merchantCubeSwitch: {
     fetch: () => {
       return getCubeSwitch()
     },
     defaultValue: false
+  },
+  allCubeStatus: {
+    fetch: () => {
+      const poiProductCubeSwitch = fetchGetPoiProductCubeSwitch()
+      const poiAuditInfo = fetchGetPoiAuditInfo()
+      const arrivalSwitch = fetchGetProductNewArrivalSwitch()
+      return Promise.all([ poiAuditInfo, poiProductCubeSwitch, arrivalSwitch ])
+    },
+    defaultValue: []
   }
 }
 export default source
