@@ -20,7 +20,7 @@
     "@sgfe/dynamic-form-vue": "0.1.27-alpha.2",
     "@sgfe/eproduct": "1.5.8-alpha.1",
     "@sgfe/owl": "1.1.0",
-    "@sgfe/product-validate": "1.1.6",
+    "@sgfe/product-validate": "1.1.8",
     "@sgfe/reco-fe-tim-lx": "1.3.0",
     "@utiljs/cookie": "0.1.1",
     "@utiljs/guid": "^0.5.2",
