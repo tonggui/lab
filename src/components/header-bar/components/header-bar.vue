@@ -25,12 +25,12 @@
               >
             </div>
             <div class="tip-link">
-              <a>如何选择？</a>
+              <a target="_blank" href="https://daxue.meituan.com/m/shangoushang/article/7581?mtdxSource=wmsj_l360gx">如何选择？</a>
             </div>
           </template>
         </Tooltip>
       </div>
-      <template v-for="(menu, index) in newLeft">
+      <template v-for="(menu, index) in left">
         <div v-if="index !== 0" class="border" :key="index"></div>
         <transition :name="menu.transitionName" :key="index">
           <IconItem
@@ -64,12 +64,10 @@
       >
         <div class="tip"></div>
         <template slot="content">
-          <div class="tooltip-content">
-            “新建商品功能”全部放到这里了哦～选择合适的建品方式，可节省您的宝贵时间。
-          </div>
+          <div class="tooltip-content">“新建商品功能”全部放到这里了哦～选择合适的建品方式，可节省您的宝贵时间。</div>
           <div class="tip-link">
             <a @click="hideTip">我知道了 </a>
-            <a> 如何选择？</a>
+            <a target="_blank" href="https://daxue.meituan.com/m/shangoushang/article/7581?mtdxSource=wmsj_l360gx"> 如何选择？</a>
           </div>
         </template>
       </Tooltip>
@@ -129,6 +127,11 @@
       disabled: Boolean,
       needPermission: Boolean
     },
+    data () {
+      return {
+        firstStatus: true
+      }
+    },
     computed: {
       ...mapModule({
         newArrivalSwitch: POI_PRODUCT_NEW_ARRIVAL_SWITCH,
@@ -143,28 +146,6 @@
           return 'link-item-wrapper-9'
         }
       },
-      newLeft () {
-        return this.left.map(item => {
-          if (
-            item.key === 'productLibrary' &&
-            (this.newArrivalSwitch.switch || this.supportProductCube)
-          ) {
-            return {
-              key: 'productLibrary',
-              label: '商品魔方',
-              icon: item.icon,
-              link: this.newArrivalSwitch.switch
-                ? { name: 'newArrivalList', query: this.$route.query }
-                : { name: 'productRecommend', query: this.$route.query },
-              bid: '',
-              description: '从商品魔方新建商品'
-            }
-          } else {
-            return item
-          }
-        })
-      },
-
       isShowTips () {
         return !LocalStorage[KEYS.PRODUCT_NEW_CREATE]
       },

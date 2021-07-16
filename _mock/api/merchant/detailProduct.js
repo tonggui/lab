@@ -370,6 +370,9 @@ module.exports = function () {
             isCustomized: true,
             attrId: 300000030,
           }],
+          commonProperty: {
+            allowUpcEmpty: 'true'
+          },
           minOrderCount: 1,
           id: 130332024,
           stock: 10,

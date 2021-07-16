@@ -352,7 +352,21 @@ const module = {
       // ].includes(status)
     }
   ),
-  // 商品魔方入口下发信息
+  [types.ALL_POI_PRODUCT_CUBE_ENTRANCE_SWITCH]: createFelid(
+    source.allCubeStatus,
+    undefined,
+    ([poiAuditInfo = {}, productCubeSwitch]) => {
+      console.log('productCubeSwitch', productCubeSwitch)
+      if (productCubeSwitch === undefined) return undefined
+      if (!productCubeSwitch) {
+        return false
+      }
+      const { processStatus, status, categoryMatch } = poiAuditInfo
+      if (status === POI_AUDIT_STATUS.PASSED) return processStatus === PROCESS_STATUS.NONE_PROCESS || categoryMatch
+      return [POI_AUDIT_STATUS.NOT_AUDITED, POI_AUDIT_STATUS.REJECTED].includes(status)
+    }
+  ),
+  // 品魔方入口下发信息
   [types.POI_PRODUCT_CUBE_INFO]: createFelid(
     source.productCubeInfo,
     { description: '', title: '' }
@@ -375,7 +389,7 @@ const module = {
   [types.POI_PRODUCT_NEW_ARRIVAL_SWITCH]: createFelid(
     source.productNewArrivalSwitch,
     {
-      switch: false,
+      switch: undefined,
       tips: ''
     }
   ),

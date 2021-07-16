@@ -1,21 +1,17 @@
 <template>
   <div>
-    <HeaderBar
-      v-if="showNewBatchCreate"
-      ref="headerBar"
-      :module-map="moduleMap"
-      @click="handleClick"
-      :disabled="disabled"
-      need-permission
-      />
-    <HeaderBarOld
-      v-else
-      ref="headerBar"
-      :module-map="moduleMap"
-      @click="handleClick"
-      :disabled="disabled"
-      need-permission
-      />
+    <LeftMenuGetter>
+      <template v-slot:default="menuList">
+        <HeaderBar
+            ref="headerBar"
+            :module-map="moduleMap"
+            @click="handleClick"
+            :disabled="disabled"
+            need-permission
+            :left-menu-list="menuList"
+        />
+      </template>
+    </LeftMenuGetter>
     <DownloadModal
       v-model="downloadVisible"
       :fetch-download-list="fetchGetDownloadTaskList"
@@ -41,8 +37,8 @@
   import ShoppingBagSettingModal from './shopping-bag-setting-modal'
   // import MonitorModal from './monitor-modal'
   import ProductPromotionModal from './product-promotion-modal'
+  import LeftMenuGetter from './LeftMenuGetter'
   import HeaderBar from '@/components/header-bar'
-  import HeaderBarOld from '@/components/header-bar-old'
   import storage, { KEYS } from '@/common/local-storage'
   import {
     POI_VIOLATION,
@@ -65,8 +61,7 @@
     name: 'navigator-bar',
     props: {
       disabled: Boolean,
-      tagId: Number,
-      showNewBatchCreate: Boolean
+      tagId: Number
     },
     data () {
       return {
@@ -135,12 +130,11 @@
       }
     },
     components: {
+      LeftMenuGetter,
       HeaderBar,
       DownloadModal,
       ShoppingBagSettingModal,
-      HeaderBarOld,
       ProductPromotionModal
-      // MonitorModal
     },
     computed: {
       ...mapModule({
