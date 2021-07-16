@@ -162,14 +162,23 @@
       handleConfirm () {
         if (this.pois && this.pois.length) {
           this.submitting = true
-          this.$emit('on-confirm', this.pois, this.createCallback(() => {
+          this.$emit('on-confirm', this.pois, this.createCallback(callback => {
+            if (callback) {
+              callback()
+            }
             this.submitting = false
             this.handleVisibleChange(false)
           }, () => {
             this.submitting = false
           }))
         } else {
-          this.$Message.warning('请选择门店')
+          const config = {
+            content: '请选择门店',
+            duration: 5,
+            top: document.body.clientHeight / 2 - 50,
+            left: document.body.clientWidth * (2 / 5)
+          }
+          this.$Message.warning(config)
         }
       }
     }

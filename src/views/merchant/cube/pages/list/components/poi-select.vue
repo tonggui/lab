@@ -67,6 +67,18 @@
           }
         })
         const poiIdList = tmp.map(poi => poi.id)
+        if (poiIdList.length <= 0) {
+          return () => {
+            const config = {
+              content: '请至少选择一个需要关联的门店，否则商品无法正常创建',
+              duration: 5,
+              top: document.body.clientHeight / 2 - 50,
+              left: document.body.clientWidth * (2 / 5)
+            }
+            this.$Message.warning(config)
+            throw new Error('at least one poi')
+          }
+        }
         this.triggerChange(poiIdList)
       },
       fetchGetPoiList (params) {
