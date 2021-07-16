@@ -88,6 +88,7 @@
         align-items: center;
         justify-content:center;
         text-align: center;
+        padding-left: 17px;
         > a {
           flex-shrink: 0;
           font-size: 14px;
