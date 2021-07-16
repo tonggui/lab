@@ -2,7 +2,7 @@
   <div class="category-attr-selector">
     <CustomSelector
       v-bind="$attrs"
-      v-on="$listeners"
+      v-on="customListener"
       :value="val"
       :valueKey="valueKey"
       :labelKey="labelKey"
@@ -14,8 +14,6 @@
       :customTip="customTip"
       :maxLength="8"
       :width="width"
-      @change="handleChange"
-      @add="handleAddOption"
       :clearable="clearable"
       arrow
     />
@@ -60,6 +58,12 @@
       }
     },
     computed: {
+      customListener () {
+        return Object.assign({}, this.$listeners, {
+          change: this.handleChange,
+          add: this.handleAddOption
+        })
+      },
       convertedSource () {
         return this.source.map(item => ({ ...item, group: item.isCustomized ? '自定义' : '' })).sort((a, b) => a.group > b.group ? 1 : (a.group === b.group ? 0 : -1))
       },
