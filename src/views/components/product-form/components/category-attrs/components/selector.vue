@@ -14,8 +14,6 @@
       :customTip="customTip"
       :maxLength="8"
       :width="width"
-      @change="handleChange"
-      @add="handleAddOption"
       :clearable="clearable"
       arrow
     />
