@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="34px" viewBox="0 0 34 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>搜索</title>
+    <defs>
+        <linearGradient x1="28.609506%" y1="38.0631743%" x2="95.7796034%" y2="94.8825802%" id="linearGradient-1">
+            <stop stop-color="#66CCFF" offset="0%"></stop>
+            <stop stop-color="#4D88FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="搜索" transform="translate(17.000000, 17.000000) scale(-1, 1) rotate(90.000000) translate(-17.000000, -17.000000) ">
+            <path d="M17,0.000612527132 L17.0006125,0.000612549202 C26.3892141,0.000950829977 34,7.61201099 34,17.0006125 C34,26.389115 26.389115,34 17.0006125,34 L17,34 C7.61115925,34 1.14980138e-15,26.3888407 0,17 C-1.14975995e-15,7.61149754 7.61088502,0.000612516097 16.9993875,0.000612516097 C16.9995917,0.000612516097 16.9997958,0.000612519775 17,0.000612527132 Z" id="矩形备份" fill="url(#linearGradient-1)"></path>
+            <path d="M8.56418733,15 L25.4358127,15 C25.7474047,15 26,15.2525953 26,15.5641873 L26,18.4358127 C26,18.7474047 25.7474047,19 25.4358127,19 L8.56418733,19 C8.25259527,19 8,18.7474047 8,18.4358127 L8,15.5641873 C8,15.2525953 8.25259527,15 8.56418733,15 Z" id="矩形备份-81" fill="#FFFFFF" transform="translate(17.000000, 17.000000) rotate(-90.000000) translate(-17.000000, -17.000000) "></path>
+            <rect id="矩形备份-80" fill="#FFFFFF" transform="translate(17.000000, 17.000000) scale(1, -1) translate(-17.000000, -17.000000) " x="8" y="15" width="18" height="4" rx="0.564187328"></rect>
+        </g>
+    </g>
+</svg>

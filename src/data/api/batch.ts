@@ -212,3 +212,38 @@ export const submitBatchUploadImg = (params: {
     v2: 1
   })
 }
+
+/**
+ * 批量新建查询
+ * @param poiId
+ */
+export const getRetailBatchInsertTask = (poiId: number) => {
+  return httpClient.post('task/r/getRetailBatchInsertTask', {
+    wmPoiId: poiId
+  })
+}
+
+/**
+ * 批量新建查询
+ * @param taskId
+ */
+export const finishBatchInsertNew = (taskId: number) => {
+  return httpClient.post('task/w/finishBatchInsertNew', {
+    taskId
+  })
+}
+
+/**
+ * 新版批量新建灰度
+ * @param poiId
+ */
+let inGreyCache
+export const inBatchInsertNewGrey = async (poiId: number) => {
+  if (inGreyCache !== undefined) return { inGrey: inGreyCache }
+  const res = await httpClient.post('retail/r/inBatchInsertNewGrey', {
+    wmPoiId: poiId
+  })
+  const { inGrey } : { inGrey: boolean } = res || {}
+  inGreyCache = inGrey
+  return { inGrey }
+}

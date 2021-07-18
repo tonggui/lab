@@ -19,7 +19,6 @@ import moduleControl from './module'
 import appendMenu from '@sfe/queenbee-menu'
 
 Vue.component('gray-router-view', GrayRouterView)
-
 setupPageJumper(Vue, router)
 Vue.config.productionTip = false
 Vue.config.errorHandler = function (err) {

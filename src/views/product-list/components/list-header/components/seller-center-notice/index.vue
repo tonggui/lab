@@ -3,25 +3,123 @@
     <span v-if="!!alertdata.title" class="seller-alert-title">{{alertdata.title}}</span>
     <span v-if="!!alertdata.title" class="seller-alert-right">|</span>
     <span v-html="alertdata.content"></span>
-    <Button v-if="alertdata.operationType === 'button'" class="seller-alert-operation" type="primary" @click="handleLink(alertdata.link)">{{alertdata.operationText}}</Button>
-    <a v-if="alertdata.operationType === 'link'" class="seller-alert-link" @click="handleLink(alertdata.link)">{{alertdata.operationText}}</a>
+    <div class="seller-alert-actions">
+      <div :key="item.text" v-for="item in alertdata.actions">
+        <Button v-if="item.type === 'button'" class="seller-alert-operation" type="primary" @click="handleLink(item.handle)">{{item.text}}</Button>
+        <a v-if="item.type === 'link'" class="seller-alert-link" @click="handleLink(item.handle)">{{item.text}}</a>
+      </div>
+    </div>
   </Alert>
 </template>
 <script>
   import { getProductCount, getGrey } from '@/data/repos/sellerCenter'
+  import { getRetailBatchInsertTask, finishBatchInsertNew, inBatchInsertNewGrey } from '@/data/api/batch'
   import { poiId } from '@/common/constants'
   import jumpTo from '@/components/link/jumpTo'
+  import moment from 'moment'
 
   export default {
     name: 'seller-center-notice',
     data () {
       return {
-        productCount: null
+        productCount: null,
+        batchInfo: null,
+        showBatchAlert: true
       }
     },
     computed: {
       alertdata () {
-        const { productCount } = this
+        const { productCount, batchInfo, inNewBatchGrey } = this
+
+        if (this.showBatchAlert && batchInfo && inNewBatchGrey) {
+          const { taskId, infoMiss, ctime, status } = batchInfo
+          if (taskId) {
+            if (status === 0) {
+              return {
+                title: '批量新建',
+                type: 'warning',
+                content: `于 ${moment(ctime * 1000).format('YYYY-MM-DD h:mm')} 提交的创建任务正在进⾏中，请耐⼼等待。`,
+                actions: [{
+                  text: '查看进度',
+                  type: 'button',
+                  handle: '/reuse/sc/product/views/seller/center/new/create'
+                }]
+              }
+            }
+            if (status === 1) {
+              return {
+                title: '批量新建',
+                type: 'warning',
+                content: `于 ${moment(ctime * 1000).format('YYYY-MM-DD h:mm')} 提交的创建任务已完成。商品全部创建成功。`,
+                actions: [{
+                  text: '查看详情',
+                  type: 'button',
+                  handle: '/reuse/sc/product/views/seller/center/new/create'
+                }, {
+                  text: '我知道了',
+                  type: 'link',
+                  handle: () => {
+                    this.iGotIt(taskId)
+                  }
+                }]
+              }
+            }
+            // eslint-disable-next-line no-unreachable
+            if (status === 3) {
+              return {
+                title: '批量新建',
+                type: 'error',
+                content: `于 ${moment(ctime * 1000).format('YYYY-MM-DD h:mm')} 提交的任务，商品全部创建失败。`,
+                actions: [{
+                  text: '立即补充',
+                  type: 'button',
+                  handle: '/reuse/sc/product/views/seller/center/new/create'
+                }]
+              }
+            }
+            if (status === 2 && infoMiss) {
+              return {
+                title: '批量新建',
+                type: 'error',
+                content: `于 ${moment(ctime * 1000).format('YYYY-MM-DD h:mm')} 提交的任务，有${infoMiss}个商品需补充必填信息。请⽴即处理。`,
+                actions: [{
+                  text: '立即补充',
+                  type: 'button',
+                  handle: '/reuse/sc/product/views/seller/center/new/create'
+                }]
+              }
+            }
+          // eslint-disable-next-line no-unreachable
+          } else if (infoMiss) {
+            if (infoMiss > 3) {
+              return {
+                title: '批量新建',
+                type: 'error',
+                content: `${infoMiss}个商品，需补充必填信息才可上架售卖。`,
+                actions: [{
+                  text: '立即补充',
+                  type: 'button',
+                  handle: '/reuse/sc/product/views/seller/center/new/create'
+                }]
+              }
+            } else {
+              return {
+                title: '批量新建',
+                type: 'error',
+                content: `${infoMiss}个商品，需补充必填信息才可上架售卖。`,
+                actions: [{
+                  text: '立即补充',
+                  type: 'button',
+                  handle: '/reuse/sc/product/views/seller/center/new/create'
+                }, {
+                  text: '忽略',
+                  type: 'link',
+                  handle: this.hideBatchAlert
+                }]
+              }
+            }
+          }
+        }
 
         if (productCount) {
           const { level, problemItemCount } = productCount
@@ -30,30 +128,33 @@
               title: '商品管家',
               type: 'success',
               content: `<span><span class="seller-alert-tag seller-alert-success-tag">${level}</span>暂无商品信息问题，请继续保持～</span>`,
-              operationText: '查看详情',
-              operationType: 'link',
-              closeText: '立即修改',
-              link: '/reuse/sc/product/views/seller/center'
+              actions: [{
+                text: '查看详情',
+                type: 'link',
+                handle: '/reuse/sc/product/views/seller/center'
+              }]
             }
           } else if (level === '差') {
             return {
               title: '商品管家',
               type: 'error',
               content: `<span><span class="seller-alert-tag seller-alert-error-tag">${level}</span>有<span class="seller-alert-count seller-alert-error-count">${problemItemCount}</span>个商品信息问题，严重影响商品售卖!</span>`,
-              operationText: '立即修改',
-              operationType: 'button',
-              closeText: '立即修改',
-              link: '/reuse/sc/product/views/seller/center'
+              actions: [{
+                text: '立即修改',
+                type: 'button',
+                handle: '/reuse/sc/product/views/seller/center'
+              }]
             }
           } else {
             return {
               title: '商品管家',
               type: 'warning',
               content: `<span><span class="seller-alert-tag seller-alert-warning-tag">${level}</span>有<span class="seller-alert-count seller-alert-warning-count">${problemItemCount}</span>个商品信息问题，影响店铺销量提升！</span>`,
-              operationText: '立即修改',
-              operationType: 'button',
-              closeText: '立即修改',
-              link: '/reuse/sc/product/views/seller/center'
+              actions: [{
+                text: '立即修改',
+                type: 'button',
+                handle: '/reuse/sc/product/views/seller/center'
+              }]
             }
           }
         }
@@ -64,18 +165,37 @@
     components: {
     },
     methods: {
-      handleLink (link) {
-        jumpTo(link)
+      handleLink (action) {
+        if (typeof action === 'string') {
+          jumpTo(action)
+        } else if (typeof action === 'function') {
+          action()
+        }
+      },
+      hideBatchAlert () {
+        this.showBatchAlert = false
+      },
+      iGotIt (taskId) {
+        this.showBatchAlert = false
+        finishBatchInsertNew(taskId)
+      },
+      async init () {
+        getGrey(poiId).then(data => {
+          if (data && data.productManagerGray) {
+            getProductCount(poiId).then(data => {
+              this.productCount = data
+            })
+          }
+        })
+        const res = await inBatchInsertNewGrey(poiId)
+        this.inNewBatchGrey = (res || {}).inGrey
+        getRetailBatchInsertTask(poiId).then(data => {
+          this.batchInfo = data
+        })
       }
     },
     mounted () {
-      getGrey(poiId).then(data => {
-        if (data && data.productManagerGray) {
-          getProductCount(poiId).then(data => {
-            this.productCount = data
-          })
-        }
-      })
+      this.init()
     }
   }
 </script>
@@ -84,7 +204,6 @@
   .seller-alert {
     margin-bottom: 10px;
     padding: 9px 24px 9px 20px;
-    line-height: 14px;
     border-radius: 0;
     font-size: 14px;
     color: #333333;
@@ -108,15 +227,23 @@
       color: #D9D9D9;
     }
 
-    &-operation {
+    &-actions {
       float: right;
+      > div {
+        display: inline-block;
+        margin-left: 12px;
+        height: 28px;
+        line-height: 28px;
+      }
+    }
+
+    &-operation {
       margin-top: -4px;
       font-size: 12px;
       height: 28px;
     }
 
     &-link {
-      float: right;
     }
 
     :global(.seller-alert-tag) {
