@@ -1,5 +1,7 @@
 import { QUALIFICATION_STATUS } from '@/data/enums/product'
 import { get } from 'lodash'
+import LocalStorage, { KEYS } from '@/common/local-storage'
+import Modal from '@/components/modal'
 
 /**
  * 商品是否超出门店经营范围或者门店缺少资质判断
@@ -270,4 +272,16 @@ export const ErrorJumper = function (target, name, descriptor) {
   }
   descriptor.value = wrapFn(fn)
   return descriptor
+}
+
+export const triggerToast = () => {
+  if (LocalStorage[KEYS.MERCHANT_CUBE_RESULT_TIP] === true) {
+    Modal.info({
+      title: '温馨提示',
+      content: '若您后续还想查看失败商品&分店明细，可通过"商品首页-任务进度"查看',
+      onOk: () => {
+        LocalStorage[KEYS.MERCHANT_CUBE_RESULT_TIP] = false
+      }
+    })
+  }
 }

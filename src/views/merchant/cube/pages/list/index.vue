@@ -28,6 +28,7 @@
   import SelectedScopeShop from './components/select-scope'
   import { helper } from '../../store'
   import { get } from 'lodash'
+  import { triggerToast } from '../../utils'
 
   const { mapState, mapActions } = helper()
 
@@ -112,10 +113,10 @@
           return prev
         }, [])
       }
+    },
+    mounted () {
+      triggerToast()
     }
-    // mounted () {
-    //   this.handleGetScopeData()
-    // }
   }
 </script>
 <style lang="less">
