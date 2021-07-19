@@ -95,7 +95,7 @@ export default {
       })
       commit('setClassifySelectedProducts', map)
     },
-    // 切换城市时，更新已选列表中的product的totalPoiIds
+    // 切换城市/切换tab时，更新已选列表中的product的totalPoiIds（当前tab）
     updateSelectedProducts ({ state, commit, rootState }) {
       const rowProductList = multiCubeListStore.state.productList.list
       const map = { ...state.classifySelectedProducts }
@@ -105,7 +105,7 @@ export default {
           const totalPoiIds = _.result(_.find(rowProductList, item => {
             return item.__id__ === product.__id__
           }), 'totalPoiIds')
-          product.totalPoiIds = totalPoiIds
+          totalPoiIds && (product.totalPoiIds = totalPoiIds)
         })
       }
       commit('setClassifySelectedProducts', map)

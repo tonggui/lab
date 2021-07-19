@@ -2,7 +2,7 @@
   <div :data-lx-param="param">
     <ProductListPage class="product-list-container">
       <Header slot="header" class="header-slot-tabs">
-        <Tabs slot="left" class="header-left-with-tabs" @on-change="getData">
+        <Tabs slot="left" class="header-left-with-tabs" @on-change="handleChangeTab">
           <ProductSearch @on-search="handleSearch" :searchValue="keyword" slot="tabs-extra" :needSuggest="false" style="margin-right: 0" />
         </Tabs>
       </Header>
@@ -68,7 +68,8 @@
     name: 'product-list-with-header',
     props: {
       selectedIdList: Array,
-      classifySelectedProducts: Object
+      classifySelectedProducts: Object,
+      updateSelectedProducts: Function
     },
     data () {
       return {
@@ -126,6 +127,11 @@
       }),
       handleDeSelectProduct (productList) {
         this.$emit('on-de-select', productList)
+      },
+      handleChangeTab () {
+        this.getData().then(() => {
+          this.$emit('updateSelectedProducts')
+        })
       },
       handleSelectProduct (productList) {
         this.$emit('on-select', productList)

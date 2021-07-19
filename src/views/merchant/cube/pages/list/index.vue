@@ -14,6 +14,7 @@
             @on-select="handleSelect"
             @on-de-select="handleDeSelect"
             @set-edit-product="handleSetEditProduct"
+            @updateSelectedProducts="updateSelectedProducts"
             class="recommend-table-list"
           />
         </div>
@@ -105,7 +106,7 @@
             }) : false
             // console.log(flag)
             if (flag) {
-              prev.push({ __id__, relatedPoiIds, addedPoiIds })
+              prev.push({ __id__, relatedPoiIds, addedPoiIds, totalPoiIds })
             }
           })
           // console.log(prev)
