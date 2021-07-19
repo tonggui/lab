@@ -212,9 +212,9 @@ function clearAllTime () {
 
 export const install = (router) => {
   router.beforeEach((to, _from, next) => {
-    setTimeout(() => {
-      clearAllTime()
-    }, 200)
+    // setTimeout(() => {
+    clearAllTime()
+    // }, 200)
     next()
   })
   // router.afterEach((to, _from, next) => {
