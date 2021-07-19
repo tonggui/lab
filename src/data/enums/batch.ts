@@ -111,8 +111,8 @@ export enum BATCH_REL_MATCH_TYPE {
  * 601: 失败
  **/
 export enum BATCH_TASK_RESULT_STATUS {
-    // PROCESSING = 200, // 处理中
-    ALL_SUCCESS = 600,
-    FAIL = 601,
-    PART_SUCCESS = 602
+  // PROCESSING = 200, // 处理中
+  ALL_SUCCESS = 600,
+  FAIL = 601,
+  PART_SUCCESS = 602
 }

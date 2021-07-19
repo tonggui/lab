@@ -11,6 +11,7 @@
   import SortProductList from './container/sort-product-list'
   import ManageProductList from './container/manage-product-list'
   import { triggerTour } from './merchant-tour'
+  import { triggerToast } from '../../cube/utils'
 
   const { mapGetters, mapActions } = helper()
 
@@ -29,6 +30,7 @@
     },
     mounted () {
       this.getData()
+      triggerToast()
       triggerTour()
     },
     beforeDestroy () {

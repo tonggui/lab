@@ -15,7 +15,7 @@
   import { mapModule } from '@/module/module-manage/vue'
   import {
     UNAPPROVE_PRODUCT_COUNT,
-    BUSINESS_MEDICINE // TODO 药品兼容 后期优化
+    BUSINESS_MEDICINE, MERCHANT_CUBE_SWITCH // TODO 药品兼容 后期优化
   } from '@/module/moduleTypes'
   import {
     fetchGetPoiAuditProductCount,
@@ -87,7 +87,8 @@
     computed: {
       ...mapModule({
         unApproveProductCount: UNAPPROVE_PRODUCT_COUNT,
-        isMedicine: BUSINESS_MEDICINE
+        isMedicine: BUSINESS_MEDICINE,
+        merchantCubeSwitch: MERCHANT_CUBE_SWITCH
       }),
       fetchGetDownloadTaskList () {
         return fetchGetDownloadTaskList
@@ -99,8 +100,25 @@
         return {
           createProduct: {
             show: !this.isMedicine,
-            link: '/merchant/product/edit',
-            id: 'creatSingleProduct'
+            label: '新建商品',
+            // link: '/merchant/product/edit',
+            id: 'creatSingleProduct',
+            badge: {
+              dot: true
+            },
+            style: {
+              textAlign: 'left'
+            }
+          },
+          singleCreate: {
+            show: true
+          },
+          cubeCreate: {
+            show: this.merchantCubeSwitch,
+            order: 4,
+            badge: {
+              dot: true
+            }
           },
           download: true,
           unApproveProduct: {

@@ -19,6 +19,7 @@ import { convertCategoryToTagList } from '@/data/helper/product/multiCube/conver
 export const apiCubeTaskStatus = () => httpClient.post('/hqcc/cube/r/cubeRunningTask').then((data) => {
   const {
     taskId,
+    taskName,
     status,
     runningStatusVo,
     finishStatusVo: processResult,
@@ -43,6 +44,7 @@ export const apiCubeTaskStatus = () => httpClient.post('/hqcc/cube/r/cubeRunning
   return {
     taskId,
     status,
+    taskName,
     submitTime,
     processStatus: runningStatusVo ? {
       runningStatus,

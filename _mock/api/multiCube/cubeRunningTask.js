@@ -6,7 +6,7 @@ module.exports = {
   msg: '',
   data: {
     taskId: -1,
-    taskName: '212',
+    taskName: '魔方任务',
     status: 60,
     runningStatusVo: {
       runningStatus: 202,
@@ -20,7 +20,7 @@ module.exports = {
       }
     },
     finishStatusVo: {
-      finishStatus: 300,
+      finishStatus: 600,
       succeedMainSpuNum: 10,
       failedMainSpuNum: 14,
       succeedMainSpuDetails: [],

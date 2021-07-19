@@ -224,7 +224,6 @@ const source = {
     },
     defaultValue: false
   },
-
   merchantCubeSwitch: {
     fetch: () => {
       return getCubeSwitch()

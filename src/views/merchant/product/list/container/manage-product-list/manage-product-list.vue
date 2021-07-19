@@ -29,6 +29,7 @@
           <h3>暂无商品</h3>
           <p>请使用<a @click="handleBatchCreate">批量新建</a>上传Excel一次性创建多个商品</p>
           <p>或使用<a @click="handleSingleCreate">新建单个商品</a>逐个创建</p>
+          <p>或<a @click.prevent>【魔方快捷新建】</a>创建商品</p>
         </div>
 <!--        <template slot="empty">-->
 <!--          <span>快去新建商品吧~</span>-->
