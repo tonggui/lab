@@ -18,8 +18,11 @@ import Video from '@/assets/icons/video.svg'
 import Clock from '@/assets/icons/clock.svg'
 import Cube from '@/assets/icons/cube.svg'
 import Audit from '@/assets/icons/audit.svg'
+import BatchCreate from '@/assets/icons/batch-create.svg'
+import SingleCreate from '@/assets/icons/circle-add.svg'
+import CubeCreate from '@/assets/icons/productCube.svg'
 
-import SingleCreatePage from '@sgfe/eproduct/navigator/pages/product/edit'
+// import SingleCreatePage from '@sgfe/eproduct/navigator/pages/product/edit'
 import SpCreatePage from '@sgfe/eproduct/navigator/pages/product/spCreate'
 // import BatchCreatePage from '@sgfe/eproduct/navigator/pages/batch/create'
 import BatchUploadImagePage from '@sgfe/eproduct/navigator/pages/batch/uploadImgs'
@@ -40,9 +43,33 @@ export const leftMenu = [{
   key: 'createProduct',
   label: '新建单个商品',
   icon: PlusCircle,
-  link: {
-    name: SingleCreatePage.name
-  },
+  children: [{
+    key: 'batchCreate',
+    label: '批量创建',
+    icon: BatchCreate,
+    desc: '通过Excel快捷新建多个',
+    link: {
+      path: '/batchManagement/batchCreate'
+    },
+    bid: 'b_1xrhzpqn'
+  }, {
+    key: 'singleCreate',
+    label: '单个新建',
+    icon: SingleCreate,
+    desc: '自行录入单个商品信息',
+    link: '/merchant/product/edit',
+    bid: 'b_1qs629km'
+  }, {
+    key: 'cubeCreate',
+    label: '魔方快捷新建',
+    icon: CubeCreate,
+    desc: '从平台热销商品选择创建',
+    link: '/merchant/cube/list',
+    bid: ''
+  }],
+  // link: {
+  //   name: SingleCreatePage.name
+  // },
   bid: 'b_e66gkndk'
 }, {
   key: 'createRegister', // 发热药品登记新增配置
