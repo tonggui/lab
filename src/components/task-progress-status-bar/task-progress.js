@@ -15,7 +15,7 @@ const STATUS_COLLECTION = {
       color: '#198CFF'
     },
     buttons: [{
-      btnText: '查看进度',
+      btnText: '查看详情',
       link: ''
     }],
     displayText: '于@{time}提交的@{task_name}处理中，请耐心等待。'
@@ -84,7 +84,7 @@ class BaseTaskProcess {
   }
   displayBtn ({ status, resultStatus }) {
     if ([BATCH_REL_TASK_STATUS.INLINE, BATCH_REL_TASK_STATUS.IN_PROCESS].includes(status)) {
-      return get(STATUS_COLLECTION[status], 'buttonss')
+      return get(STATUS_COLLECTION[status], 'buttons')
     } else if (BATCH_REL_TASK_STATUS.FINISH === status) {
       return get(STATUS_COLLECTION[resultStatus], 'buttons')
     }
