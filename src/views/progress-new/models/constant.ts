@@ -1,4 +1,5 @@
 export enum MerchantTaskType {
+  MULTI_CUBE_RECOMMEND = 1001, // 连锁魔方推荐
   BATCH_MODIFY_TAG = 112, // 批量修改分类
   BATCH_DELETE = 106, // 批量删除
   BATCH_CREATE_BY_EXCEL = 501, // excel批量新建

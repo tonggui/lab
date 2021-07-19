@@ -5,6 +5,7 @@ import { MerchantTaskBatchUploadImage } from '@/views/progress-new/models/mercha
 import { MerchantTaskBatchRel } from '@/views/progress-new/models/merchant/merchant-task-batch-rel'
 import { NewMerchantTaskBatchRel } from '@/views/progress-new/models/merchant/new-merchant-task-batch-rel'
 import { NewMerchantTaskBatchModify } from '@/views/progress-new/models/merchant/new-merchant-task-batch-modify'
+import { MerchantTaskMultiCube } from '@/views/progress-new/models/merchant/merchant-task-multi-cube'
 
 const createMerchantTaskViewModel = (task: TaskInfo) => {
   switch (task.type) {
@@ -33,6 +34,8 @@ const createMerchantTaskViewModel = (task: TaskInfo) => {
         failUrlText: '批量删除商品处理失败明细.xlsx',
         productUrlText: '批量删除的商品列表.xlsx'
       })
+    case MerchantTaskType.MULTI_CUBE_RECOMMEND:
+      return new MerchantTaskMultiCube(task)
     default:
       return new MerchantProgressTask(task)
   }

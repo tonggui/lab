@@ -1,7 +1,10 @@
 <template>
   <div class="modal-new-batch-task-container">
     <div>{{text}}</div>
-    <a @click="handleClick">{{linkText}}</a>
+    <div>
+      <span>{{linkTitle}}</span>
+      <a @click="handleClick">{{linkText}}</a>
+    </div>
   </div>
 </template>
 
@@ -20,6 +23,9 @@
       },
       linkText () {
         return this.dataSource.linkText
+      },
+      linkTitle () {
+        return this.dataSource.linkTitle || ''
       }
     },
     methods: {
