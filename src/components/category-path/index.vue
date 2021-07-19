@@ -16,6 +16,7 @@
       @blur="handleBlur"
       @search="handleSearch"
       @change="handleChange"
+      @open="handleOpen"
       @close="handleClose"
       @trigger="handleTrigger"
       @trigger-locked="handleTriggerLocked"
@@ -251,9 +252,13 @@
         TimeCounters.setEndTime('category', +new Date())
         this.$emit(this.isCorrect ? 'change' : 'on-change', params)
       },
+      handleOpen () {
+        this.$emit('start')
+      },
       handleClose () {
         TimeCounters.stopTime('category')
         this.categoryId = null
+        this.$emit('end')
       },
       handleTrigger (item) {
         const {

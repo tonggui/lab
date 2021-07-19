@@ -15,6 +15,7 @@
     :onSearch="handleSearch"
     :transfer="transfer"
     @change="handleChange"
+    @open="$emit('start')"
     @focus="handleFocus"
     @blur="handleBlur"
     @close="handleClose"
@@ -107,6 +108,7 @@
       },
       handleClose () {
         TimeCounters.stopTime('tag')
+        this.$emit('end')
       },
       arrange () {
         const multiple = this.maxCount > 1

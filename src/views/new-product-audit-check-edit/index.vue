@@ -84,6 +84,7 @@
               visible: !!(this.originalFormData.id && this.originalFormData.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
+              required: this.upcIsSp,
               visible: !this.upcIsSp && !!this.needAudit
             }
           },
@@ -160,6 +161,7 @@
         const cb = (response, err) => {
           const spChangeInfoDecision = this.getSpChangeInfoDecision()
           if (err) {
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm

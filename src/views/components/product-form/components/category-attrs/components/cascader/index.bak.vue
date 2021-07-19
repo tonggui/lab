@@ -3,6 +3,8 @@
     v-bind="$attrs"
     :on-search="handleSearch"
     :on-load-menu="handleCascader"
+    @open="$emit('start')"
+    @close="$emit('end')"
     v-on="$listeners"
   >
     <template slot="empty"><slot name="empty"></slot></template>

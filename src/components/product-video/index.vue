@@ -116,6 +116,17 @@
         return this.uploadComplete ? '上传完成' : '上传中...'
       }
     },
+    watch: {
+      showVideoListModal (v) {
+        this.$emit(v ? 'start' : 'end')
+      },
+      showProgressModal (v) {
+        this.$emit(v ? 'start' : 'end')
+      },
+      curEditVideo (v) {
+        this.$emit(v ? 'start' : 'end')
+      }
+    },
     methods: {
       handleDel () {
         this.handleChange(null)

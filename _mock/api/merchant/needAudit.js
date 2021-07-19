@@ -7,7 +7,7 @@ module.exports = {
   code: 0,
   msg: '',
   data: {
-    meetPoiCondition: true,
-    meetCategoryCondition: true
+    meetPoiCondition: false,
+    meetCategoryCondition: false
   },
 };

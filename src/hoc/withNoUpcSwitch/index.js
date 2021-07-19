@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
-import { get } from 'lodash'
+import { get, isFunction, set } from 'lodash'
 import lx from '@/common/lx/lxReport'
 import { getName } from '@/hoc/helper'
 import LocalStorage from '@/common/local-storage'
@@ -22,6 +22,10 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     required: {
       type: Boolean,
       default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   inject: ['needAudit'],
@@ -32,8 +36,19 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   watch: {
+    required: {
+      immediate: true,
+      handler (val) {
+        if (!val) {
+          if (this.data.commonProperty && 'allowUpcEmpty' in this.data.commonProperty) this.data.commonProperty = null
+        }
+      }
+    },
     disable (val) {
-      if (this.data.commonProperty) this.data.commonProperty.allowUpcEmpty = !!val
+      console.log(66666, val, this.data)
+      if (val) set(this.data, 'commonProperty.allowUpcEmpty', !!val)
+      else set(this.data, 'commonProperty', null)
+
       if (val) this.$emit('input', '')
       // if (!this.data.commonProperty) this.data.commonProperty = {}
       // this.data.commonProperty.allowUpcEmpty = !!val
@@ -42,7 +57,8 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
   },
   computed: {
     isNeedAudit () {
-      return this.needAudit()
+      if (isFunction(this.needAudit)) return this.needAudit()
+      else return false
     }
   },
   methods: {
@@ -51,17 +67,20 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
         style: {
           display: 'block',
           'text-decoration': 'underline',
-          'font-size': '12px'
+          'font-size': '12px',
+          color: this.disabled ? '#cccccc' : '#F89800',
+          cursor: this.disabled ? 'not-allowed' : 'pointer'
         },
         on: {
           click: () => {
+            if (this.disabled) return
             const buttonNm = this.isNeedAudit ? 0 : 1
             lx.mc({ bid: 'b_shangou_online_e_sd08qhxf_mc', val: { button_nm: 0 } })
             lx.mv({ bid: 'b_shangou_online_e_adry2q7n_mv', val: { button_nm: buttonNm } })
             this.$Modal.open({
               width: 420,
               title: `确定此商品没有条形码`,
-              content: this.isNeedAudit ? '确定后，无需再填写条形码。若商品实际存在条形码，提交审核后将被驳回。' : '确定后，无需再填写条形码。若商品实际存在条形码，平台可能自动下架该商品。',
+              content: '确定后，无需再填写条形码。若商品实际存在条形码，可能被审核驳回或自动下架。',
               closable: false,
               maskClosable: false,
               centerLayout: true,
@@ -83,10 +102,13 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
         style: {
           display: 'block',
           'text-decoration': 'underline',
-          'font-size': '12px'
+          'font-size': '12px',
+          color: this.disabled ? '#cccccc' : '#F89800',
+          cursor: this.disabled ? 'not-allowed' : 'pointer'
         },
         on: {
           click: () => {
+            if (this.disabled) return
             lx.mc({ bid: 'b_shangou_online_e_sd08qhxf_mc', val: { button_nm: 1 } })
             lx.mv({ bid: 'b_shangou_online_e_s8rn8oik_mv', val: { button_nm: 1 } })
             this.disable = false
@@ -99,16 +121,21 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   render (h) {
-    if (!hasFunc || !this.required || !this.initEnable || !this.data.editable) return forwardComponent(this, WrapperComponent)
+    if (!hasFunc || !this.required || !this.data.editable) {
+      return forwardComponent(this, WrapperComponent, { props: {
+        disabled: this.disabled
+      } })
+    }
     return h('div', [forwardComponent(this, WrapperComponent, {
       props: {
-        disabled: this.disable,
+        disabled: this.disabled || this.disable,
         value: this.disable ? '' : this.data.upcCode,
         placeholder: this.disable ? '商品没有条形码' : ''
       }
     }), this.renderEnableUpc(h)])
   },
   created () {
+    // 初始是否存在此功能
     this.initEnable = get(this.data, 'commonProperty.allowUpcEmpty', false)
     this.disable = this.initEnable
     if (this.disable) {

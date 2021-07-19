@@ -129,6 +129,8 @@ const createItemOptions = (key, attr, { allowBrandApply }, width) => {
       const regTip = getRegTip(regTypes)
       return {
         type: 'CategoryAttrText',
+        startEventName: 'on-focus',
+        endEventName: 'on-blur',
         events: {
           'on-change' ($event) {
             this.setData(key, $event.target.value)
