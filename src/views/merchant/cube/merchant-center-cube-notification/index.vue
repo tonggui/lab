@@ -30,8 +30,9 @@
       },
       async getTaskStatus () {
         const { taskId, taskName, status, submitTime, processResult: { resultStatus = '' } } = await getCubeTaskStatus()
+        if (taskId <= 0) return
         const list = [...this.list]
-        list.push(new BaseTaskProcess({ link: 'merchantCubeList', taskId, taskName, status, submitTime, resultStatus }))
+        list.push(new BaseTaskProcess({ link: 'merchantCubeList', name: '魔方快捷创建', taskId, taskName: '魔方商品任务' || taskName, status, submitTime, resultStatus }))
         this.list = list
       }
     },

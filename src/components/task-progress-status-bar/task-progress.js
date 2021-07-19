@@ -73,7 +73,8 @@ const STATUS_COLLECTION = {
 class BaseTaskProcess {
   constructor (props) {
     this.id = props.taskId
-    this.name = props.taskName
+    this.name = props.name
+    this.taskName = props.taskName
     this.submitTime = props.submitTime
     this.link = props.link
     this.status = STATUS[props.status] || STATUS[BATCH_REL_TASK_STATUS.INLINE]
@@ -104,7 +105,7 @@ class BaseTaskProcess {
     } else if (BATCH_REL_TASK_STATUS.FINISH === status) {
       text = get(STATUS_COLLECTION[resultStatus], 'displayText', '')
     }
-    return text.replace('@{time}', moment(submitTime).format('YYYY-MM-DD HH:mm:ss')).replace('@{task_name}', this.name)
+    return text.replace('@{time}', moment(submitTime).format('YYYY-MM-DD HH:mm:ss')).replace('@{task_name}', this.taskName)
   }
 }
 
