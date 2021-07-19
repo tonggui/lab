@@ -107,7 +107,7 @@
             }) : false
             // console.log(flag)
             if (flag) {
-              prev.push({ __id__, relatedPoiIds, addedPoiIds, totalPoiIds })
+              prev.push({ __id__, relatedPoiIds, addedPoiIds })
             }
           })
           // console.log(prev)

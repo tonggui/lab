@@ -69,13 +69,13 @@
         const poiIdList = tmp.map(poi => poi.id)
         if (poiIdList.length <= 0) {
           return () => {
-            const config = {
+            this.$Message.warning({
               content: '请至少选择一个需要关联的门店，否则商品无法正常创建',
               duration: 5,
-              top: document.body.clientHeight / 2 - 50,
-              left: document.body.clientWidth * (2 / 5) - 90
-            }
-            this.$Message.warning(config)
+              className: 'messageBoxTip'
+              // top: document.body.clientHeight / 2 - 50,
+              // left: document.body.clientWidth * (2 / 5) - 90
+            })
             throw new Error('at least one poi')
           }
         }
@@ -91,3 +91,10 @@
     }
   }
 </script>
+
+<style lang="less">
+.messageBoxTip{
+  top: calc(50vh - 50px);
+  left: calc(50vh - 60px);
+}
+</style>
