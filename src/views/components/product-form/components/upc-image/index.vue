@@ -14,6 +14,7 @@
 <script>
   import ProductPicture from '@/components/product-picture'
   import exampleImg from '@/assets/upc-img-example.jpg'
+  import TimeCounters from '@/common/lx/lxReport/lxTime'
 
   export default {
     name: 'UpcImage',
@@ -44,6 +45,7 @@
     methods: {
       handleImageChange (valList = []) {
         this.$emit('on-change', valList[1])
+        TimeCounters.setTime('upcImage', +new Date(), 's2s')
       }
     }
   }

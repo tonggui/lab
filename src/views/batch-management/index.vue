@@ -50,9 +50,17 @@
     SINGLE_BUSINESS,
     BATCH_UPLOAD_IMAGE
   } from '@/module/moduleTypes'
+  import { inBatchInsertNewGrey } from '@/data/api/batch'
+  import { poiId } from '@/common/constants'
 
   export default {
     name: 'batch-management',
+    data () {
+      return {
+        firstStatus: true,
+        isNewBatchGrey: false
+      }
+    },
     computed: {
       ...mapModule({
         isMerchantAccount: MERCHANT_ACCOUNT, // 账号是否开通商家商品中心
@@ -115,7 +123,9 @@
           // 只有单店 && 支持上传图片 才展示 批量上传图片
           [KEYS.UPLOAD_IMAGE]: this.isSinglePoi && this.supportUploadImage,
           // 只有多店才有批量同步
-          [KEYS.SYNC]: !this.isSinglePoi
+          [KEYS.SYNC]: !this.isSinglePoi,
+          [KEYS.CREATE]: !this.isSinglePoi ? true : !this.isNewBatchGrey
+
         })
       }
     },
@@ -125,7 +135,24 @@
     methods: {
       renderTab (h, menu) {
         return <RouteLink to={menu.link}>{ menu.name }</RouteLink>
+      },
+      async init () {
+        if (!this.isSinglePoi) return
+        await this.updateBatchGreyStatus()
+        if (this.isNewBatchGrey && this.$route.name === KEYS.CREATE) {
+          this.$router.push({
+            ...this.$route,
+            name: KEYS.UPLOAD_IMAGE
+          })
+        }
+      },
+      async updateBatchGreyStatus () {
+        const res = await inBatchInsertNewGrey(poiId)
+        this.isNewBatchGrey = (res || {}).inGrey
       }
+    },
+    mounted () {
+      this.init()
     }
   }
 </script>

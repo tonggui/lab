@@ -42,6 +42,8 @@ export const KEYS = {
   PRODUCT_NEW_ARRIVAL_GUIDE: 'productNewArrivalGuide',
   // 商品上新推荐编辑页面自动填写分类弹窗(魔方二期)
   PRODUCT_NEW_ARRIVAL_AUTO_FILL: 'productNewArrivalAutoFill',
+  // 首次显示新建
+  PRODUCT_NEW_CREATE: 'productNewCreate',
   // 新批量关联引导提示
   NEW_BATCH_REL_GUIDE: 'newBatchRelGuide',
   BATCH_IMPORT_TIP: 'batchImportTip',

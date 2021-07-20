@@ -3,6 +3,9 @@
     <Alert v-if="categoryTemplateApplying" type="warning" show-icon class="tips">
       分类模版正在提交中，当前店内分类信息暂不支持调整，约需要等待10秒，请稍侯...
     </Alert>
+    <div class="product-list-header">
+      商品列表
+    </div>
     <ProductListPage>
       <ManageTagList
         slot="tag-list"
@@ -73,6 +76,17 @@
     }
     .footer {
       margin-top: 10px;
+    }
+    .product-list-header {
+      width: 100%;
+      height: 54px;
+      line-height: 60px;
+      background: #fff;
+      font-weight: 500;
+      font-size: 18px;
+      color: #000000;
+      border-bottom: 1px solid #EEEEEE;
+      padding-left: 24px;
     }
   }
 </style>

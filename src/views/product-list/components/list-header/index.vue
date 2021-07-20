@@ -3,11 +3,18 @@
     <SellerCenterNotice />
     <PoiNotice />
     <AlertTip v-if="showRiskControl" type="error">该门店有原价虚高被平台下架商品，请及时处理</AlertTip>
-    <NavigatorBar class="header-navigator-bar" :disabled="disabled" :tag-id="context.tagId" />
+    <NavigatorBar
+      class="header-navigator-bar"
+      :disabled="disabled"
+      :tag-id="context.tagId"
+      :showNewBatchCreate="showNewBatchCreate"
+      />
     <HotRecommend v-if="showHotRecommend" />
     <AuditAlert :totalProductCount="context.totalProductCount" />
-    <ProductNewArrival v-if="computedCubeShow === 2" :tips="newArrivalSwitch.tips" />
-    <ProductCube v-else-if="computedCubeShow === 1" :totalProductCount="context.totalProductCount" />
+    <template v-if="!showNewBatchCreate">
+      <ProductNewArrival v-if="computedCubeShow === 2" :tips="newArrivalSwitch.tips" />
+      <ProductCube v-else-if="computedCubeShow === 1" :totalProductCount="context.totalProductCount" />
+    </template>
   </div>
 </template>
 
@@ -41,6 +48,11 @@
           totalProductCount: undefined,
           tagId: undefined
         })
+      }
+    },
+    data () {
+      return {
+        showNewBatchCreate: true
       }
     },
     computed: {

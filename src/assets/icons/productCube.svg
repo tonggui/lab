@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="65px" height="64px" viewBox="0 0 65 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>商品魔方</title>
+    <defs>
+        <linearGradient x1="65.8776656%" y1="88.2486751%" x2="-2.79285608%" y2="9.3067439%" id="linearGradient-1">
+            <stop stop-color="#FFCC00" offset="0%"></stop>
+            <stop stop-color="#FF8000" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="14.7330992%" y1="44.1032467%" x2="94.5944755%" y2="57.468111%" id="linearGradient-2">
+            <stop stop-color="#FFC815" offset="0%"></stop>
+            <stop stop-color="#FFE631" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="83.6880396%" y1="5.69969508%" x2="21.5446928%" y2="46.6249%" id="linearGradient-3">
+            <stop stop-color="#FFCC00" offset="0%"></stop>
+            <stop stop-color="#FF8000" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="34.4737984%" y1="43.3842747%" x2="82.8470359%" y2="55.379483%" id="linearGradient-4">
+            <stop stop-color="#FFCB18" offset="0%"></stop>
+            <stop stop-color="#FFE631" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="61.5742136%" y1="0%" x2="54.240565%" y2="113.870002%" id="linearGradient-5">
+            <stop stop-color="#FFE631" stop-opacity="0.55307583" offset="0%"></stop>
+            <stop stop-color="#FFCB18" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="89.0957958%" y1="69.2816964%" x2="16.0982301%" y2="34.5434262%" id="linearGradient-6">
+            <stop stop-color="#FF8000" offset="0%"></stop>
+            <stop stop-color="#FFCC00" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-7">
+            <stop stop-color="#F3C920" offset="0%"></stop>
+            <stop stop-color="#ECAE19" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="首页新手引导" transform="translate(-490.000000, -194.000000)">
+            <g id="编组-2" transform="translate(474.500000, 194.000000)">
+                <g id="商品魔方" transform="translate(16.000000, 0.000000)">
+                    <rect id="矩形" x="0" y="0" width="64" height="64"></rect>
+                    <g id="编组" transform="translate(6.500000, 3.500000)">
+                        <polygon id="Fill-2" fill="url(#linearGradient-1)" points="37.9471546 34.5673667 25.0939506 27.9946498 25.0746028 11.7020115 37.9596577 18.4132163"></polygon>
+                        <polygon id="Fill-5" fill="url(#linearGradient-2)" points="37.9592506 34.5643709 24.9911395 27.9462367 12.0169395 34.5738742 24.9153482 41.2498816"></polygon>
+                        <polygon id="路径" fill="url(#linearGradient-3)" points="-7.68017748e-12 11.5483361 12.0349376 17.8125654 12.0322778 34.5705204 24.9485031 41.2215241 24.948754 56.0289107 -7.68017748e-12 43.133686"></polygon>
+                        <path d="M26.6359084,7.5270108e-05 L38.4033862,6.1531557 L38.400617,6.15407527 L50.8545675,12.6641455 L37.8975711,18.4953208 L25.163617,11.8390753 L12.1049285,17.8482613 L0.00861697727,11.5520325 L13.8529779,5.42482624 L13.896617,5.44707527 L26.6359084,7.5270108e-05 Z" id="形状结合" fill="url(#linearGradient-4)"></path>
+                        <polygon id="路径" fill="url(#linearGradient-5)" opacity="0.381533668" points="50.666264 12.6982484 37.9257638 18.4488794 37.9257638 34.5514006 24.9578326 41.2490736 24.9258818 56.0610504 50.666264 44.1439023"></polygon>
+                        <polygon id="Fill-5备份" fill="url(#linearGradient-6)" opacity="0.095943" transform="translate(18.462223, 23.069162) rotate(-242.000000) translate(-18.462223, -23.069162) " points="31.6580262 23.3620128 19.5485152 14.8746432 5.26641945 22.4685683 16.8882579 31.2636808"></polygon>
+                        <polygon id="Fill-9" fill="url(#linearGradient-7)" points="22.8664718 20.2523604 19.098952 22.0922128 21.7263805 16.60728 18.5429568 18.1618586 15.0140432 25.528795 18.1977179 23.9739655 18.2047431 23.9589115 15.5996446 30.6421444"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

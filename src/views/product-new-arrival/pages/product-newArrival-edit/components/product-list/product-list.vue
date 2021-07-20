@@ -261,14 +261,15 @@
         return new Promise((resolve) => {
           this.$emit('single-create', product, this.createCallback((error) => {
             const id = getUniqueId(product)
+            console.log(product)
             this.errorInfo[id] = {}
             const isLastProduct = this.total <= 1
             // 成功
-            if (!error) {
+            if (!error || !error.code) {
               lx.mv({
                 bid: 'b_shangou_online_e_qwst9shs_mv',
                 val: {
-                  ...getLxParams(product),
+                  ...getLxParams(product, error),
                   op_res: Number(product.productStatus) ? (product.productStatus === NEW_ARRIVAL_PRODUCT_STATUS.OFFSHELF ? 0 : 1) : ''
                 }
               })

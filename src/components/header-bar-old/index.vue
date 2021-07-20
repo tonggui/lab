@@ -1,27 +1,23 @@
 <script>
-  import { isPlainObject, merge, defaultTo } from 'lodash'
+  import { isPlainObject, merge, defaultTo, cloneDeep } from 'lodash'
   import HeaderBar from './components/header-bar'
   import { leftMenu, rightMenu } from './config'
+
   export default {
     name: 'header-bar-container',
     props: {
-      leftMenuList: { // 需自定义时传入，替换config中leftMenu
-        type: Array,
-        default: leftMenu
-      },
       moduleMap: {
         type: Object,
         required: true
       },
-      disabled: Boolean,
-      needPermission: Boolean
+      disabled: Boolean
     },
     components: {
       HeaderBar
     },
     computed: {
       leftMenu () {
-        return this.reorder(this.filterMenu(this.leftMenuList, this.moduleMap))
+        return this.reorder(this.filterMenu(cloneDeep(leftMenu), this.moduleMap))
       },
       rightMenu () {
         return this.reorder(this.filterMenu(rightMenu, this.moduleMap))
@@ -70,8 +66,7 @@
         props: {
           left: this.leftMenu,
           right: this.rightMenu,
-          disabled: this.disabled,
-          needPermission: this.needPermission
+          disabled: this.disabled
         }
       })
     }
