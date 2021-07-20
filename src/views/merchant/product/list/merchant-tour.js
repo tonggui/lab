@@ -19,6 +19,7 @@ function toastModal () {
     }
   })
 }
+
 export const triggerTour = () => {
   const oncomplete = () => {
     LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE] = true

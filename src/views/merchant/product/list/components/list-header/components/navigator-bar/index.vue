@@ -102,19 +102,21 @@
             show: !this.isMedicine,
             label: '新建商品',
             // link: '/merchant/product/edit',
-            id: 'creatSingleProduct',
             badge: {
               dot: true
             },
             style: {
               textAlign: 'left'
-            }
+            },
+            initVisible: !storage[STORAGE_KEY['MERCHANT_GUIDE']]
           },
           singleCreate: {
-            show: true
+            show: true,
+            id: 'creatSingleProduct'
           },
           cubeCreate: {
-            show: this.merchantCubeSwitch,
+            id: 'cubeCreate',
+            show: !storage[STORAGE_KEY['MERCHANT_GUIDE']] ? true : this.merchantCubeSwitch,
             order: 4,
             badge: {
               dot: true
