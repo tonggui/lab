@@ -154,7 +154,7 @@
             } else {
               this.isAllDeleted = res.deletedProductList.length === this.totalSelectedCount
               this.deleteVisible = true
-              this.$emit('on-de-select', res.deletedProductList)
+              this.$emit('on-de-thorough-select', res.deletedProductList)
               this.getData()
             }
           }).catch(err => {

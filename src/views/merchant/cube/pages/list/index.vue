@@ -13,6 +13,7 @@
             :classifySelectedProducts="classifySelectedProducts"
             @on-select="handleSelect"
             @on-de-select="handleDeSelect"
+            @on-de-thorough-select="handleDeThoroughSelect"
             @set-edit-product="handleSetEditProduct"
             @updateSelectedProducts="updateSelectedProducts"
             class="recommend-table-list"
@@ -83,6 +84,7 @@
       ...mapActions({
         handleDestroyStatus: 'destroyStatus',
         handleSelect: 'selectProduct',
+        handleDeThoroughSelect: 'deleteSelectProduct',
         handleDeSelect: 'deSelectProduct',
         handleSetEditProduct: 'setEditProductList',
         handleGetData: 'multiCubeList/getData',

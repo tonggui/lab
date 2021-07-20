@@ -117,6 +117,7 @@ export default {
       dispatch('toggleSelectProduct', { productList, selected: 'deselected' })
     },
     deleteSelectProduct ({ dispatch }, productList) {
+      console.log(productList)
       dispatch('toggleSelectProduct', { productList, selected: 'delete' })
     },
     clearSelected ({ commit }) {
