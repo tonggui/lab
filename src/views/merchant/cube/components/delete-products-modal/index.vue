@@ -7,10 +7,10 @@
     </slot>
     <slot name="content">
       <div class="delete-products-modal-content">
-        {{ isAllDeleted ? '你选择的商品全部已被平台删除，请重新选择。' : '你选中的如下商品已被平台删除，请确认是否继续创建。' }}
+        {{ isAllDeleted ? '你选中的全部商品已被平台删除，请重新选择。' : '你选中的如下商品已被平台删除，请确认是否继续创建。' }}
         <ul v-if="!isAllDeleted" :class="{ 'single': dataSource.length === 1 }">
           <li v-for="item in dataSource" :key="item.__id__">
-            <ProductInfo :product="item" />
+            <ProductInfo :product="item" :scopeFlag="false" :hotInfoDisabled="false"/>
           </li>
         </ul>
       </div>

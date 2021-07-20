@@ -26,7 +26,6 @@ class MerchantTaskMultiCube extends NewMerchantProgressTask {
   protected getExclusiveAction (): TaskAction[] {
     const actionList: TaskAction[] = []
     const { status = 0, poiCount, productCount } = this.task
-    console.log('000')
     if ([MERCHANT_STATUS.SUCCESS, MERCHANT_STATUS.FAIL, MERCHANT_STATUS.PART_SUCCESS].includes(status)) {
       actionList.push({
         text: '查看详情',
@@ -38,7 +37,7 @@ class MerchantTaskMultiCube extends NewMerchantProgressTask {
           getData: () => {
             return new Promise((resolve) => {
               resolve({
-                text: `需要创建${productCount}个商品到总共${poiCount}个门店，${status === (MERCHANT_STATUS.PART_SUCCESS || MERCHANT_STATUS.PART_SUCCESS) ? '部分' : '全部'}创建${status === MERCHANT_STATUS.FAIL ? '失败' : '成功'}`
+                text: `需要创建${productCount}个商品到总共${poiCount}个门店，${status === MERCHANT_STATUS.PART_SUCCESS ? '部分' : '全部'}创建${status !== MERCHANT_STATUS.SUCCESS ? '失败' : '成功'}`
               })
             })
           }

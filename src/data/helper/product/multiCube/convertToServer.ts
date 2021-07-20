@@ -13,7 +13,7 @@ export const convertMultiCubeProduct = (product: MultiCubeProduct) => {
   return {
     id: product.id || 0,
     name: product.name,
-    tagList: tagList,
+    tagInfoList: tagList,
     isSp: product.spId ? (product.isSp ? 1 : 2) : 0,
     spId: product.spId,
     skus: convertSkuList,
