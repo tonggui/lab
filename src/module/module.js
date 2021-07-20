@@ -403,7 +403,7 @@ const module = {
   ),
   [types.MERCHANT_CUBE_SWITCH]: createFelid(
     source.merchantCubeSwitch,
-    false
+    undefined
   )
   // [types.POI_PRODUCT_NEW_ARRIVAL_INFO]: createFelid(
   //   source.productNewArrivalInfo,

@@ -68,7 +68,8 @@ export const KEYS = {
   // 商家商品中心魔方范围默认开启
   MERCHANT_CUBE_RANGE_AUTO_SETTING: 'merchantCubeRangeAutoSetting',
   // 商家商品中心魔方结果页返回
-  MERCHANT_CUBE_RESULT_TIP: 'merchantCubeResultTip'
+  MERCHANT_CUBE_RESULT_TIP: 'merchantCubeResultTip',
+  MERCHANT_CUBE_GUIDE: 'merchantCubeGuide'
 }
 
 export const orders = ['MERCHANT_GUIDE', 'MERCHANT_GUIDE_BOOK']

@@ -45,7 +45,7 @@ export const leftMenu = [{
   icon: PlusCircle,
   children: [{
     key: 'batchCreate',
-    label: '批量创建',
+    label: 'Excel批量新建',
     icon: BatchCreate,
     desc: '通过Excel快捷新建多个',
     link: {
@@ -54,7 +54,7 @@ export const leftMenu = [{
     bid: 'b_1xrhzpqn'
   }, {
     key: 'singleCreate',
-    label: '单个新建',
+    label: '单个商品新建',
     icon: SingleCreate,
     desc: '自行录入单个商品信息',
     link: '/merchant/product/edit',
@@ -63,7 +63,7 @@ export const leftMenu = [{
     key: 'cubeCreate',
     label: '魔方快捷新建',
     icon: CubeCreate,
-    desc: '从平台热销商品选择创建',
+    desc: '智能选品，一键上架',
     link: '/merchant/cube/list',
     bid: ''
   }],

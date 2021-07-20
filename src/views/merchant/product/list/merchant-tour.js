@@ -3,7 +3,8 @@ import stepTour, {
   oldMerchantSteps,
   stepsFromPoi,
   stepsFromSelf,
-  stepsProductOperation
+  stepsProductOperation,
+  stepsMerchantCube, tourState
 } from '@/step-tour'
 import Modal from '@components/modal'
 import router from '@/router'
@@ -19,19 +20,29 @@ function toastModal () {
     }
   })
 }
+const oncomplete = () => {
+  LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE] = true
+  LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] = true
+  LocalStorage[STORAGE_KEYS.MERCHANT_CUBE_GUIDE] = true
+  tourState.visible = false
+}
+const onbeforeexit = () => {
+  tourState.visible = false
+}
 
-export const triggerTour = () => {
-  const oncomplete = () => {
-    LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE] = true
-    LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] = true
-  }
-  if (!LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE]) {
+export const triggerTour = ({ inExistSteps = [] }) => {
+  if (LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE] && !LocalStorage[STORAGE_KEYS.MERCHANT_CUBE_GUIDE]) {
+    tourState.visible = true
+    triggerMerchantCubeTour({ inExistSteps })
+  } else if (!LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE]) {
+    tourState.visible = true
     if (LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] === null) {
       // 老商家
       setTimeout(() => {
         stepTour({
-          steps: oldMerchantSteps,
-          oncomplete
+          steps: oldMerchantSteps.filter(item => !inExistSteps.includes(item.element)),
+          oncomplete,
+          onbeforeexit
         }).start()
       }, 2000)
     } else { // 新商家
@@ -39,18 +50,20 @@ export const triggerTour = () => {
       if (LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_WAY] === 'fromPoi') {
         setTimeout(() => {
           stepTour({
-            steps: stepsFromPoi,
+            steps: stepsFromPoi.filter(item => !inExistSteps.includes(item.element)),
             oncomplete: function () {
               oncomplete()
               toastModal()
-            }
+            },
+            onbeforeexit
           }).start()
         }, 2000)
       } else {
         setTimeout(() => {
           stepTour({
-            steps: stepsFromSelf,
-            oncomplete
+            steps: stepsFromSelf.filter(item => !inExistSteps.includes(item.element)),
+            oncomplete,
+            onbeforeexit
           }).start()
         }, 2000)
       }
@@ -59,13 +72,28 @@ export const triggerTour = () => {
 }
 
 export const triggerProductOperation = () => {
-  if (LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_WAY] !== 'fromPoi' && LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] !== null && LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE] && !LocalStorage[STORAGE_KEYS.MERCHANT_OPERATION_GUIDE]) {
+  if (LocalStorage[STORAGE_KEYS.MERCHANT_CUBE_GUIDE] && LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_WAY] !== 'fromPoi' && LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] !== null && LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE] && !LocalStorage[STORAGE_KEYS.MERCHANT_OPERATION_GUIDE]) {
     setTimeout(() => {
       stepTour({
         steps: stepsProductOperation,
         oncomplete: function () {
           LocalStorage[STORAGE_KEYS.MERCHANT_OPERATION_GUIDE] = true
         }
+      }).start()
+    }, 2000)
+  }
+}
+
+export const triggerMerchantCubeTour = ({ inExistSteps = [] }) => {
+  if (!LocalStorage[STORAGE_KEYS.MERCHANT_CUBE_GUIDE] && !inExistSteps.includes('#cubeCreate')) {
+    setTimeout(() => {
+      stepTour({
+        steps: stepsMerchantCube,
+        oncomplete: function () {
+          LocalStorage[STORAGE_KEYS.MERCHANT_CUBE_GUIDE] = true
+          onbeforeexit()
+        },
+        onbeforeexit
       }).start()
     }, 2000)
   }

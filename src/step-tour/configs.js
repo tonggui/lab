@@ -7,10 +7,9 @@ export const oldMerchantSteps = [
     intro: '商家商品中心”正式更名为“总部商品库”啦～<br />现可支持自主重置总部商品库哦～'
   },
   {
+    title: '魔方快捷新建',
     element: '#cubeCreate',
-    title: '重置总部商品库',
-    intro: '点击这里即可重置<br />重置商品库可“从分店中快速导入商品”或“自行创建总部商品”<br />（重置总部商品不会删除分店相应商品，请放心使用）',
-    position: 'left'
+    intro: '新增“魔方快捷新建”功能，为你智能推荐平台热销及热搜商品，批量选择后可一键快捷创建哦～'
   },
   {
     element: '#reset',
@@ -27,6 +26,11 @@ export const stepsFromPoi = [
   {
     title: '欢迎使用总部商品库',
     intro: '欢迎使用总部商品库'
+  },
+  {
+    title: '魔方快捷新建',
+    element: '#cubeCreate',
+    intro: '新增“魔方快捷新建”功能，为你智能推荐平台热销及热搜商品，批量选择后可一键快捷创建哦～'
   },
   {
     title: '从分店导⼊商品',
@@ -74,6 +78,11 @@ export const stepsFromSelf = [
     intro: '分类创建后，可使⽤“新建单个商品”创建商品，⼿动逐条输⼊商品信息，⼀次仅可创建⼀个商品。<br />新建的商品可自动给所选分店新建，并与分店建立关联关系，后续修改商品可以自动同步有关联的分店哦~'
   },
   {
+    title: '魔方快捷新建',
+    element: '#cubeCreate',
+    intro: '分类创建后，可使用“魔方快捷新建”创建商品，为你智能推荐平台热销及热搜商品，批量选择后可一次快捷创建多个商品到多个门店。'
+  },
+  {
     title: '从分店导⼊商品',
     element: '#import',
     intro: '如要继续向商品库中添加，请使⽤“从分类导⼊商品'
@@ -97,3 +106,9 @@ export const stepsProductOperation = [
     intro: '删除商品时，请选择是否删除分店商品，注意不要误删商品哦~'
   }
 ]
+
+export const stepsMerchantCube = [{
+  title: '魔方快捷新建',
+  element: '#cubeCreate',
+  intro: '新增“魔方快捷新建”功能，为你智能推荐平台热销及热搜商品，批量选择后可一键快捷创建哦～'
+}]

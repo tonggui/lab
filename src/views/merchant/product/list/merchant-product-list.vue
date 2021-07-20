@@ -10,13 +10,15 @@
   import ListHeader from './components/list-header/index'
   import SortProductList from './container/sort-product-list'
   import ManageProductList from './container/manage-product-list'
-  import { triggerTour } from './merchant-tour'
+  // import { triggerTour } from './merchant-tour'
   import { triggerToast } from '../../cube/utils'
+  import MerchantGuideMixin from './merchant-guide-mixin'
 
   const { mapGetters, mapActions } = helper()
 
   export default {
     name: 'merchant-product-list-page',
+    mixins: [MerchantGuideMixin],
     computed: {
       ...mapGetters(['sorting'])
     },
@@ -31,7 +33,7 @@
     mounted () {
       this.getData()
       triggerToast()
-      triggerTour()
+      // triggerTour()
     },
     beforeDestroy () {
       this.destroy()
