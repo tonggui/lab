@@ -198,7 +198,7 @@ const source = {
   productNewArrivalSwitch: { // 商品上新开关 (魔方二期)
     fetch: () => fetchGetProductNewArrivalSwitch(),
     defaultValue: {
-      switch: false,
+      switch: undefined,
       tips: ''
     }
   },
@@ -220,6 +220,15 @@ const source = {
       return fetchSettingBrandProductPromotionGray()
     },
     defaultValue: false
+  },
+  allCubeStatus: {
+    fetch: () => {
+      const poiProductCubeSwitch = fetchGetPoiProductCubeSwitch()
+      const poiAuditInfo = fetchGetPoiAuditInfo()
+      const arrivalSwitch = fetchGetProductNewArrivalSwitch()
+      return Promise.all([ poiAuditInfo, poiProductCubeSwitch, arrivalSwitch ])
+    },
+    defaultValue: []
   }
 }
 export default source

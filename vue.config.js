@@ -123,6 +123,7 @@ module.exports = {
         .options({
           svgo: {
             plugins: [
+              { prefixIds: true },
               { removeTitle: true },
               { removeDesc: true },
               { removeComments: true },

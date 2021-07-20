@@ -104,7 +104,10 @@
             order: 2,
             link: '/medicine/merchant/product/setting'
           },
-          batchOperation: true,
+          batchOperation: {
+            show: true,
+            link: '/merchant/batchManagement/batchCreate'
+          },
           batchCreate: {
             label: '新建商品中心商品',
             link: {
