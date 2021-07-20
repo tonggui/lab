@@ -36,7 +36,7 @@
       </template>
     </edit>
     <!-- TODO: 新增小于库存标识 -->
-    <div v-if="showStockInsufficient">库存小于最小购买量{{minOrderCount}}</div>
+    <div class="stock-insufficient-sign" v-if="showStockInsufficient">库存小于最小购买量{{minOrderCount}}</div>
   </div>
 </template>
 
@@ -125,6 +125,11 @@
       display: inline-flex;
       align-items: center;
       width: 100%;
+    }
+    .stock-insufficient-sign {
+      font-size: 12px;
+      padding-top: 12px;
+      line-height: 0;
     }
   }
 </style>
