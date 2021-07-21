@@ -320,7 +320,7 @@
     justify-content: center;
   }
   /deep/ .drawer-footer {
-    justify-content: center;
+    justify-content: flex-end;
   }
   .classify-table-list-footer {
     .empty-selected {
@@ -336,7 +336,7 @@
     }
     .create-btn {
       height: 40px;
-      line-height: 25px;
+      line-height: 27px;
       width: 110px;
       text-align: center;
       font-size: 14px;

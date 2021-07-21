@@ -3,6 +3,7 @@
     tableFixed
     group
     :columns="columns"
+    :hasPermission="false"
     :type="type"
     :data="showGroupData"
     :pagination="pagination"

@@ -51,6 +51,10 @@
       },
       editable: Boolean,
       disabled: Boolean,
+      hasPermission: {
+        type: Boolean,
+        default: true
+      },
       needPermission: Boolean
     },
     computed: {
@@ -151,7 +155,8 @@
           pictureList: this.product.pictureList,
           video: this.hasVideo ? this.product.video : undefined,
           editable: this.editable,
-          needPermission: this.needPermission
+          needPermission: this.needPermission,
+          hasPermission: this.hasPermission
         }, {
           onChange: this.handleChange,
           onClose: this.handleClose
