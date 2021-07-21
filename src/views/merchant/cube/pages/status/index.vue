@@ -8,8 +8,6 @@
       :checkRunningStatus="getRunningStatusStatus"
       inline-text="抱歉，创建商品任务排队中，您可以先去处理其他事情~"
       tip="马上创建完毕，请您耐心等待~"
-      inline-btn-text="返回'商品库'"
-      not-inline-btn-text="返回'商品库'"
       @on-click-btn="handleClickBtn"
     />
   </div>
