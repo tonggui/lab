@@ -2,7 +2,7 @@
   <Layout class="quick-edit-product-info">
     <ProductInfoImage
       slot="image"
-      :product="product"
+      :product="product" :hasPermission="hasPermission"
       :show-marker="showMarker"
       v-bind="bindItem"
     >
@@ -41,7 +41,8 @@
         required: true
       },
       editable: Boolean,
-      type: String
+      type: String,
+      hasPermission: Boolean
     },
     data () {
       return {

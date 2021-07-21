@@ -23,6 +23,7 @@
           return Object.values(TYPE).includes(type)
         }
       },
+      hasPermission: Boolean,
       modules: {
         type: Object,
         default: () => ({})
@@ -45,6 +46,7 @@
                 class="quick-edit-product-info"
                 product={row}
                 type={this.type}
+                hasPermission={this.hasPermission}
                 editable={editable}
                 onChange={handleChange}
               />
