@@ -59,7 +59,7 @@
     justify-content:center;
     .header {
       height: 42px;
-      background: #F7F8FA;
+      background: #FFFFFF;
       border: 1px solid #E9EAF2;
       border-top: none;
       font-size: 14px;
