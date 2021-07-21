@@ -1,8 +1,8 @@
 <template>
   <Layout class="recommend-product-info">
     <ProductInfoImage
-      slot="image"
-      :product="product"
+      slot="image" :editable="false"
+      :product="product" :hasPermission="false"
       class="recommend-product-info-image"
     >
       <template slot="top-left-marker" v-if="!product.isSp">

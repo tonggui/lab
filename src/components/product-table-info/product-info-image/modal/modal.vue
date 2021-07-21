@@ -19,7 +19,7 @@
         </PermissionBtn>
       </template>
     </div>
-    <PermissionBtn
+    <PermissionBtn v-if="hasPermission"
       component="div"
       :need-permission="needPermission"
       :btn-type="btnType"
@@ -74,6 +74,7 @@
         type: Array,
         required: true
       },
+      hasPermission: Boolean,
       editable: Boolean,
       needPermission: Boolean
     },

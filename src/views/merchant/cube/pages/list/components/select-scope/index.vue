@@ -1,6 +1,7 @@
 <template>
   <div class="select-scope" style="background：rgb(247, 248, 250);">
     <div class="scope-card">
+      <div class="boo-steps"><span>1</span></div>
       <span class="scope-span">选择推荐商品范围</span>
       <RadioGroup v-model="scope" type="button" @on-change="handleStatusChange" >
         <Radio :label="-1">全国</Radio>
@@ -11,6 +12,7 @@
       <span v-show="displayShop.cityId !== -1" style="margin-left: 20px">所选{{cityOrPoiDisplay}}为: {{ displayShop.name }}</span>
     </div>
     <div class="display-tip">
+      <div class="boo-steps"><span>2</span></div>
       商品勾选后默认关联{{ displayShop.name }}，加入已选列表或完善商品信息时可调整关联门店范围
     </div>
     <SelectedScopeShop :scopeVisible="scopeVisible" :scope="scope"  @updateScope="updateScope" @setDisplayShop="contentScopeStatus"
@@ -126,6 +128,20 @@
   padding: 30px 70px;
   margin-bottom: 10px;
   border-radius: 2px;
+}
+.boo-steps{
+  display: inline-block;
+  width: 31px;
+  height: 31px;
+  background: #F4F4F5;
+  line-height: 28px;
+  margin-right: 16px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  font-family: HelveticaNeue;
+  font-size: 16px;
+  color: #222222;
 }
 .scope-span{
   margin-right: 20px;
