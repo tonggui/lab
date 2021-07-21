@@ -1,6 +1,6 @@
 <template>
   <div class="step-rel-container">
-    <Icon local="time" size="50" />
+    <Icon local="time" size="64" />
     <div class="progress-status">{{statusText}}</div>
     <slot name="status">
       <template v-if="isInLine">
@@ -22,8 +22,8 @@
       </template>
     </slot>
     <slot name="bottom">
-      <Button v-if="isInLine" type="primary" @click="goToList">{{inlineBtnText}}</Button>
-      <Button v-else @click="goToList">{{processBtnText}}</Button>
+      <Button v-if="isInLine" type="primary" @click="goToList" class="btn">{{inlineBtnText}}</Button>
+      <Button v-else @click="goToList" class="btn">{{processBtnText}}</Button>
     </slot>
   </div>
 </template>
@@ -46,12 +46,12 @@
       },
       inlineBtnText: {
         type: String,
-        default: '返回"商品列表"'
+        default: '返回"商品库"'
       },
       processText: String,
       processBtnText: {
         type: String,
-        default: '返回"商品列表"'
+        default: '返回"商品库"'
       },
       succeedNum: Number,
       totalNum: Number,
@@ -98,7 +98,7 @@
 
 <style lang="less" scoped>
   .step-rel-container {
-    padding-top: 60px;
+    padding-top: 142px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -108,17 +108,18 @@
     text-align: center;
     font-size: 12px;
     .progress-status {
-      font-size: 16px;
+      font-size: 20px;
       margin-top: 20px;
       margin-bottom: 5px;
     }
     .status {
-      margin-bottom: 20px;
+      margin-bottom: 28px;
+      font-size: 14px;
     }
     .progress-container {
       display: flex;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
       .progress-bar {
         width: 320px;
         height: 8px;
@@ -140,7 +141,21 @@
       font-family: PingFangSC-Regular;
       color: #999999;
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 48px;
+      font-size: 14px;
+    }
+    .btn {
+      border-radius: 25px;
+      background-image: linear-gradient(-45deg, #FFC34D 0%, #FFE14D 100%);
+      border: none;
+      padding: 10px 22px;
+      font-weight: 500;
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #222222;
+      text-align: center;
+      height: auto;
+      line-height: unset;
     }
   }
 </style>

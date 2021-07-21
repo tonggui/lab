@@ -58,7 +58,7 @@
         this.succeedNum = succeedNum
       },
       handleTipModal (name) {
-        if (LocalStorage[KEYS.MERCHANT_CUBE_RESULT_TIP] !== true && LocalStorage[KEYS.MERCHANT_CUBE_RESULT_TIP] !== false) {
+        if (LocalStorage[KEYS.MERCHANT_CUBE_RESULT_TIP] !== true && LocalStorage[KEYS.MERCHANT_CUBE_RESULT_TIP] !== false && this.type !== 'success') {
           LocalStorage[KEYS.MERCHANT_CUBE_RESULT_TIP] = true
           this.$router.push({ name })
         } else {
