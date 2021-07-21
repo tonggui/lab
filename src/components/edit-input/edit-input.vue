@@ -130,6 +130,7 @@
       font-size: 12px;
       padding-top: 12px;
       line-height: 0;
+      color: #ff5f59;
     }
   }
 </style>
