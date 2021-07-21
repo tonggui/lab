@@ -2,9 +2,10 @@
   import { noop } from 'lodash'
   import createModal from './modal'
   import config from './config'
-  import { PRODUCT_TYPE } from '@/data/enums/product'
+  import { PRODUCT_TYPE, PRODUCT_STATUS_MAIDIAN } from '@/data/enums/product'
   import PermissionBtn from '@/views/components/permission-bth/index'
   import { FELID } from '../product-sku-edit'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'product-sku-edit',
@@ -22,7 +23,8 @@
         type: Array,
         required: true
       },
-      disabled: Boolean
+      disabled: Boolean,
+      tabValue: [String, Number] // tab当前选中值
     },
     created () {
       this.$modal = null
@@ -59,6 +61,13 @@
         this.$modal = null
       },
       showModal () {
+        // 多规格点击
+        lx.mc({
+          bid: 'b_shangou_online_e_a01gqbnj_mc',
+          val: {
+            tab_id: PRODUCT_STATUS_MAIDIAN[this.tabValue.toString()]
+          }
+        })
         if (this.disabled) {
           return
         }
@@ -92,7 +101,11 @@
           onChange: this.handleSingleChange,
           disabled: isDisabled,
           isPackageProduct,
-          isDisplayNone
+          isDisplayNone,
+          // 传递是否为单规格
+          isSingleSku: this.isSingleSku,
+          // 传递当前Tab值
+          tabValue: this.tabValue
         })
       }
       const className = {
@@ -101,8 +114,9 @@
         'display-none': isDisplayNone
       }
       return (
+        // 传递是否为单规格
         <div>
-          { info.displayRender(h, { skuList: this.skuList }) }
+          { info.displayRender(h, { skuList: this.skuList, isSingleSku: this.isSingleSku }) }
           <PermissionBtn
             component="Icon"
             needPermission

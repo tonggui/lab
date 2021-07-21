@@ -82,6 +82,11 @@ export const ProductMark = {
   [PRODUCT_MARK.MERCHANT_EXIST]: {
     type: 'normal',
     name: '总部已创建'
+  },
+  // TODO: 新增库存不足标签
+  [PRODUCT_MARK.STOCK_INSUFFICIENT_COUNT]: {
+    type: 'danger',
+    name: '库存不足'
   }
 }
 
@@ -125,6 +130,20 @@ export const productStatus = [{
     transfer: false,
     keyName: 'PRODUCT_MISSING_INFORMATION',
     content: '商品有必填字段还未填写，影响用户下单转化哦！请将商品缺失的信息补充完整'
+  }
+}, {
+  // TODO: 新增【库存不足】列表
+  id: PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT,
+  key: 'stockInsuffientCount', // 这个单词有问题
+  name: '库存不足',
+  needDanger: true,
+  count: 0,
+  badge: false,
+  tooltip: {
+    type: 'guide',
+    transfer: false,
+    keyName: 'PRODUCT_STOCK_INSUFFICIENT_COUNT',
+    content: '库存小于最小购买量的商品，买家不能正常下单哦！请及时补充库存'
   }
 }]
 

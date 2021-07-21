@@ -60,7 +60,9 @@ export const convertProductSku = (sku: any): Sku => {
     },
     upcCode: sku.upc_code || sku.upcCode,
     sourceFoodCode: sku.source_food_code || sku.sourceFoodCode,
-    shelfNum: sku.locator_code
+    shelfNum: sku.locator_code,
+    // TODO: 新增sku起购数
+    skuMinOrderCount: sku.minOrderCount
   }
   return node
 }
@@ -109,7 +111,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     name: categoryName,
     namePath: trimSplit(categoryNamePath)
   }
-  const skuList = convertProductSkuList(wmProductSkus || [])
+  const skuList:any = convertProductSkuList(wmProductSkus || [])
   // 是否下架
   const notBeSold = product.isStopSell === 1 || sellStatus === 1
   // 设置基本信息要展示的字段
@@ -172,6 +174,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
   const productType = product.combinationLabel === 1 ? PRODUCT_TYPE.PACKAGE : PRODUCT_TYPE.NORMAL
   // 合规审核中
   const isComplianceUnderAudit = complianceStatus === COMPLIANCE_AUDIT_STATUS_TYPE.UNDER_AUDIT
+  // 判断是够为库存不足 所有都有库存 存在库存不足
+  const isStockInsufficientCount = skuList && skuList.every(i => i && i.stock) && skuList.some(i => i.skuMinOrderCount > 1 && i.skuMinOrderCount > i.stock)
   const node: ProductInfo = {
     enableStockEditing,
     id,
@@ -190,6 +194,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     isNeedFill: fillOrCheck === 1,
     isMissingInfo: !!product.missingRequiredInfo,
     isSmartSort: !!smartSort,
+    // TODO: 新增是否展示库存不足文案标识
+    isStockInsufficientCount: isStockInsufficientCount,
     displayInfo,
     isOTC: isMedicine() ? isOTC : false,
     isPrescription: isMedicine() ? isPrescription : false,

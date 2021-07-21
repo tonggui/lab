@@ -209,6 +209,12 @@ module.exports = {
         changeOrigin: true,
         secure: false
       },
+      // '^/api': {
+      //   target: 'http://e.shangou.test.sankuai.com',
+      //   pathRewrite: { '^/api': '' },
+      //   changeOrigin: true,
+      //   secure: false
+      // },
       '^/dev/api/reuse/sc/product': {
         target: 'http://eproductapi.sc.waimai.dev.sankuai.com',
         pathRewrite: { '^/dev/api': '' },

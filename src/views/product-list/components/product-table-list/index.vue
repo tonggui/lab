@@ -1,14 +1,17 @@
 <template>
   <div>
+    <!-- TODO: 给行内添加Tab状态值 -->
     <Columns
       :tagId="tagId"
       :disabled="disabled"
+      :tab-value="status"
       @delete="handleDelete"
       @edit-product="handleEdit"
       @edit-sku="handleEditSku"
       @refresh="$emit('refresh')"
     >
       <template v-slot:default="{columns}">
+        <!-- TODO: 商家商品列表二级包裹 isShowTabPane判断是否展示tab -->
         <ProductTableList
           need-permission
           :disabled="disabled"
@@ -109,6 +112,12 @@
         }
       }
     },
+    mounted () {
+      // TODO: 库存不足首次展示mv 埋点
+      if (this.status && this.status === PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT) {
+        lx.mv({ bid: 'b_shangou_online_e_lrhx6wkv_mc' }, 'productListTableContainer')
+      }
+    },
     computed: {
       ...mapModule({
         sellTimeEditable: PRODUCT_SELL_TIME,
@@ -117,6 +126,14 @@
       }),
       batchOperation () {
         return batchOperation
+      }
+    },
+    watch: {
+      // TODO: 库存不足切换展示mv 埋点
+      status (value) {
+        if (value === PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT) {
+          lx.mv({ bid: 'b_shangou_online_e_lrhx6wkv_mc' }, 'productListTableContainer')
+        }
       }
     },
     methods: {
@@ -150,10 +167,17 @@
         }
         return $tabLabel
       },
+      // TODO: 新增【库存不足】列表展示逻辑
       isShowTabPane (item) {
         if (item.id === PRODUCT_STATUS.INCOMPLETE) {
           return this.showIncompleteTab
         } else if (item.id === PRODUCT_STATUS.MISSING_INFORMATION) {
+          // 如果当前查询条件为缺失商品，则非空场景下也显示
+          if (item.id === `${this.status}`) {
+            return true
+          }
+          return item.count > 0
+        } else if (item.id === PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT) {
           // 如果当前查询条件为缺失商品，则非空场景下也显示
           if (item.id === `${this.status}`) {
             return true

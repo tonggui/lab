@@ -73,6 +73,7 @@ declare interface Sku {
   monthSale?: number;
   enableStockEditing?: boolean; // 库存字段是否可编辑
   relCombinationProduct?: boolean; // sku是否参与组包
+  skuMinOrderCount?: number; // 起购数
 }
 
 declare interface CellularProductSku extends Omit<Sku, 'stock'> {
@@ -121,6 +122,7 @@ declare interface ProductInfo {
   isNeedFill: Boolean; // 信息需要补充
   isNeedCheck: Boolean; // 信息需要确认
   isMissingInfo?: boolean; // 商品信息缺失
+  isStockInsufficientCount?: boolean; // TODO: 新增库存不足
   tagCount: number;
   skuList: Sku[];
   displayInfo: (string|string[])[];
@@ -139,6 +141,7 @@ declare interface ProductInfo {
   stockoutAutoClearStock: boolean; // 是否设置缺货库存自动清零
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
   category: BaseCategory; // 商品分类
+  // isMedicare: boolean; // 是否是医保商品  //重复了 qizhi03我删了
   limitRuleId: number; // 商品限购Id
   isMedicare: boolean; // 是否是医保商品
   isComplianceUnderAudit: boolean; // 合规审核中

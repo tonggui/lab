@@ -10,7 +10,8 @@ export enum PRODUCT_MARK {
   MERCHANT_DELETE = 'merchantDelete', // 总部删除
   AUDIT_REJECTED = 'auditRejected', // 审核驳回
   AUDITING = 'auditing', // 审核中
-  MERCHANT_EXIST = 'merchantExist' // 总部已存在
+  MERCHANT_EXIST = 'merchantExist', // 总部已存在
+  STOCK_INSUFFICIENT_COUNT = 'stockInsuffientCount' // TODO: 新增库存不足标签
 }
 
 export enum RELEASE_TYPE {
@@ -44,6 +45,19 @@ export enum PRODUCT_STATUS {
   EMPTY_CATEGORY = '8', // 空后台类目(复用搜索结果页)
   ERROR_CATEGORY = '9', // 错误后台类目(复用搜索结果页)
   MISSING_INFORMATION = '28', // 关键信息缺失
+  // TODO: 新增【库存不足】列表
+  STOCK_INSUFFICIENT_COUNT = '21',
+}
+
+// Tab埋点
+export const PRODUCT_STATUS_MAIDIAN = {
+  '0': '0', // 全部商品
+  '1': '1', // 售卖中
+  '2': '2', // 已下架
+  '3': '3', // 已售罄
+  '21': '4', // 库存不足 对应21
+  '5': '5', // 商品优化
+  '28': '6' // 信息缺失 对应28
 }
 
 // 审核类型

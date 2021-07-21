@@ -74,7 +74,8 @@
         if (this.markerType) {
           return ProductMark[this.markerType]
         }
-        // 标签展示优先级：审核驳回>审核中>平台下架>风控下架>已下架>已售罄>部分售罄>图片质量差>需补充>待更新
+        // TODO: 新增库存不足
+        // 标签展示优先级：审核驳回>审核中>平台下架>风控下架>已下架>已售罄>部分售罄>库存不足>图片质量差>需补充>待更新
         const {
           isPlatformStopSell = false,
           isStopSell = false,
@@ -105,6 +106,9 @@
           markType = PRODUCT_MARK.SOLD_OUT
         } else if (skuList && skuList.some(i => i && i.stock === 0)) { // 部分售罄
           markType = PRODUCT_MARK.PART_SOLD_OUT
+        } else if (skuList && skuList.every(i => i && i.stock > 0) && skuList.some(i => i && i.skuMinOrderCount > 1 && i.skuMinOrderCount > i.stock)) { // 库存不足
+          // 0<库存<起购（起购>1） 所有都存在库存 有库存少于起购
+          markType = PRODUCT_MARK.STOCK_INSUFFICIENT_COUNT
         } else if (isNeedFill) { // 图片质量差
           markType = PRODUCT_MARK.NEED_TO_FILL
         } else if (isNeedCheck) { // 需补充
