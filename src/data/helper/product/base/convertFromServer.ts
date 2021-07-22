@@ -3,7 +3,8 @@ import { BrandProductVideo, ProductInfo, ProductVideo, Sku } from '../../../inte
 import {
   PRODUCT_SELL_STATUS,
   PRODUCT_TYPE,
-  COMPLIANCE_AUDIT_STATUS_TYPE
+  COMPLIANCE_AUDIT_STATUS_TYPE,
+  PRODUCT_STATUS
 } from '@/data/enums/product'
 import { isMedicine } from '@/common/app'
 import { BaseCategory } from '@/data/interface/category'
@@ -72,7 +73,7 @@ export const convertProductSkuList = (list: any[]): Sku[] => {
   return list.map(convertProductSku)
 }
 
-export const convertProductInfo = (product: any, validationConfigMap): ProductInfo => {
+export const convertProductInfo = (product: any, tabState, validationConfigMap): ProductInfo => {
   const {
     enableStockEditing,
     id,
@@ -174,8 +175,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
   const productType = product.combinationLabel === 1 ? PRODUCT_TYPE.PACKAGE : PRODUCT_TYPE.NORMAL
   // 合规审核中
   const isComplianceUnderAudit = complianceStatus === COMPLIANCE_AUDIT_STATUS_TYPE.UNDER_AUDIT
-  // 判断是够为库存不足 所有都有库存 存在库存不足
-  const isStockInsufficientCount = skuList && skuList.every(i => i && i.stock) && skuList.some(i => i.skuMinOrderCount > 1 && i.skuMinOrderCount > i.stock)
+  // TODO: 增加Tab判断，判断是够为库存不足 存在库存不足并且在<库存不足>或者<全部商品>Tab下
+  const isStockInsufficientCount = skuList && skuList.some(i => i.stock && i.skuMinOrderCount > 1 && i.skuMinOrderCount > i.stock) && (tabState === PRODUCT_STATUS.ALL || tabState === PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
   const node: ProductInfo = {
     enableStockEditing,
     id,
@@ -215,9 +216,9 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
   return node
 }
 
-export const convertProductInfoList = (list: any[], validationConfigMap?: { [propName:string]: any }): ProductInfo[] => {
+export const convertProductInfoList = (list: any[], tabState: string, validationConfigMap?: { [propName:string]: any }): ProductInfo[] => {
   list = list || []
-  return list.map((item) => convertProductInfo(item, validationConfigMap))
+  return list.map((item) => convertProductInfo(item, tabState, validationConfigMap))
 }
 
 export const convertProductInfoWithPagination = (data: any, requestQuery) => {
@@ -229,9 +230,9 @@ export const convertProductInfoWithPagination = (data: any, requestQuery) => {
     spuTopCount,
     spuSortType // 1: 手动排序 2: 智能排序
   } = (data || {}) as any
-  const { pagination, statusList } = requestQuery
+  const { pagination, statusList, tabState } = requestQuery
   return {
-    list: convertProductInfoList(productList, validationConfigMap),
+    list: convertProductInfoList(productList, tabState, validationConfigMap),
     pagination: {
       ...pagination,
       total: totalCount
