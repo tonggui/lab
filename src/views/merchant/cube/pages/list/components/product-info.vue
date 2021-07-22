@@ -9,7 +9,7 @@
         <span class="recommend-product-info-no-sp-marker">非标品</span>
       </template>
       <template slot="bottom-marker">
-        <span v-if="product.isHqExist" class="recommend-product-info-bottom-marker">总部已创建</span>
+        <span v-if="product.isHqExist" class="recommend-product-info-bottom-marker"><i class="merchant-center">总部已创建</i></span>
         <span v-else />
       </template>
     </ProductInfoImage>
@@ -182,6 +182,12 @@
       color: #FFFFFF;
       text-align: center;
       line-height: 1;
+      padding: 2.5px 0;
+      .merchant-center {
+        font-style: normal;
+        display: inline-block;
+        transform: scale(0.85);
+      }
       &.delete {
         background: rgba(244, 113, 107, .9);
       }
