@@ -183,7 +183,7 @@
       text-align: center;
       line-height: 1;
       padding: 2.5px 0;
-      .merchant-center {
+      > i.merchant-center {
         font-style: normal;
         display: inline-block;
         transform: scale(0.85);
