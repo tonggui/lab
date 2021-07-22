@@ -174,7 +174,6 @@
         } else {
           this.$Message.warning({
             content: '请选择门店',
-            duration: 5,
             className: 'messageBoxTip'
             // top: document.body.clientHeight / 2 - 50,
             // left: document.body.clientWidth * (2 / 5) - 90
