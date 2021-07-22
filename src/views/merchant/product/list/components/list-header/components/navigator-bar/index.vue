@@ -15,7 +15,8 @@
   import { mapModule } from '@/module/module-manage/vue'
   import {
     UNAPPROVE_PRODUCT_COUNT,
-    BUSINESS_MEDICINE, MERCHANT_CUBE_SWITCH // TODO 药品兼容 后期优化
+    BUSINESS_MEDICINE,
+    MERCHANT_CUBE_SWITCH // TODO 药品兼容 后期优化
   } from '@/module/moduleTypes'
   import {
     fetchGetPoiAuditProductCount,
@@ -102,18 +103,20 @@
             show: !this.isMedicine,
             label: '新建商品',
             // link: '/merchant/product/edit',
-            id: 'creatSingleProduct',
             badge: {
               dot: true
             },
             style: {
               textAlign: 'left'
-            }
+            },
+            initVisible: (this.merchantCubeSwitch && !storage[STORAGE_KEY['MERCHANT_CUBE_GUIDE']]) || !storage[STORAGE_KEY['MERCHANT_GUIDE']]
           },
           singleCreate: {
-            show: true
+            show: true,
+            id: 'creatSingleProduct'
           },
           cubeCreate: {
+            id: 'cubeCreate',
             show: this.merchantCubeSwitch,
             order: 4,
             badge: {

@@ -9,6 +9,7 @@
 import isVueComponent from 'is-vue-component'
 import { isBoolean, isString, isNumber, isPlainObject, noop } from 'lodash'
 import lx from '@/common/lx/lxReport'
+import { tourState } from '@/step-tour'
 
 export default {
   props: {
@@ -25,6 +26,15 @@ export default {
     disabled: Boolean
   },
   computed: {
+    inTourModal () {
+      return tourState.visible
+    },
+    dropDownAttrs () {
+      return this.inTourModal ? {
+        trigger: 'custom',
+        visible: this.menu.initVisible
+      } : { trigger: 'hover' }
+    },
     isDisabled () {
       return this.disabled || this.menu.disabled
     },

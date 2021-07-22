@@ -10,7 +10,7 @@
   >
     <component :is="component" v-bind="tooltip">
       <template v-if="menu.children">
-        <Dropdown trigger="hover" :visible="menu.initVisible">
+        <Dropdown v-bind="dropDownAttrs">
           <Icon :class="{ active: menu.active }" class="icon" v-bind="getIconProps(icon)">
             <component v-if="isComponent(icon)" :is="icon" />
             <Badge v-if="badgeProps" v-bind="badgeProps" />
@@ -126,7 +126,7 @@
       }
       /deep/ .boo-badge-dot {
         top: 2px;
-        right: -2px;
+        right: -7px;
       }
 
       &.line /deep/ .boo-badge-count {

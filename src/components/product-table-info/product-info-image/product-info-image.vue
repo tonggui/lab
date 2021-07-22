@@ -212,6 +212,11 @@
         &.is-normal {
           background: rgba(63, 65, 86, .9);
         }
+        &.is-normal-mini {
+          background: rgba(63, 65, 86, .9);
+          white-space: nowrap;
+          padding: 1px;
+        }
       }
     }
     &.top-left-marker {

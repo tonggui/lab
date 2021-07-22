@@ -1,5 +1,5 @@
 <template>
-  <div class="product-recommend-edit-batch-operation">
+  <div class="merchant-cube-edit-batch-operation">
     <div>
       <Checkbox @on-change="handleSelectAll" :value="value" :indeterminate="!value && indeterminate" >全选本页</Checkbox>
     </div>
@@ -15,7 +15,7 @@
 </template>
 <script>
   export default {
-    name: 'product-recommend-edit-batch-operation',
+    name: 'merchant-cube-edit-batch-operation',
     props: {
       value: Boolean,
       indeterminate: Boolean,
@@ -41,7 +41,7 @@
   }
 </script>
 <style lang="less" scoped>
-  .product-recommend-edit-batch-operation {
+  .merchant-cube-edit-batch-operation {
     display: flex;
     padding: 18px;
     justify-content: space-between;

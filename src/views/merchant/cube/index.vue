@@ -1,7 +1,9 @@
 <template>
   <div class="merchant-cube-container" :style="style">
-    <router-view name="breadCrumb"></router-view>
-    <CubeSteps />
+    <div class="sticky-top">
+      <router-view name="breadCrumb"></router-view>
+      <CubeSteps />
+    </div>
     <router-view class="content"></router-view>
   </div>
 </template>
@@ -35,9 +37,14 @@
 
 <style lang="less" scoped>
   .merchant-cube-container {
-    //height: 100vh;
     display: flex;
     flex-direction: column;
+    .sticky-top {
+      background: #F7F8FA;
+      position: sticky;
+      top: 0;
+      z-index: 100
+    }
     .content {
       flex: 1;
     }

@@ -131,7 +131,7 @@
 .scope-card{
   background: #fff;
   box-shadow: 0 0 6px 0 #F3F3F4;
-  padding: 30px 70px;
+  padding: 34px 30px;
   margin-bottom: 10px;
   border-radius: 2px;
 }
@@ -143,7 +143,7 @@
   line-height: 28px;
   margin-right: 16px;
   text-align: center;
-  border: 1px solid #ccc;
+  /*border: 1px solid #ccc;*/
   border-radius: 50%;
   font-family: HelveticaNeue;
   font-size: 16px;
@@ -154,7 +154,7 @@
 }
 .display-tip{
   background: #fff;
-  padding: 22px 70px;
+  padding: 20px 30px;
   margin-top: 10px;
   border-bottom: 1px solid #E9EAF2;
 }

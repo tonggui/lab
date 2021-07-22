@@ -228,7 +228,7 @@ const source = {
     fetch: () => {
       return getCubeSwitch()
     },
-    defaultValue: false
+    defaultValue: undefined
   },
   allCubeStatus: {
     fetch: () => {

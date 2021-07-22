@@ -69,6 +69,7 @@ export const KEYS = {
   MERCHANT_CUBE_RANGE_AUTO_SETTING: 'merchantCubeRangeAutoSetting',
   // 商家商品中心魔方结果页返回
   MERCHANT_CUBE_RESULT_TIP: 'merchantCubeResultTip',
+  MERCHANT_CUBE_GUIDE: 'merchantCubeGuide',
   MERCHANT_CUBE_SCOPE_TIP: 'merchantCubeScopeTip'
 }
 
