@@ -81,7 +81,7 @@ export default [
     },
     meta: {
       id: 'merchantCubeProcessResult',
-      title: '创建结果',
+      title: '创建完成',
       pv: {
         cid: ''
       }

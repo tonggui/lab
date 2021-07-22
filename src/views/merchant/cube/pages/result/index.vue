@@ -107,8 +107,8 @@
       position: absolute;
       bottom: 30px;
       display: flex;
-      width: 100%;
-      justify-content: center;
+      width: calc(100% - 60px);
+      justify-content: flex-end;
       .btn-cube, .btn-center {
         width: 152px;
         height: 40px;
