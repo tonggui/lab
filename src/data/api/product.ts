@@ -97,7 +97,7 @@ export const getSearchSuggestion = ({ poiId, keyword, auditStatus, packageProduc
   return convertProductSuggestionListFromServer(data.list)
 })
 /**
- * 获取商品列表 // TODO: 点击商品Tab触发
+ * 获取商品列表
  * @param tagId 店内分类id
  * @param keyword 关键字
  * @param status 商品状态
@@ -169,7 +169,9 @@ export const getProductInfoList = ({
   statusList = statusList || []
   const product = convertProductInfoWithPaginationFromServer(data, {
     pagination,
-    statusList
+    statusList,
+    // TODO: 增加当前Tab标识
+    tabState: defaultTo(status, PRODUCT_STATUS.ALL)
   })
   // store.commit('product/statusList', product.statusList)
   if (needTag) {
