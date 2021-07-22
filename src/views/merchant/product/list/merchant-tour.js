@@ -4,10 +4,28 @@ import stepTour, {
   stepsFromPoi,
   stepsFromSelf,
   stepsProductOperation,
-  stepsMerchantCube, tourState
+  stepsMerchantCube,
+  tourState
 } from '@/step-tour'
 import Modal from '@components/modal'
 import router from '@/router'
+
+function triggerTouchEvent (disable) {
+  const element = document.querySelector('#app') || document.body
+  if (disable) element.style.pointerEvents = 'none'
+  else element.style.pointerEvents = 'unset'
+}
+
+/**
+ * 由于延时的问题，用户可能会快速操作
+ * @param fn
+ * @param time
+ */
+function delayTriggerTour (fn, time = 2000) {
+  if (typeof fn !== 'function') throw Error('delayTriggerTour 需要传入函数')
+  triggerTouchEvent(true)
+  setTimeout(fn, time)
+}
 
 function toastModal () {
   Modal.confirm({
@@ -28,6 +46,7 @@ const oncomplete = () => {
 }
 const onbeforeexit = () => {
   tourState.visible = false
+  triggerTouchEvent(false)
 }
 
 export const triggerTour = ({ inExistSteps = [] }) => {
@@ -38,17 +57,17 @@ export const triggerTour = ({ inExistSteps = [] }) => {
     tourState.visible = true
     if (LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] === null) {
       // 老商家
-      setTimeout(() => {
+      delayTriggerTour(() => {
         stepTour({
           steps: oldMerchantSteps.filter(item => !inExistSteps.includes(item.element)),
           oncomplete,
           onbeforeexit
         }).start()
-      }, 2000)
+      })
     } else { // 新商家
       // 因为存在一些异步获取的接口，所以一定延迟加载引导
       if (LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_WAY] === 'fromPoi') {
-        setTimeout(() => {
+        delayTriggerTour(() => {
           stepTour({
             steps: stepsFromPoi.filter(item => !inExistSteps.includes(item.element)),
             oncomplete: function () {
@@ -57,15 +76,15 @@ export const triggerTour = ({ inExistSteps = [] }) => {
             },
             onbeforeexit
           }).start()
-        }, 2000)
+        })
       } else {
-        setTimeout(() => {
+        delayTriggerTour(() => {
           stepTour({
             steps: stepsFromSelf.filter(item => !inExistSteps.includes(item.element)),
             oncomplete,
             onbeforeexit
           }).start()
-        }, 2000)
+        })
       }
     }
   }
@@ -73,20 +92,21 @@ export const triggerTour = ({ inExistSteps = [] }) => {
 
 export const triggerProductOperation = () => {
   if (LocalStorage[STORAGE_KEYS.MERCHANT_CUBE_GUIDE] && LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_WAY] !== 'fromPoi' && LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] !== null && LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE] && !LocalStorage[STORAGE_KEYS.MERCHANT_OPERATION_GUIDE]) {
-    setTimeout(() => {
+    delayTriggerTour(() => {
       stepTour({
         steps: stepsProductOperation,
         oncomplete: function () {
           LocalStorage[STORAGE_KEYS.MERCHANT_OPERATION_GUIDE] = true
+          triggerTouchEvent(false)
         }
       }).start()
-    }, 2000)
+    })
   }
 }
 
 export const triggerMerchantCubeTour = ({ inExistSteps = [] }) => {
   if (!LocalStorage[STORAGE_KEYS.MERCHANT_CUBE_GUIDE] && !inExistSteps.includes('#cubeCreate')) {
-    setTimeout(() => {
+    delayTriggerTour(() => {
       stepTour({
         steps: stepsMerchantCube,
         oncomplete: function () {
@@ -95,6 +115,6 @@ export const triggerMerchantCubeTour = ({ inExistSteps = [] }) => {
         },
         onbeforeexit
       }).start()
-    }, 2000)
+    })
   }
 }

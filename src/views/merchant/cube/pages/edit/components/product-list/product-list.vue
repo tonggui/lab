@@ -16,6 +16,7 @@
     @modify-sku="handleModifySku"
     @on-select="handleSelect"
     @on-page-change="handlePageChange"
+    class="merchant-cube-quick-edit-table-container"
   >
     <template v-slot:groupHeader="{ group }">
       <GroupHeader
@@ -69,7 +70,7 @@
   import validate from './validate'
 
   export default {
-    name: 'product-recommend-edit-table',
+    name: 'merchant-cube-edit-table',
     components: {
       QuickEditProductTable,
       BatchOperation,
@@ -158,6 +159,7 @@
           dimension: 'spu',
           align: 'center',
           width: 120,
+          className: 'merchant-cube-edit-operation-container',
           render: (h, { row }) => {
             const id = getUniqueId(row)
             const cache = this.cacheProduct[id] || {}
@@ -181,7 +183,7 @@
           width: 50,
           align: 'center',
           dimension: 'spu',
-          className: 'product-recommend-edit-table-selection',
+          className: 'merchant-cube-edit-table-selection',
           selectedRowKeys: this.selectIdList
         }
       },
@@ -441,12 +443,53 @@
   }
 </script>
 <style lang="less">
-  .table-head .product-recommend-edit-table-selection .table-selection-checkbox {
-    display: none;
-  }
-  .product-recommend-edit-table {
-    &-selection {
-      border-right: none !important;
+  .merchant-cube-quick-edit-table-container {
+    .quick-edit-product-table-container .table {
+      overflow-y: auto;
+      .table-head {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        .merchant-cube-edit-table-selection .table-selection-checkbox {
+          display: none;
+        }
+        thead tr th:last-child {
+          position: sticky;
+          right: 0;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 100%;
+            left: -20px;
+            top: 0;
+            background-image: linear-gradient(90deg, rgba(248,249,251,0.00) 0%, rgba(0,0,0,0.05) 100%);
+          }
+        }
+      }
+      .table-body {
+        overflow-y: unset;
+        table .merchant-cube-edit-operation-container {
+          position: sticky;
+          right: 0;
+          //border-left: 1px solid #E9EAF2;
+          background: #fff;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 100%;
+            left: -20px;
+            top: 0;
+            background-image: linear-gradient(90deg, rgba(248,249,251,0.00) 0%, rgba(0,0,0,0.05) 100%);
+          }
+        }
+      }
+    }
+    .merchant-cube-edit-table {
+      &-selection {
+        border-right: none !important;
+      }
     }
   }
 </style>
