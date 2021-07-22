@@ -446,41 +446,44 @@
   .merchant-cube-quick-edit-table-container {
     .quick-edit-product-table-container .table {
       overflow-y: auto;
-    }
-    .table-head {
-      position: sticky;
-      top: 0;
-      z-index: 5;
-      .merchant-cube-edit-table-selection .table-selection-checkbox {
-        display: none;
-      }
-      thead tr th:last-child {
+      .table-head {
         position: sticky;
-        right: 0;
-        &::before {
-          content: '';
-          position: absolute;
-          width: 20px;
-          height: 100%;
-          left: -20px;
-          top: 0;
-          background-image: linear-gradient(90deg, rgba(248,249,251,0.00) 0%, rgba(0,0,0,0.05) 100%);
+        top: 0;
+        z-index: 5;
+        .merchant-cube-edit-table-selection .table-selection-checkbox {
+          display: none;
+        }
+        thead tr th:last-child {
+          position: sticky;
+          right: 0;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 100%;
+            left: -20px;
+            top: 0;
+            background-image: linear-gradient(90deg, rgba(248,249,251,0.00) 0%, rgba(0,0,0,0.05) 100%);
+          }
         }
       }
-    }
-    .table-body table .merchant-cube-edit-operation-container {
-      position: sticky;
-      right: 0;
-      //border-left: 1px solid #E9EAF2;
-      background: #fff;
-      &::before {
-        content: '';
-        position: absolute;
-        width: 20px;
-        height: 100%;
-        left: -20px;
-        top: 0;
-        background-image: linear-gradient(90deg, rgba(248,249,251,0.00) 0%, rgba(0,0,0,0.05) 100%);
+      .table-body {
+        overflow-y: unset;
+        table .merchant-cube-edit-operation-container {
+          position: sticky;
+          right: 0;
+          //border-left: 1px solid #E9EAF2;
+          background: #fff;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 100%;
+            left: -20px;
+            top: 0;
+            background-image: linear-gradient(90deg, rgba(248,249,251,0.00) 0%, rgba(0,0,0,0.05) 100%);
+          }
+        }
       }
     }
     .merchant-cube-edit-table {
