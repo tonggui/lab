@@ -348,7 +348,7 @@
       .visible-switch {
         font-size: 14px;
         line-height: 14px;
-        text-decoration: none;
+        text-decoration: underline;
         font-weight: 400;
         font-family: PingFangSC-Regular;
         color: #999999;

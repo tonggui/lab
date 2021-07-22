@@ -3,12 +3,14 @@
     <div class="scope-card">
       <div class="boo-steps"><span>1</span></div>
       <span class="scope-span">选择推荐商品范围</span>
-      <RadioGroup v-model="scope" type="button" @on-change="handleStatusChange" >
-        <Radio :label="-1">全国</Radio>
-        <span @click="handleStatusClick">
+        <Tooltip type="guide" keyName="MERCHANT_CUBE_SCOPE_TIP" placement="right-start" transfer :max-width="400" :content="scopeContentTip">
+          <RadioGroup v-model="scope" type="button" @on-change="handleStatusChange" >
+            <Radio :label="-1">全国</Radio>
+            <span @click="handleStatusClick">
           <Radio :label="1">指定城市或分店</Radio>
         </span>
-      </RadioGroup>
+          </RadioGroup>
+        </Tooltip>
       <span v-show="displayShop.cityId !== -1" style="margin-left: 20px">所选{{cityOrPoiDisplay}}为: {{ displayShop.name }}</span>
     </div>
     <div class="display-tip">
@@ -23,6 +25,7 @@
 <script>
   import SelectedScopeShop from './selected-scope-shop'
   import { helper } from '@/views/merchant/cube/store'
+  import { LIST_CONTENT } from '@/views/merchant/cube/pages/content'
   const { mapState, mapActions } = helper('multiCubeList')
 
   export default {
@@ -56,6 +59,9 @@
         scopeLists: 'scopeList',
         currentScopeId: 'currentScope'
       }),
+      scopeContentTip () {
+        return LIST_CONTENT.MERCHANT_CUBE_SCOPE_TIP
+      },
       cityOrPoiDisplay () {
         return this.displayShop.id === -1 ? '城市' : '分店'
       },
