@@ -80,7 +80,7 @@ export const ProductMark = {
     name: '信息缺失'
   },
   [PRODUCT_MARK.MERCHANT_EXIST]: {
-    type: 'normal',
+    type: 'normal-mini',
     name: '总部已创建'
   }
 }
