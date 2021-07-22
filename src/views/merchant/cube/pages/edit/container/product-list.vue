@@ -211,9 +211,8 @@
         })
       },
       async handleBatchCreateConfirm (productList) {
-        const hasAddedPoiIds = productList.some(product => product.addedPoiIds && product.addedPoiIds.length)
-
-        if (hasAddedPoiIds) await this.handleModalVisible()
+        // const hasAddedPoiIds = productList.some(product => product.addedPoiIds && product.addedPoiIds.length)
+        // if (hasAddedPoiIds) await this.handleModalVisible()
         return this.handleRequest(productList)
       },
       handleDelete (productList) {
