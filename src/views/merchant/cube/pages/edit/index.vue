@@ -33,11 +33,9 @@
         this.$router.back()
       },
       handleExistToast () {
-        console.log('wqwqwqwqwq', this.tagGroupProduct)
         const hasHqExist = Object.values(this.tagGroupProduct || {}).some(item => (item.productList || []).some(pro => !!pro.isHqExist))
         if (hasHqExist) {
-          this.$Modal.info({
-            title: '温馨提示',
+          this.$Message.info({
             content: '选中商品若为总部已存在，直接基于现有商品信息进行编辑完善'
           })
         }
