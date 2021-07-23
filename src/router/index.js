@@ -5,6 +5,7 @@ import routes from './config'
 import moduleControl from '@/module'
 import { install as installLeaveConfirmRouterPlugin } from '@/plugins/router-leave-confirm'
 import { install as installLxTimeCounterRouter } from '@/common/lx/lxReport/lxTime'
+import { clearTourTimeOut as installClearTourTimeOut } from '@/views/merchant/product/list/merchant-tour.js'
 import categoryMap from '@/module/category'
 import { pageGuardBeforeEach } from '@/common/app'
 import pvRouterGuard from '@/common/lx/pvRouterGuard'
@@ -130,5 +131,7 @@ installLxTimeCounterRouter(router)
 
 // 装载页面离开确认插件
 installLeaveConfirmRouterPlugin(router)
+
+installClearTourTimeOut(router)
 
 export default router

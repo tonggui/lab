@@ -121,6 +121,13 @@
             order: 4,
             badge: {
               dot: true
+            },
+            tooltip: {
+              type: 'guide',
+              placement: 'right',
+              transfer: true,
+              content: '新增“魔方快捷新建”功能，为你智能推荐平台热销及热搜商品，批量选择后可一键快捷创建哦～',
+              keyName: 'MERCHANT_CUBE_GUIDE'
             }
           },
           download: true,

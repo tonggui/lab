@@ -33,7 +33,7 @@ export default {
       return this.inTourModal ? {
         trigger: 'custom',
         visible: this.menu.initVisible
-      } : { trigger: 'hover' }
+      } : { trigger: 'hover', visible: this.menu.initVisible }
     },
     isDisabled () {
       return this.disabled || this.menu.disabled
