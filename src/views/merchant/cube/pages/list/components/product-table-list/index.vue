@@ -70,7 +70,8 @@
       return {
         showExist: true, // 已隐藏商品
         displayTip: '',
-        displayContent: ''
+        displayContent: '',
+        currentSelectTip: ''
       }
     },
     computed: {
@@ -82,6 +83,9 @@
       }),
       classifySelectedProductsInfo () {
         return Object.values(this.classifySelectedProducts)
+      },
+      classifySelectedProductsCount () {
+        return this.classifySelectedProductsInfo.reduce((prev, { productList }) => prev.concat(productList), [])
       },
       displayContentScope () {
         if (this.currentScope.poiId !== -1 && this.currentScope.poiId !== '') {
@@ -140,12 +144,17 @@
         immediate: true,
         handler (v) {
           if (v.cityId === -1 || v.cityId === '') {
+            this.currentSelectTip = '全国'
             this.displayTip = '全国所有'
-          } else if (v.poiId === -1 || v.poiId === '') {
-            let cityName = this.rowScopeList && this.rowScopeList.find(item => item.cityId === v.cityId).cityName
-            this.displayTip = cityName + '所有'
-          } else if (v.poiId !== -1) {
-            this.displayTip = ''
+          } else {
+            let city = this.rowScopeList && this.rowScopeList.find(item => item.cityId === v.cityId)
+            if (v.poiId === -1 || v.poiId === '') {
+              this.currentSelectTip = city.cityName
+              this.currentSelectTip = this.currentSelectTip + '所有'
+            } else {
+              this.currentSelectTip = city.name
+              this.displayTip = ''
+            }
           }
         }
       }
@@ -209,12 +218,12 @@
           return selection ? !include : include
         })
         if (selection) {
-          this.handleSelectChange(list)
+          this.handleSelectChange(list, true)
         } else {
-          this.handleDeSelect(list)
+          this.handleDeSelect(list, true)
         }
       },
-      handleSelectChange (items) {
+      handleSelectChange (items, isSelectAll = false) {
         if (this.handleExceedMax()) {
           return
         }
@@ -226,33 +235,66 @@
         }
         if (this.classifySelectedProductsInfo.length > 0) {
           // 找对应的项并判断是否有toast提示
-          this.getDisplayItem(items, true)
+          this.getDisplayItem(items, true, isSelectAll)
         }
         this.$emit('on-select', items)
       },
-      handleDeSelect (deSelectItem) {
+      handleDeSelect (deSelectItem, isSelectAll = false) {
         this.$emit('on-de-select', deSelectItem)
         // 当剔除关联后该商品待关联门店数>=1，则toast提示
         // 找对应的项并判断是否有toast提示
         console.log(this.classifySelectedProductsInfo)
-        this.getDisplayItem(deSelectItem, false)
+        this.getDisplayItem(deSelectItem, false, isSelectAll)
       },
-      getDisplayItem (items, type) {
-        items.forEach(item => {
-          let target = {}
-          this.classifySelectedProductsInfo.some(({ productList }) => {
-            target = productList.find(ele => {
-              return item.__id__ === ele.__id__
-            })
-            if (target) return true
-          })
-          console.log('---00', target)
-          if (target) {
-            if (type || (!type && target.addedPoiIds && target.addedPoiIds.length > 0)) {
-              this.displayTips(_.cloneDeep(target), type)
+      getDisplayItem (items, type, isSelectAll) {
+        console.log(isSelectAll)
+        if (isSelectAll) {
+          if (type) {
+            if (this.classifySelectedProductsCount.length > 0) {
+              let addCount = this.dataSource.filter(item => {
+                return !this.isItemNotSeletable(item) && !this.classifySelectedProductsCount.some(ele => ele.__id__ === item.__id__)
+              })
+              let selContent = addCount.length === 0 ? `本页全部商品在已选列表已存在，这些商品关联门店范围将新增${this.currentSelectTip}` : `已选列表新增${addCount.length}个商品，其余${this.classifySelectedProductsCount.length}个商品在已选列表已存在，这些商品关联门店范围将新增${this.currentSelectTip}`
+              console.log(selContent)
+              this.$Message.info({
+                content: selContent
+              })
+            }
+          } else {
+            // “由于商品【A】、【B】、【C】等XX个商品在部分门店待创建，已选列表仍然保留这些商品”，
+            // A、B、C为商品名称，超过3个时仅显示3个，XX为取消选中后本页商品即将关联门店数量>0（排除已关联门店，统计即将关联门店数量）的商品数量
+            if (this.classifySelectedProductsCount.length > 0) {
+              let content = ''
+              let poiCount = 0
+              for (let product of this.classifySelectedProductsCount) {
+                content += poiCount > 0 ? '、' : ''
+                content += product.name
+                if (++poiCount >= 3) break
+              }
+              let deSelContent = `由于商品${content}${items.length > 3 ? '等' : ''}${this.classifySelectedProductsCount.length}个商品在部分门店待创建，已选列表仍然保留这些商品`
+              console.log(deSelContent)
+              this.$Message.info({
+                content: deSelContent
+              })
             }
           }
-        })
+        } else {
+          items.forEach(item => {
+            let target = {}
+            this.classifySelectedProductsInfo.some(({ productList }) => {
+              target = productList.find(ele => {
+                return item.__id__ === ele.__id__
+              })
+              if (target) return true
+            })
+            console.log('---00', target)
+            if (target) {
+              if (type || (!type && target.addedPoiIds && target.addedPoiIds.length > 0)) {
+                this.displayTips(_.cloneDeep(target), type)
+              }
+            }
+          })
+        }
       },
       // 选择城市内容+商品已关联城市去重后的总城市数量XX 及 选择门店内容+商品已关联门店去重后的总门店数量YY 判断**如何展示
       displayTips (target, type) {
