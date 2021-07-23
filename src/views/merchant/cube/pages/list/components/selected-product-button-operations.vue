@@ -61,7 +61,7 @@
   .un-select {
     font-family: PingFangSC-Regular;
     font-size: 14px;
-    color: #666666;
+    color: #cccccc;
     line-height: 14px;
     margin-right: 16px;
   }
@@ -83,7 +83,6 @@
     text-align: center;
     font-size: 14px;
     color: #222222;
-    cursor: pointer;
     font-family: PingFangSC-Medium;
     margin-left: 24px;
     margin-bottom: 6px;
