@@ -43,7 +43,7 @@
       background: #F7F8FA;
       position: sticky;
       top: 0;
-      z-index: 1111
+      z-index: 111
     }
     .content {
       flex: 1;

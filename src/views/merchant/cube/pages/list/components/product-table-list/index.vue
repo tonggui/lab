@@ -147,12 +147,15 @@
             this.currentSelectTip = '全国'
             this.displayTip = '全国所有'
           } else {
-            let city = this.rowScopeList && this.rowScopeList.find(item => item.cityId === v.cityId)
+            let city = this.scopeList && this.scopeList.find(item => item.cityId === v.cityId)
             if (v.poiId === -1 || v.poiId === '') {
               this.currentSelectTip = city.cityName
               this.currentSelectTip = this.currentSelectTip + '所有'
             } else {
-              this.currentSelectTip = city.name
+              let poi = city.poiList.filter(item => {
+                return v.poiId === item.id
+              })
+              this.currentSelectTip = poi[0].name
               this.displayTip = ''
             }
           }
@@ -254,8 +257,7 @@
               let addCount = this.dataSource.filter(item => {
                 return !this.isItemNotSeletable(item) && !this.classifySelectedProductsCount.some(ele => ele.__id__ === item.__id__)
               })
-              let selContent = addCount.length === 0 ? `本页全部商品在已选列表已存在，这些商品关联门店范围将新增${this.currentSelectTip}` : `已选列表新增${addCount.length}个商品，其余${this.classifySelectedProductsCount.length}个商品在已选列表已存在，这些商品关联门店范围将新增${this.currentSelectTip}`
-              console.log(selContent)
+              let selContent = addCount.length === 0 ? `本页全部商品在已选列表已存在，这些商品关联门店范围将新增${this.currentSelectTip}` : `已选列表新增${addCount.length}个商品，这些商品关联门店范围已新增${this.currentSelectTip}，其余${this.classifySelectedProductsCount.length}个商品在已选列表已存在`
               this.$Message.info({
                 content: selContent
               })
@@ -271,7 +273,7 @@
                 content += product.name
                 if (++poiCount >= 3) break
               }
-              let deSelContent = `由于商品${content}${items.length > 3 ? '等' : ''}${this.classifySelectedProductsCount.length}个商品在部分门店待创建，已选列表仍然保留这些商品`
+              let deSelContent = `由于商品${content}${this.classifySelectedProductsCount > 3 ? '等' : ''}${this.classifySelectedProductsCount.length}个商品在部分门店待创建，已选列表仍然保留这些商品`
               console.log(deSelContent)
               this.$Message.info({
                 content: deSelContent
