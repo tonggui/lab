@@ -133,7 +133,7 @@
           merchantProductConfig: true,
           batchOperation: {
             show: !this.isMedicine,
-            initVisible: !storage[STORAGE_KEY['NEW_BATCH_REL_GUIDE']] || !storage[STORAGE_KEY['MERCHANT_GUIDE']]
+            initVisible: !storage[STORAGE_KEY['MERCHANT_GUIDE']]
           },
           batchCreate: {
             show: true,
@@ -160,17 +160,18 @@
           batchRel: {
             show: true,
             order: 3,
+            id: 'batchRel',
             link: {
               name: 'newBatchRel'
-            },
-            tooltip: {
-              type: 'guide',
-              placement: 'right',
-              transfer: true,
-              content: '①批量关联可给新开业门店批量建品哦；\n②总部商品修改后未更新到门店，因为门店商品未关联总部，也可批量关联一下~',
-              keyName: 'NEW_BATCH_REL_GUIDE'
-              // disabled: !!storage[STORAGE_KEY['NEW_BATCH_REL_GUIDE']]
             }
+            // tooltip: {
+            //   type: 'guide',
+            //   placement: 'right',
+            //   transfer: true,
+            //   content: '①批量关联可给新开业门店批量建品哦；\n②总部商品修改后未更新到门店，因为门店商品未关联总部，也可批量关联一下~',
+            //   keyName: 'NEW_BATCH_REL_GUIDE'
+            //   // disabled: !!storage[STORAGE_KEY['NEW_BATCH_REL_GUIDE']]
+            // }
           },
           audit: {
             show: true,

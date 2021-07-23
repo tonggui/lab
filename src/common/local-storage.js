@@ -64,8 +64,9 @@ export const KEYS = {
   // 商家商品中心任务进度
   MERCHANT_TASK_PROCESS: 'merchantTaskProcess',
   // 商家中心欢迎提示
-  MERCHANT_WELCOME: 'merchantWelcome'
-
+  MERCHANT_WELCOME: 'merchantWelcome',
+  // 商家中心导入商品功能 (另一个项目中设置)，如果是自助开通则为true，从商品库列表进入则为false
+  IMPORT_FROM_OPEN: 'importFromOpen'
 }
 
 export const orders = ['MERCHANT_GUIDE', 'MERCHANT_GUIDE_BOOK']

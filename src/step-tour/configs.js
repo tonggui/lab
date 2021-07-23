@@ -7,6 +7,11 @@ export const oldMerchantSteps = [
     intro: '商家商品中心”正式更名为“总部商品库”啦～<br />现可支持自主重置总部商品库哦～'
   },
   {
+    title: '批量关联',
+    element: '#batchRel',
+    intro: '①批量关联可给新开业门店批量建品哦；<br />②总部商品修改后未更新到门店，因为门店商品未关联总部，也可批量关联一下~'
+  },
+  {
     element: '#reset',
     title: '重置总部商品库',
     intro: '点击这里即可重置<br />重置商品库可“从分店中快速导入商品”或“自行创建总部商品”<br />（重置总部商品不会删除分店相应商品，请放心使用）',
@@ -41,6 +46,11 @@ export const stepsFromPoi = [
     title: '删除商品',
     element: '.delete-operation',
     intro: '删除商品时，请选择是否删除分店商品，注意不要误删商品哦~'
+  },
+  {
+    title: '批量关联',
+    element: '#batchRel',
+    intro: '①批量关联可给新开业门店批量建品哦；<br />②总部商品修改后未更新到门店，因为门店商品未关联总部，也可批量关联一下~'
   }
 ]
 
@@ -61,6 +71,11 @@ export const stepsFromSelf = [
     title: '批量新建',
     element: '#batchCreate',
     intro: '分类创建后，可使⽤“批量新建”创建商品，将商品信息复制粘贴⾄Excel模板并上传创建，⼀次可创建多个商品。<br />新建的商品可自动给所选分店新建，并与分店建立关联关系，后续修改商品可以自动同步有关联的分店哦~'
+  },
+  {
+    title: '批量关联',
+    element: '#batchRel',
+    intro: '①批量关联可给新开业门店批量建品哦；<br />②总部商品修改后未更新到门店，因为门店商品未关联总部，也可批量关联一下~'
   },
   {
     title: '单个新建',
