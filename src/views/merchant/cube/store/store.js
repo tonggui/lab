@@ -6,7 +6,7 @@ import {
   arrayToMap,
   arrayRemoveItem
 } from '../utils'
-import { getPriorityTag, isEmptyArray } from '@/views/product-recommend/utils'
+import { getPriorityTag, isEmptyArray, getProductForAllTag } from '@/views/product-recommend/utils'
 import * as _ from 'lodash'
 export default {
   namespaced: true,
@@ -25,7 +25,8 @@ export default {
         if (!product.hasOwnProperty('addedPoiIds')) {
           product['addedPoiIds'] = []
         }
-        const { tagList } = product
+        let existProduct = getProductForAllTag(map, product)
+        const { tagList } = existProduct || product
         if (isEmptyArray(tagList)) {
           return
         }
@@ -34,9 +35,10 @@ export default {
           map[id] = { name, sequence, productList: [] }
         }
         const productList = [...map[id].productList]
-        const existProduct = _.find(productList, item => {
-          return item.__id__ === product.__id__
-        })
+        // 存在一个商品在不同范围下有不同的tagList，需去所有的tagList中找product
+        // 在原有的tag下找不到商品，则需去所有分类下面找商品
+        // 且以前者的tagList为准
+        console.log('ooos:', existProduct)
         let currentScope = state.multiCubeList.currentScope
         if (selected === 'selected') {
           // 将当前范围下未关联的门店&&可关联门店 加入待关联门店中

@@ -1,8 +1,8 @@
 <template>
   <div class="merchant-cube-result-container">
     <ResultBanner :type="type" button-text="下载【失败商品&分店表】" @on-click-btn="handleClickBtn">
-      <span class="merchant-cube-result-success" slot="success">全部创建成功，共<span class="success-num">{{succeedNum}}</span>个商品已创建至总部商品库并关联所选门店</span>
-      <span class="merchant-cube-result-fail" slot="fail">{{part ? '部分商品' : '全部'}}创建失败，详细请下载右侧表格文件</span>
+      <span class="merchant-cube-result-success" slot="success">全部创建成功，共<span class="success-num">{{succeedNum}}</span>个商品已全部成功创建至总部商品库及关联门店</span>
+      <span class="merchant-cube-result-fail" slot="fail">{{part ? '部分创建成功' : '全部创建失败'}}，失败明细请下载右侧表格文件</span>
     </ResultBanner>
     <div class="fix-bottom">
       <div class="btn-cube" @click="jumpToCube">

@@ -16,6 +16,16 @@ function triggerTouchEvent (disable) {
   else element.style.pointerEvents = 'unset'
 }
 
+let timeout = null
+
+export function clearTourTimeOut (router) {
+  router.beforeEach((to, _from, next) => {
+    console.log('timewqwq', timeout)
+    if (timeout) clearTimeout(timeout)
+    next()
+  })
+}
+
 /**
  * 由于延时的问题，用户可能会快速操作
  * @param fn
@@ -24,7 +34,7 @@ function triggerTouchEvent (disable) {
 function delayTriggerTour (fn, time = 2000) {
   if (typeof fn !== 'function') throw Error('delayTriggerTour 需要传入函数')
   triggerTouchEvent(true)
-  setTimeout(fn, time)
+  timeout = setTimeout(fn, time)
 }
 
 function toastModal () {
@@ -50,10 +60,11 @@ const onbeforeexit = () => {
 }
 
 export const triggerTour = ({ inExistSteps = [] }) => {
-  if (LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE] && !LocalStorage[STORAGE_KEYS.MERCHANT_CUBE_GUIDE]) {
-    tourState.visible = true
-    triggerMerchantCubeTour({ inExistSteps })
-  } else if (!LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE]) {
+  // if (LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE] && !LocalStorage[STORAGE_KEYS.MERCHANT_CUBE_GUIDE]) {
+  //   tourState.visible = true
+  //   triggerMerchantCubeTour({ inExistSteps })
+  // } else
+  if (!LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE]) {
     tourState.visible = true
     if (LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] === null) {
       // 老商家
@@ -98,7 +109,8 @@ export const triggerProductOperation = () => {
         oncomplete: function () {
           LocalStorage[STORAGE_KEYS.MERCHANT_OPERATION_GUIDE] = true
           triggerTouchEvent(false)
-        }
+        },
+        onbeforeexit
       }).start()
     })
   }

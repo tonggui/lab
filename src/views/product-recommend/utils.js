@@ -1,5 +1,5 @@
 import { QUALIFICATION_STATUS } from '@/data/enums/product'
-import { get } from 'lodash'
+import { get, find } from 'lodash'
 
 /**
  * 商品是否超出门店经营范围或者门店缺少资质判断
@@ -51,6 +51,18 @@ export const getPriorityTag = (tagList) => {
     }
   })
   return priorityTag
+}
+
+export const getProductForAllTag = (map, product) => {
+  let existProduct
+  for (let key in map) {
+    let productListTmp = [...map[key].productList]
+    existProduct = find(productListTmp, item => {
+      return item.__id__ === product.__id__
+    })
+    if (existProduct) break
+  }
+  return existProduct
 }
 
 export const getLxParams = (item) => {
