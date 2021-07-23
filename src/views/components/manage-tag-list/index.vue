@@ -7,6 +7,7 @@
         :disabled="disabled || loading"
         @click="handleAddTag"
         v-mc="{ bid: 'b_shangou_online_e_ctqgsxco_mc' }"
+        id="createTag"
       >
         <Icon local="add" />新建分类
       </PermissionBtn>
