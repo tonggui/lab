@@ -60,10 +60,11 @@ const onbeforeexit = () => {
 }
 
 export const triggerTour = ({ inExistSteps = [] }) => {
-  if (LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE] && !LocalStorage[STORAGE_KEYS.MERCHANT_CUBE_GUIDE]) {
-    tourState.visible = true
-    triggerMerchantCubeTour({ inExistSteps })
-  } else if (!LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE]) {
+  // if (LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE] && !LocalStorage[STORAGE_KEYS.MERCHANT_CUBE_GUIDE]) {
+  //   tourState.visible = true
+  //   triggerMerchantCubeTour({ inExistSteps })
+  // } else
+  if (!LocalStorage[STORAGE_KEYS.MERCHANT_GUIDE]) {
     tourState.visible = true
     if (LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] === null) {
       // 老商家
