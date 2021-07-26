@@ -74,8 +74,12 @@
         this.ctime = ctime
         this.status = status
         // 通过“从分店导入商品”的方式开通时（仅开通时，不包括开通后使用“从分店导入商品”），确认导入进入处理中的页面后，刷新页面再次进入总部商品库，仍进入处理中页面，不自动进入总部商品库。
-        if (LocalStorage[KEYS.MERCHANT_OPEN_WAY] === 'fromPoi' && LocalStorage[KEYS.IMPORT_FROM_OPEN] && [BATCH_REL_TASK_STATUS.INLINE, BATCH_REL_TASK_STATUS.IN_PROCESS].includes(status)) {
+        if (LocalStorage[KEYS.MERCHANT_OPEN_WAY] === 'fromPoi' &&
+          LocalStorage[KEYS.IMPORT_FROM_OPEN] &&
+          [BATCH_REL_TASK_STATUS.INLINE, BATCH_REL_TASK_STATUS.IN_PROCESS].includes(status)) {
           this.handleGoToTask()
+        } else {
+          LocalStorage[KEYS.IMPORT_FROM_OPEN] = false
         }
         // 如果有失败任务，默认跳转到失败页面
         if (id > 0 && BATCH_REL_TASK_STATUS.FINISH === status && resultStatus !== BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS) {
