@@ -14,8 +14,8 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <Switch>
-          <Route exact component={Login} path="/" />
-          <Route exact component={Index} path="/index" />
+          <Route exact component={Index} path="/" />
+          <PrivateRouter exact component={Index} path="/index" />
         </Switch>
       </BrowserRouter>
     )
