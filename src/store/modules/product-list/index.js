@@ -28,6 +28,11 @@ export default (api, defaultState = {}) => ({
     initState = { ...initState, ...defaultState }
     return { ...initState }
   },
+  getters: {
+    statusList (state) {
+      return state.statusList
+    }
+  },
   mutations: {
     setLoading (state, payload) {
       state.loading = !!payload

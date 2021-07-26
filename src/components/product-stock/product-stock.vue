@@ -9,7 +9,14 @@
   export default {
     name: 'product-dispaly-stock',
     props: {
-      stock: [Array, Number, String]
+      stock: [Array, Number, String],
+      // 最小起购数
+      minOrderCount: {
+        type: Number,
+        default: 0
+      },
+      // 是否为单规格
+      isSingleSku: Boolean
     },
     filters: {
       isInfinite (stock) {
@@ -24,7 +31,8 @@
         return this.stock
       },
       className () {
-        if (this.showStock === 0) {
+        // TODO: 新增 多规格 起购>1且库存<起购的sku，库存数量展示为红色
+        if (this.showStock === 0 || (!this.isSingleSku && this.minOrderCount > 1 && this.showStock < this.minOrderCount)) {
           return 'danger'
         }
         return ''

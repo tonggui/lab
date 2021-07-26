@@ -11,7 +11,6 @@ import Vuex from 'vuex'
 import moduleControl from '@/module'
 
 Vue.use(Vuex)
-
 const store = new Vuex.Store({
   state: {
     moduleStates: moduleControl.states

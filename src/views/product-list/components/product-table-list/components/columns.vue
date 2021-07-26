@@ -24,7 +24,8 @@
     name: 'product-table-list-columns',
     props: {
       tagId: Number,
-      disabled: Boolean
+      disabled: Boolean,
+      tabValue: [String, Number] // tab当前选中值
     },
     data () {
       return {
@@ -93,8 +94,10 @@
           align: 'center',
           render: (h, { row }) => {
             return (
+              // 新增当前Tab值
               <ProductSkuEdit
                 disabled={this.disabled || this.getProductAudit(row)}
+                tabValue={this.tabValue}
                 felid={FELID.STOCK}
                 skuList={row.skuList}
                 product={row}
@@ -113,6 +116,7 @@
               disabled={this.disabled}
               product={row}
               tagId={this.tagId}
+              tabValue={this.tabValue}
               vOn:delete={this.handleDelete}
               vOn:change-sell-status={this.handleChangeSellStatus}
             />

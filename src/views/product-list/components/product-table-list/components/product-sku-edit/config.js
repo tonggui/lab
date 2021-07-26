@@ -21,18 +21,23 @@ export default {
         return res.msg
       }
     },
-    displayRender: (h, { skuList }) => {
+    displayRender: (h, { skuList, isSingleSku }) => {
       const stockList = skuList.map(sku => sku.stock)
-      return <ProductStock stock={stockList} />
+      return <ProductStock stock={stockList} isSingleSku={isSingleSku} />
     },
-    editRender: (h, { sku, onChange, disabled, isPackageProduct, isDisplayNone }) => {
+    editRender: (h, { sku, onChange, disabled, isPackageProduct, isDisplayNone, isSingleSku, tabValue }) => {
       const value = sku.stock
+      // TODO: 起购数
+      const minOrderCount = sku.skuMinOrderCount
       return h(EditStock, {
         attrs: {
           displayNone: isDisplayNone,
           disabled: disabled || isPackageProduct,
           disableTip: isPackageProduct ? '组包商品库存根据组包内商品数量及商品库存自动计算，不能直接修改。如需修改，您可以找到组包内商品，修改关联商品的原库存' : '',
           value,
+          minOrderCount,
+          isSingleSku,
+          tabValue, // 当前Tab值
           onConfirm: async (...rest) => {
             await new Promise((resolve, reject) => {
               onChange(...rest, createCallback(() => {
