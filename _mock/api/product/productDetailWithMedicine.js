@@ -26,7 +26,9 @@ module.exports = function () {
       "wmProductVideo": null,
       "skus": [{
         "enableStockEditing": true,
-        "commonProperty": null,
+        "commonProperty": {
+          "allowUpcEmpty": "true"
+        },
         "ladderPrice": 0.0,
         "ladderNum": 0,
         "skuAttrs": [],

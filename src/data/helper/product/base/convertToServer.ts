@@ -9,6 +9,7 @@ import {
 import {
   SELLING_TIME_TYPE
 } from '../../../enums/product'
+import {convertCommonPropertyToSever} from '@/data/helper/product/withCategoryAttr/convertToServer';
 
 /*
  * 转换视频数据格式-转出
@@ -90,7 +91,8 @@ export const convertProductSkuList = (skuList: Sku[]) => {
       source_food_code: sku.sourceFoodCode || '',
       locator_code: sku.shelfNum || '',
       attrList: ([] as object[]),
-      min_order_count: defaultTo(sku.minOrderCount, 1)
+      min_order_count: defaultTo(sku.minOrderCount, 1),
+      commonProperty: convertCommonPropertyToSever((sku.commonProperty || null) as object)
     }
     if (sku.categoryAttrList) {
       node.attrList = sku.categoryAttrList.map(attr => {

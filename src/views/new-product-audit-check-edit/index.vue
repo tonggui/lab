@@ -84,6 +84,7 @@
               visible: !!(this.originalFormData.id && this.originalFormData.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
+              required: this.upcIsSp,
               visible: !this.upcIsSp && !!this.needAudit
             }
           },
