@@ -273,7 +273,7 @@
                 content += product.name
                 if (++poiCount >= 3) break
               }
-              let deSelContent = `由于商品${content}${this.classifySelectedProductsCount > 3 ? '等' : ''}${this.classifySelectedProductsCount.length}个商品在部分门店待创建，已选列表仍然保留这些商品`
+              let deSelContent = `由于商品${content}${this.classifySelectedProductsCount.length > 3 ? '等' : ''}${this.classifySelectedProductsCount.length}个商品在部分门店待创建，已选列表仍然保留这些商品`
               console.log(deSelContent)
               this.$Message.info({
                 content: deSelContent
