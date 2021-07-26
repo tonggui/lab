@@ -5,7 +5,7 @@ import { getToken } from "../../utils/cookies";
 const PrivateRouter = ({ component: Component, ...rest }) => {
     return (
       <Route {...rest} render={routeProps => (
-        true ? <Component {...routeProps} /> : <Redirect to="/" />
+          <Component {...routeProps} />
       )} />
     );
 }

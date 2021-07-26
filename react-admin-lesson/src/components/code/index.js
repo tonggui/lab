@@ -16,8 +16,7 @@ class Code extends Component {
             button_text: "获取验证码",
             button_loading: false,
             button_disabled: false,
-            module: props.module,
-            initValue: {}
+            module: props.module
         }
     }
     // this.props.username 每次都会去获取

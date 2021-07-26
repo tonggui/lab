@@ -54,7 +54,7 @@ class AsideMenu extends Component {
     // 无子级菜单处理
     renderMenu = ({title, key}) => {
         return (
-            <Menu.Item key={key} icon={<UserOutlined />}>
+            <Menu.Item key={key}>
                 <Link to={key}><span>{title}</span></Link>
             </Menu.Item>
         )
@@ -63,7 +63,7 @@ class AsideMenu extends Component {
     // 子级菜单处理
     renderSubMenu = ({title, key, child}) => {
         return (
-            <SubMenu key={key} icon={<UserOutlined />} title={key}>
+            <SubMenu key={key} icon={<UserOutlined />} title={title}>
                 {
                     child && child.map(item => {
                         return item.child && item.child.length > 0 ? this.renderSubMenu(item) : this.renderMenu(item);
