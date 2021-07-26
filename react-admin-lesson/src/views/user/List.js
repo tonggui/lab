@@ -1,12 +1,18 @@
 import React, { Component } from "react";
+import TaskSteps from "../index/components/steps/index";
 class UserList extends Component {
     constructor(props){
         super(props);
-        this.state = {};
+        this.state = {
+            current:0
+        };
     }
     render(){
         return (
-            <div>用户列表</div>
+            <div>
+                <TaskSteps current={this.state.current}>
+                </TaskSteps>
+            </div>
         )
     }
 }
