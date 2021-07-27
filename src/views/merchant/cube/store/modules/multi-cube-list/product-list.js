@@ -4,7 +4,7 @@ import {
 import {
   defaultTagId
 } from '@/data/constants/poi'
-import message from '@/store/helper/toast'
+import Vue from 'vue'
 
 const initState = {
   loading: false, // 加载状态
@@ -123,7 +123,8 @@ export default (api) => {
           commit('setPagination', result.pagination)
         } catch (err) {
           console.error(err)
-          message.error(err.message)
+          const message = Vue.prototype.$Message
+          message.error(err.msg)
           commit('setError', true)
         } finally {
           commit('setLoading', false)

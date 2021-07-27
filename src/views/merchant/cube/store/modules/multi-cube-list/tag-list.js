@@ -1,7 +1,7 @@
 import mergeModule from '@/store/helper/merge-module'
 import createTagListStore from '@/store/modules/base-tag-list'
-import message from '@/store/helper/toast'
 import { get } from 'lodash'
+import Vue from 'vue'
 
 export default (api) => {
   const tagListStoreInstance = createTagListStore(api, {
@@ -28,7 +28,7 @@ export default (api) => {
           commit('setList', tagList)
         } catch (err) {
           console.error(err)
-          message.error(err.message)
+          Vue.prototype.$Message.error(err.msg)
           commit('setError', true)
         } finally {
           commit('setLoading', false)
