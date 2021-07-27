@@ -1,6 +1,9 @@
 import React, { Component, Fragment } from "react";
 import { Steps, Button, message, Select, Input, Form } from 'antd';
 import Steps2 from './steps2'
+import Steps3 from './steps3'
+import './steps.scss'
+
 const { Step } = Steps;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -16,7 +19,7 @@ const TaskForm = () => {
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
             initialValues={{ remember: true }}
-            onFinish={onFinish}
+            onFinish={onFinish} className="step-one"
         >
             <Form.Item
                 label="任务名称"
@@ -51,9 +54,9 @@ const steps = [
         title: '完善算法信息',
         content: (<div  style={{marginTop:30, marginBottom:150, marginLeft:20}}>
             <div>
-                <p >攻击方法选择：</p>
+                <p>攻击方法选择：</p>
             </div>
-            <div >
+            <div style={{marginLeft:20, marginTop:20}}>
                 <Steps2>
                 </Steps2>
             </div>
@@ -61,7 +64,12 @@ const steps = [
     },
     {
         title: '创建完成',
-        content: 'Last-content',
+        content: (<div style={{marginTop:30}}>
+            <div >
+                <Steps3>
+                </Steps3>
+            </div>
+        </div>),
     },
 ];
 const TaskSteps = () => {
@@ -75,7 +83,7 @@ const TaskSteps = () => {
         setCurrent(current - 1);
     };
     const handleSubmit = () => {
-
+        setCurrent(current + 1);
     }
     return (
         <>
@@ -92,7 +100,7 @@ const TaskSteps = () => {
                     </Button>
                 )}
                 {current === 1 && (
-                    <Button type="primary" onClick={handleSubmit()}>
+                    <Button type="primary" onClick={handleSubmit} style={{ margin: '0 8px' }}>
                         确认提交
                     </Button>
                 )}
@@ -101,7 +109,7 @@ const TaskSteps = () => {
                         返回
                     </Button>
                 )}
-                {current > 0 && (
+                {current === 1 && (
                     <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
                         上一步
                     </Button>

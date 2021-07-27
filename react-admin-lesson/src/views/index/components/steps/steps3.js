@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import WhiteDetail from "../index/components/detail/whiteAttack";
-import BlackDetail from "../index/components/detail/blackAttack";
+import WhiteDetail from "../detail/whiteAttack";
+import BlackDetail from "../detail/blackAttack";
 
 class TaskDetail extends Component {
     constructor(props){

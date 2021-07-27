@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import TaskSteps from "../index/components/steps/index";
-class UserList extends Component {
+class TaskCreate extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -16,4 +16,4 @@ class UserList extends Component {
         )
     }
 }
-export default UserList;
+export default TaskCreate;

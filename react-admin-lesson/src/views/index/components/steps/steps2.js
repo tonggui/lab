@@ -1,7 +1,7 @@
 import React from "react";
 import {Radio, Checkbox, Row, Col, Image, Upload, Button, Modal} from 'antd';
 import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
-
+import './steps.scss'
 const WhiteAttack = () => {
     const onCheckChange = (checkedValues) => {
         console.log('checked = ', checkedValues);
@@ -117,7 +117,7 @@ const BlackAttack = () => {
     }
     return (
         <div>
-            <Radio.Group onChange={onRadioChange} value={type}>
+            <Radio.Group onChange={onRadioChange} value={type}  style={{marginBottom:20}}>
                 <Radio value={1}>图片</Radio>
                 <Radio value={2}>视频</Radio>
             </Radio.Group>
@@ -152,7 +152,7 @@ const Steps2 = () => {
                 <Radio value={1}>白盒攻击</Radio>
                 <Radio value={2}>黑盒攻击</Radio>
             </Radio.Group>
-            <div>
+            <div  style={{marginLeft:30,marginTop:20}}>
                 <RenderAttack algorithmType = {algorithmType} />
             </div>
         </div>
