@@ -62,12 +62,14 @@
       },
       showModal () {
         // 多规格点击
-        lx.mc({
-          bid: 'b_shangou_online_e_a01gqbnj_mc',
-          val: {
-            tab_id: PRODUCT_STATUS_MAIDIAN[this.tabValue.toString()]
-          }
-        })
+        if (PRODUCT_STATUS_MAIDIAN[this.tabValue.toString()]) {
+          lx.mc({
+            bid: 'b_shangou_online_e_a01gqbnj_mc',
+            val: {
+              tab_id: PRODUCT_STATUS_MAIDIAN[this.tabValue.toString()]
+            }
+          })
+        }
         if (this.disabled) {
           return
         }
