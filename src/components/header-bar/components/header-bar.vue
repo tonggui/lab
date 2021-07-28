@@ -33,23 +33,15 @@
       <template v-for="(menu, index) in left">
         <div v-if="index !== 0" class="border" :key="index"></div>
         <transition :name="menu.transitionName" :key="index">
-          <IconItem
-            v-if="!['新建单个商品', '从商品库新建'].includes(menu.label)"
-            :need-permission="needPermission"
-            :id="menu.id"
-            :menu="menu"
-            @click="handleClick"
-            :disabled="disabled"
-            v-show="!menu.hide"
-          />
-          <PermissionBtn
-            v-else
+          <component
+            :is="leftComponent(menu.key)"
+            is-native-tag
             component="IconItem"
-            :need-permission="needPermission"
             btn-type="CREATE"
+            :need-permission="needPermission"
+            :showBorder="index !== 0"
             :id="menu.id"
             :menu="menu"
-            :showBorder="index !== 0"
             @click="handleClick"
             :disabled="disabled"
             v-show="!menu.hide"
@@ -75,7 +67,7 @@
     <div class="right">
       <div class="other-title">其它操作</div>
       <div :class="`link-item-wrapper ` + rightClassName">
-        <template v-for="(menu, index) in right" class="aaaa">
+        <template v-for="(menu, index) in right">
           <transition :name="menu.transitionName" :key="index">
             <LinkItem
             v-if="menu.label !== '回收站'"
@@ -106,6 +98,7 @@
 <script>
   import IconItem from './IconItem'
   import LinkItem from './LinkItem'
+  import PermissionBtn from '@/views/components/permission-bth'
   import Doubt from '@/assets/icons/doubt.svg'
   import LocalStorage, { KEYS } from '@/common/local-storage'
   import {
@@ -154,6 +147,11 @@
       }
     },
     methods: {
+      leftComponent (key) {
+        const withoutPermissionButton = ['createProduct', 'productLibrary', 'batchCreate']
+        if (!withoutPermissionButton.includes(key)) return IconItem
+        return PermissionBtn
+      },
       handleClick (menu) {
         this.$emit('click', menu)
       },
