@@ -6,7 +6,7 @@ import {
   fetchGetProductListBySearch,
   fetchSubmitModProduct,
   fetchSubmitDeleteProduct,
-  fetchSubmitModProductSku
+  fetchSubmitModProductSku, fetchBatchModifyTag
 } from '@/data/repos/merchantProduct'
 
 export default {
@@ -16,8 +16,12 @@ export default {
   },
   product: {
     getList: fetchGetProductListBySearch,
-    delete: (product, { isMerchantDelete, isSelectAll, poiIdList }) => fetchSubmitDeleteProduct([product.id], isMerchantDelete, isSelectAll, poiIdList),
+    delete: (product, { isMerchantDelete, isSelectAll, poiIdList }) => {
+      const products = Array.isArray(product) ? product : [product.id]
+      fetchSubmitDeleteProduct(products, isMerchantDelete, isSelectAll, poiIdList)
+    },
     modify: fetchSubmitModProduct,
-    modifySkuList: fetchSubmitModProductSku
+    modifySkuList: fetchSubmitModProductSku,
+    batch: fetchBatchModifyTag
   }
 }
