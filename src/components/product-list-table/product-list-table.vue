@@ -1,6 +1,7 @@
 <template>
   <div class="product-list-table">
     <slot name="tabs">
+      <!-- TODO: 这里是商品列表Tab -->
       <Tabs :value="tabValue" @on-click="handleTabChange" class="product-list-table-tabs" v-if="showTabs">
         <template v-for="item in tabs">
           <TabPane

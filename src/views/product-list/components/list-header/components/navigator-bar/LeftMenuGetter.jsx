@@ -48,7 +48,7 @@ export default {
               ? { name: 'newArrivalList', query: this.$route.query }
               : { name: 'productRecommend', query: this.$route.query },
             bid: this.computedCubeShow === 2 ? 'b_shangou_online_e_n2chi3yh_mc' : 'b_shangou_online_e_i4acqwpi_mc',
-            description: '从商品魔方新建商品'
+            description: '智能选品，一键上架'
           }
         }
         return item

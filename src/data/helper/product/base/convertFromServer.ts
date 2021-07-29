@@ -3,7 +3,8 @@ import { BrandProductVideo, ProductInfo, ProductVideo, Sku } from '../../../inte
 import {
   PRODUCT_SELL_STATUS,
   PRODUCT_TYPE,
-  COMPLIANCE_AUDIT_STATUS_TYPE
+  COMPLIANCE_AUDIT_STATUS_TYPE,
+  PRODUCT_STATUS
 } from '@/data/enums/product'
 import { isMedicine } from '@/common/app'
 import { BaseCategory } from '@/data/interface/category'
@@ -60,7 +61,9 @@ export const convertProductSku = (sku: any): Sku => {
     },
     upcCode: sku.upc_code || sku.upcCode,
     sourceFoodCode: sku.source_food_code || sku.sourceFoodCode,
-    shelfNum: sku.locator_code
+    shelfNum: sku.locator_code,
+    // TODO: 新增sku起购数
+    skuMinOrderCount: sku.minOrderCount
   }
   return node
 }
@@ -70,7 +73,7 @@ export const convertProductSkuList = (list: any[]): Sku[] => {
   return list.map(convertProductSku)
 }
 
-export const convertProductInfo = (product: any, validationConfigMap): ProductInfo => {
+export const convertProductInfo = (product: any, tabState, validationConfigMap): ProductInfo => {
   const {
     enableStockEditing,
     id,
@@ -109,7 +112,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     name: categoryName,
     namePath: trimSplit(categoryNamePath)
   }
-  const skuList = convertProductSkuList(wmProductSkus || [])
+  const skuList:any = convertProductSkuList(wmProductSkus || [])
   // 是否下架
   const notBeSold = product.isStopSell === 1 || sellStatus === 1
   // 设置基本信息要展示的字段
@@ -172,6 +175,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
   const productType = product.combinationLabel === 1 ? PRODUCT_TYPE.PACKAGE : PRODUCT_TYPE.NORMAL
   // 合规审核中
   const isComplianceUnderAudit = complianceStatus === COMPLIANCE_AUDIT_STATUS_TYPE.UNDER_AUDIT
+  // TODO: 增加Tab判断，判断是够为库存不足 存在库存不足并且在<库存不足>或者<全部商品>或者<售卖中>Tab下
+  const isStockInsufficientCount = skuList && skuList.some(i => i.stock && i.skuMinOrderCount > 1 && i.skuMinOrderCount > i.stock) && (tabState === PRODUCT_STATUS.ALL || tabState === PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT || tabState === PRODUCT_STATUS.SELLING)
   const node: ProductInfo = {
     enableStockEditing,
     id,
@@ -190,6 +195,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     isNeedFill: fillOrCheck === 1,
     isMissingInfo: !!product.missingRequiredInfo,
     isSmartSort: !!smartSort,
+    // TODO: 新增是否展示库存不足文案标识
+    isStockInsufficientCount: isStockInsufficientCount,
     displayInfo,
     isOTC: isMedicine() ? isOTC : false,
     isPrescription: isMedicine() ? isPrescription : false,
@@ -209,9 +216,9 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
   return node
 }
 
-export const convertProductInfoList = (list: any[], validationConfigMap?: { [propName:string]: any }): ProductInfo[] => {
+export const convertProductInfoList = (list: any[], tabState: string, validationConfigMap?: { [propName:string]: any }): ProductInfo[] => {
   list = list || []
-  return list.map((item) => convertProductInfo(item, validationConfigMap))
+  return list.map((item) => convertProductInfo(item, tabState, validationConfigMap))
 }
 
 export const convertProductInfoWithPagination = (data: any, requestQuery) => {
@@ -223,9 +230,9 @@ export const convertProductInfoWithPagination = (data: any, requestQuery) => {
     spuTopCount,
     spuSortType // 1: 手动排序 2: 智能排序
   } = (data || {}) as any
-  const { pagination, statusList } = requestQuery
+  const { pagination, statusList, tabState } = requestQuery
   return {
-    list: convertProductInfoList(productList, validationConfigMap),
+    list: convertProductInfoList(productList, tabState, validationConfigMap),
     pagination: {
       ...pagination,
       total: totalCount

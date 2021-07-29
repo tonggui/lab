@@ -169,8 +169,11 @@ export const getProductInfoList = ({
   statusList = statusList || []
   const product = convertProductInfoWithPaginationFromServer(data, {
     pagination,
-    statusList
+    statusList,
+    // TODO: 增加当前Tab标识
+    tabState: defaultTo(status, PRODUCT_STATUS.ALL)
   })
+  // store.commit('product/statusList', product.statusList)
   if (needTag) {
     const tagList = convertTagWithSortListFromServer(data.tagList)
     return {

@@ -138,8 +138,9 @@ module.exports = function(req, mock, random) {
             "id|+1": 0,
             'upcCode|1': ['123', '246', ''],
             'price|1': [12345.12, 10],
-            stock: 0,
-            "spec|1": ["450ml", "150ml", "300ml"]
+            "stock|1": [0, 1, 3, 2, 5, 4, 6, 7],
+            "spec|1": ["450ml", "150ml", "300ml"],
+            "minOrderCount|1": [3, 2, 5, 4], // TODO: 新增sku起购数
           }
         ],
         "auditUpdateData|1": [true, false],
@@ -170,7 +171,8 @@ module.exports = function(req, mock, random) {
       sellOut: 0,
       selling: 0,
       suspendedSale: 0,
-      missingRequiredCount: 20
+      missingRequiredCount: 20,
+      stockInsuffientCount: 5, // TODO: 库存不足tab商品数量
     },
     validationConfigMap: categoryIdList.slice(2).reduce((prev, id) => {
       prev[id] = {

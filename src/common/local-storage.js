@@ -36,6 +36,8 @@ export const KEYS = {
   // 商品缺失关键信息引导弹窗
   PRODUCT_MISSING_INFORMATION: 'productMissingInfo',
   MERCHANT_PRODUCT_MISSING_INFORMATION: 'merchantProductMissingInfo',
+  // TODO: 【库存不足】列表信息引导弹窗
+  PRODUCT_STOCK_INSUFFICIENT_COUNT: 'productStockInsufficientCount',
   // 商品上新推荐入口(魔方二期) 引导
   PRODUCT_NEW_ARRIVAL_GUIDE: 'productNewArrivalGuide',
   // 商品上新推荐编辑页面自动填写分类弹窗(魔方二期)

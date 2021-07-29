@@ -1,6 +1,6 @@
 <template>
   <div class="product-table-op-cell" :class="{ disabled: disabled }">
-    <span v-mc="{ bid: 'b_sfkii6px' }">
+    <span v-mc="{ bid: 'b_sfkii6px', val: { tab_id: tabId } }">
       <Link
         v-if="isPackageProduct"
         :disabled="disabled"
@@ -20,10 +20,10 @@
       >编辑</NamedLink>
     </span>
     <span :class="{ disabled: product.isStopSell }"  v-if="!isAudit">
-      <PermissionBtn component="span" need-permission btn-type="MODIFY_ON_AND_OFF_SHELVES" isNativeTag v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON, product.isComplianceUnderAudit)">上架</PermissionBtn>
-      <PermissionBtn component="span" need-permission btn-type="MODIFY_ON_AND_OFF_SHELVES" isNativeTag v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</PermissionBtn>
+      <PermissionBtn component="span" need-permission btn-type="MODIFY_ON_AND_OFF_SHELVES" isNativeTag v-mc="{ bid: 'b_yo8d391g', val: { type: 1, tab_id: tabId } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON, product.isComplianceUnderAudit)">上架</PermissionBtn>
+      <PermissionBtn component="span" need-permission btn-type="MODIFY_ON_AND_OFF_SHELVES" isNativeTag v-mc="{ bid: 'b_yo8d391g', val: { type: 0, tab_id: tabId } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</PermissionBtn>
     </span>
-    <PermissionBtn component="span" need-permission btn-type="DEL_PRODUCT" isNativeTag v-mc="{ bid: 'b_ugst7wnh' }" @click="handleDelete">删除</PermissionBtn>
+    <PermissionBtn component="span" need-permission btn-type="DEL_PRODUCT" isNativeTag v-mc="{ bid: 'b_ugst7wnh', val: { tab_id: tabId } }" @click="handleDelete">删除</PermissionBtn>
   </div>
 </template>
 <script>
@@ -35,7 +35,8 @@
     QUALIFICATION_STATUS,
     PRODUCT_AUDIT_STATUS,
     PACKAGE_PRODUCT_OPT_STATUS,
-    PRODUCT_TYPE
+    PRODUCT_TYPE,
+    PRODUCT_STATUS_MAIDIAN
   } from '@/data/enums/product'
   import { defaultTagId } from '@/data/constants/poi'
   import { createCallback } from '@/common/vuex'
@@ -56,7 +57,8 @@
       createCallback: {
         type: Function,
         default: createCallback
-      }
+      },
+      tabValue: [String, Number] // tab当前选中值
     },
     data () {
       return {
@@ -78,6 +80,10 @@
       },
       isPackageProduct () {
         return this.product.type === PRODUCT_TYPE.PACKAGE
+      },
+      tabId () {
+        // 计算埋点需要的tab_id
+        return PRODUCT_STATUS_MAIDIAN[this.tabValue.toString()]
       }
     },
     methods: {
