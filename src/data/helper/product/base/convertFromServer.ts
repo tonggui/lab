@@ -175,8 +175,8 @@ export const convertProductInfo = (product: any, tabState, validationConfigMap):
   const productType = product.combinationLabel === 1 ? PRODUCT_TYPE.PACKAGE : PRODUCT_TYPE.NORMAL
   // 合规审核中
   const isComplianceUnderAudit = complianceStatus === COMPLIANCE_AUDIT_STATUS_TYPE.UNDER_AUDIT
-  // TODO: 增加Tab判断，判断是够为库存不足 存在库存不足并且在<库存不足>或者<全部商品>Tab下
-  const isStockInsufficientCount = skuList && skuList.some(i => i.stock && i.skuMinOrderCount > 1 && i.skuMinOrderCount > i.stock) && (tabState === PRODUCT_STATUS.ALL || tabState === PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT)
+  // TODO: 增加Tab判断，判断是够为库存不足 存在库存不足并且在<库存不足>或者<全部商品>或者<售卖中>Tab下
+  const isStockInsufficientCount = skuList && skuList.some(i => i.stock && i.skuMinOrderCount > 1 && i.skuMinOrderCount > i.stock) && (tabState === PRODUCT_STATUS.ALL || tabState === PRODUCT_STATUS.STOCK_INSUFFICIENT_COUNT || tabState === PRODUCT_STATUS.SELLING)
   const node: ProductInfo = {
     enableStockEditing,
     id,
