@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { Steps, Button, message, Select, Input, Form } from 'antd';
 import Steps2 from './steps2'
 import Steps3 from './steps3'
+import BlackAttack from "../detail/blackAttack";
 import './steps.scss'
 
 const { Step } = Steps;
@@ -14,28 +15,31 @@ const TaskForm = () => {
     };
 
     return (
-        <Form
-            name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            initialValues={{ remember: true }}
-            onFinish={onFinish} className="step-one"
-        >
-            <Form.Item
-                label="任务名称"
-                name="taskname"
-                rules={[{ required: true, message: 'Please input your username!' }]}
+        <>
+            <Form
+                name="basic"
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 16 }}
+                initialValues={{ remember: true }}
+                onFinish={onFinish} className="step-one"
             >
-                <Input />
-            </Form.Item>
+                <Form.Item
+                    label="任务名称"
+                    name="taskname"
+                    rules={[{ required: true, message: 'Please input your username!' }]}
+                >
+                    <Input />
+                </Form.Item>
 
-            <Form.Item
-                label="任务备注"
-                name="taskremark"
-            >
-                <TextArea />
-            </Form.Item>
-        </Form>
+                <Form.Item
+                    label="任务备注"
+                    name="taskremark"
+                >
+                    <TextArea />
+                </Form.Item>
+            </Form>
+            <BlackAttack></BlackAttack>
+        </>
     );
 };
 
