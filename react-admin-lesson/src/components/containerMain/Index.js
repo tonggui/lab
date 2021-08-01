@@ -4,9 +4,9 @@ import { Switch,Route } from 'react-router-dom';
 import PrivateRouter from "../privateRouter/Index";
 /** 自动化工程 */
 import Components from "./components";
-import TaskCreate from "../../views/user/List"
-import TaskList from "../../views/user/Add"
-import TaskDetail from "../../views/user/TaskDetail"
+import TaskCreate from "../../views/task/Create"
+import TaskList from "../../views/task/List"
+import Detail from "../../views/task/Detail"
 class ContainerMain extends React.Component {
   constructor(props){
     super(props);
@@ -14,14 +14,13 @@ class ContainerMain extends React.Component {
   }
   render(){
     return (
-      <Route exact component={TaskCreate} path="/index/user/list" />
-        // <Switch>
-        //   {
-        //     Components.map(item => {
-        //       return <PrivateRouter exact key={item.path} path={item.path} component={item.component} />
-        //     })
-        //   }
-        // </Switch>
+        <Switch>
+          {
+            Components.map(item => {
+              return <PrivateRouter exact key={item.path} path={item.path} component={item.component} />
+            })
+          }
+        </Switch>
     )
   }
 }

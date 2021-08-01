@@ -54,7 +54,7 @@ class AsideMenu extends Component {
     // 无子级菜单处理
     renderMenu = ({title, key}) => {
         return (
-            <Menu.Item key={key}>
+            <Menu.Item key={key} icon={<UserOutlined />} >
                 <Link to={key}><span>{title}</span></Link>
             </Menu.Item>
         )

@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { Tabs, Table, Tag, Space } from 'antd';
+import {withRouter} from "react-router-dom";
+import { Link } from "react-router-dom";
+import {getTaskName, getTasRemark} from "../../utils/cookies";
 
 const { TabPane } = Tabs;
 const TaskList = ()=>{
@@ -45,12 +48,36 @@ const TaskList = ()=>{
             key: 'action',
             render: (text, record) => (
                 <Space size="middle">
-                    <a>查看详情  {record.name}</a>
+                    <Link to="/index/task/detail">查看详情  {record.name}
+                    </Link>
                 </Space>
             ),
         },
     ];
-
+    const goToDetail = () => {
+        const requestData = {
+            taskName:getTaskName(),
+            taskRemark: getTasRemark(),
+        }
+        // this.setState({
+        //     loading: true
+        // })
+        // this.props.history.push('/index/task/detail');
+        // Login(requestData).then(response => {  // resolves
+        //     this.setState({
+        //         loading: false
+        //     })
+        //     const data = response.data.data
+        //     // 路由跳转
+        //     this.props.history.push('/index/task/list');
+        // }).catch(error => {  // reject
+        //     this.setState({
+        //         loading: false
+        //     })
+        // })
+        this.setState({current: 0})
+        console.log('Received values of form: ', requestData);
+    };
     const data = [
         {
             key: '1',
@@ -90,4 +117,4 @@ const TaskList = ()=>{
         </div>
     )
 }
-export default TaskList;
+export default withRouter(TaskList);

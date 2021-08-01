@@ -5,7 +5,7 @@ const components = [];
 // 循环文件
 files.keys().map((key) => {
     // 过滤 index、login
-    if(key.includes("./index/") || key.includes("./login/")) { return false; }
+    if(key.includes("./index/")) { return false; }
     // 分割字符串
     const splitFilesName = key.split(".");
     const jsonObj = {};

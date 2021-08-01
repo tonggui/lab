@@ -18,8 +18,7 @@ class BlackAttack extends Component {
     // this.player.subscribeToStateChange(this.handleStateChange.bind(this));
     // this.player.load();//  更改视频源并重新加载视频
     state = {
-        videoUrl:import('../../../blackTest.mp4'),
-        videoUrl2:import('../../../blackTest.mp4'),
+        videoUrl:import('../../../bbtest.mp4'),
     }
     // handleStateChange = () => {
     //     this.setState({

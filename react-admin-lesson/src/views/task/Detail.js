@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import WhiteDetail from "../index/components/detail/whiteAttack";
 import BlackDetail from "../index/components/detail/blackAttack";
+import {withRouter} from "react-router-dom";
 
 class TaskDetail extends Component {
     constructor(props){
@@ -27,4 +28,4 @@ class TaskDetail extends Component {
         }
     }
 }
-export default TaskDetail;
+export default withRouter(TaskDetail);

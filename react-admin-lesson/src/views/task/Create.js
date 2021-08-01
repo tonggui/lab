@@ -1,19 +1,15 @@
 import React, { Component } from "react";
 import TaskSteps from "../index/components/steps/index";
+import {withRouter} from "react-router-dom";
+import {Button} from "antd";
 class TaskCreate extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            current:0
-        };
-    }
     render(){
         return (
             <div>
-                <TaskSteps current={this.state.current}>
+                <TaskSteps  history={this.props.history}>
                 </TaskSteps>
             </div>
         )
     }
 }
-export default TaskCreate;
+export default withRouter(TaskCreate);
