@@ -1,10 +1,22 @@
 import React from "react";
 import {Radio, Checkbox, Row, Col, Image, Upload, Button, Modal} from 'antd';
 import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+    setWhiteParams,
+    setBlackParams,
+    setAttackType,
+    getWhiteParams,
+    getBlackParams,
+    getAttackType
+} from "../../../../utils/cookies"
+
 import './steps.scss'
 const WhiteAttack = () => {
     const onCheckChange = (checkedValues) => {
-        console.log('checked = ', checkedValues);
+        if (getAttackType() == 1) {
+            console.log('checked = ', checkedValues);
+            setWhiteParams( checkedValues)
+        }
     }
     return (
         <Checkbox.Group style={{ width: '100%' }} onChange={onCheckChange}>
@@ -48,7 +60,11 @@ class Pictures extends React.Component {
         });
     };
 
-    handleChange = ({ fileList }) => this.setState({ fileList });
+    handleChange = ({ fileList }) => {
+        this.setState({ fileList })
+        console.log(fileList)
+        setBlackParams(fileList)
+    };
 
     render() {
         const { previewVisible, previewImage, fileList, previewTitle } = this.state;
@@ -142,7 +158,8 @@ const Steps2 = () => {
     const [algorithmType, setAlgorithmType] = React.useState(1);
     const onRadioChange = e => {
         let value = e.target.value
-        console.log('radio checked', value);
+        setAttackType(value)
+        console.log('radio checked', value, getAttackType());
         setAlgorithmType(value);
     };
 
@@ -152,7 +169,7 @@ const Steps2 = () => {
                 <Radio value={1}>白盒攻击</Radio>
                 <Radio value={2}>黑盒攻击</Radio>
             </Radio.Group>
-            <div  style={{marginLeft:30,marginTop:20}}>
+            <div style={{marginLeft:30,marginTop:20}}>
                 <RenderAttack algorithmType = {algorithmType} />
             </div>
         </div>

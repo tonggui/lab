@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Form, Input, Button } from 'antd';
-import { setTaskRemark,getTasRemark, getTaskName,setTaskName } from "../../../../utils/cookies"
+import { setTaskRemark,getTaskRemark, getTaskName,setTaskName } from "../../../../utils/cookies"
 import './steps.scss'
 
 const { TextArea } = Input;
@@ -8,7 +8,7 @@ const { TextArea } = Input;
 class TaskForm extends Component{
     state = {
         taskName: getTaskName() || '',
-        taskRemark: getTasRemark() || ''
+        taskRemark: getTaskRemark() || ''
     }
 
     onFinish = (values) => {

@@ -4,8 +4,16 @@ import Steps2 from './steps2'
 import Steps3 from './steps3'
 import './steps.scss'
 import TaskForm from "./taskForm";
-import {Login} from "../../../../api/account";
-import { setTaskRemark,getTasRemark, getTaskName,setTaskName } from "../../../../utils/cookies"
+import {CreateWhiteTask, CreateBlackTask} from "../../../../api/task";
+import {
+    setTaskRemark,
+    getTaskRemark,
+    getTaskName,
+    setTaskName,
+    getBlackParams,
+    getWhiteParams, getAttackType,
+    deleteAttackType,deleteBlackParams,deleteWhiteParams,deleteTaskName,deleteTaskRemark
+} from "../../../../utils/cookies"
 import {withRouter} from "react-router-dom";
 
 const { Step } = Steps;
@@ -41,7 +49,6 @@ const steps = [
 class TaskSteps extends Component{
     constructor(props){
         super(props);
-        console.log(props.params)
         this.state = {
             current:0,
             taskName:"",
@@ -58,27 +65,44 @@ class TaskSteps extends Component{
         this.setState({current: this.state.current - 1});
     };
     handleSubmit = () => {
-        const requestData = {
-            taskName:getTaskName(),
-            taskRemark: getTasRemark(),
-            code: this.state.methodType,
+        let requestData = {}
+        if (getAttackType() == 1) {
+            //白盒
+            requestData = {
+                taskName:getTaskName(),
+                taskRemark: getTaskRemark(),
+                whiteParams: getWhiteParams()
+            }
+        } else {
+            //黑盒
+            requestData = {
+                taskName:getTaskName(),
+                taskRemark: getTaskRemark(),
+                blackParams: getBlackParams(),
+            }
         }
-        // this.setState({
-        //     loading: true
-        // })
-        this.props.history.push('/index/task/list');
-        // Login(requestData).then(response => {  // resolves
-        //     this.setState({
-        //         loading: false
-        //     })
-        //     const data = response.data.data
-        //     // 路由跳转
-        //     this.props.history.push('/index/task/list');
-        // }).catch(error => {  // reject
-        //     this.setState({
-        //         loading: false
-        //     })
-        // })
+        console.log("requestData:", requestData)
+        this.setState({
+            loading: true
+        })
+        const requestType = getAttackType() == 1 ? CreateWhiteTask : CreateBlackTask
+        requestType(requestData).then(response => {  // resolves
+            this.setState({
+                loading: false
+            })
+            const data = response.data.data
+            // 路由跳转
+            this.props.history.push('/index/task/list');
+            deleteTaskName()
+            deleteTaskRemark()
+            deleteAttackType()
+            deleteWhiteParams()
+            deleteBlackParams()
+        }).catch(error => {  // reject
+            this.setState({
+                loading: false
+            })
+        })
         this.setState({current: 0})
         console.log('Received values of form: ', requestData);
     };
