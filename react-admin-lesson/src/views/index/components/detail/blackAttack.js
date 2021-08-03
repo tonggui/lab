@@ -18,7 +18,7 @@ class BlackAttack extends Component {
     // this.player.subscribeToStateChange(this.handleStateChange.bind(this));
     // this.player.load();//  更改视频源并重新加载视频
     state = {
-        videoUrl:import('../../../bbtest.mp4'),
+        videoUrl:import('../../../blackTest.mp4'),
     }
     // handleStateChange = () => {
     //     this.setState({
@@ -40,7 +40,7 @@ class BlackAttack extends Component {
                     <Card title="算法结果" bordered={false}>
                         <p className='content-title2' >攻破结果图：</p>
                         <video width="620" height="200"controls>
-                            <source src={require('../../../bbtest.mp4')}/>
+                            <source src={require('../../../blackTest.mp4')}/>
                             Your browser does not support the video tag
                         </video>
                     </Card>
