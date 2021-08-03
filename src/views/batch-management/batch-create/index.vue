@@ -14,7 +14,7 @@
     </div>
     <div v-else class="batch-create-multi-poi">
       <Tabs name="batch-create">
-        <TabPane name="product" label="单个商品新建" key="product" tab="batch-create">
+        <TabPane v-if="!isMedicine" name="product" label="单个商品新建" key="product" tab="batch-create">
           <component :is="productCreateComponent"
             :router-tag-id="routerTagId"
             :is-single-poi="isSinglePoi"

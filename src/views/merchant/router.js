@@ -18,7 +18,6 @@ import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
 import MerchantCube from './cube/router'
 import { isAssociateMedicineMerchant } from '@/module/helper/utils'
 import { bridgeJump } from '@/common/bridge/bridgeJump'
-// import jumpTo from '@/components/link/jumpTo'
 
 export default [
   {

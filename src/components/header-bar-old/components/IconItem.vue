@@ -10,7 +10,7 @@
   >
     <component :is="component" v-bind="tooltip">
       <template v-if="menu.children">
-        <Dropdown trigger="hover" :visible="menu.initVisible">
+        <Dropdown v-bind="dropDownAttrs">
           <Icon :class="{ active: menu.active }" class="icon" v-bind="getIconProps(icon)">
             <component v-if="isComponent(icon)" :is="icon" />
             <Badge v-if="badgeProps" v-bind="badgeProps" />
@@ -20,29 +20,35 @@
             <Icon type="keyboard-arrow-down" />
           </div>
           <DropdownMenu slot="list">
-            <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx" :id="subMenu.id">
+            <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx" :id="subMenu.id" :style="menu.style">
               <Tooltip type="guide" v-bind="subMenu.tooltip ? subMenu.tooltip : { disabled: true }">
-                <RouteLink
-                  v-if="!['批量新建', '批量修改', '批量传图'].includes(subMenu.label)"
-                  class="download-item-link"
-                  tag="a"
-                  :to="subMenu.link||''"
-                  :disabled="!!subMenu.disabled"
-                  @click="handleClick($event, subMenu.bid)"
-                >{{subMenu.label}}
-                </RouteLink>
-                <PermissionBtn
-                  v-else
-                  placement="left"
-                  component="RouteLink"
-                  :need-permission="needPermission"
-                  :btn-type="subMenu.label === '批量新建' ? 'CREATE' : 'EDIT'"
-                  className="download-item-link"
-                  tag="a"
-                  :to="subMenu.link||''"
-                  :disabled="!!subMenu.disabled"
-                  @click="handleClick($event, subMenu.bid)"
-                >{{subMenu.label}}</PermissionBtn>
+                <Badge v-bind="subMenu.badge" class="sub-badge">
+                  <Icon class="sub-icon" v-bind="getIconProps(subMenu.icon)" :size="18">
+                    <component v-if="isComponent(subMenu.icon)" :is="subMenu.icon" />
+                  </Icon>
+                  <RouteLink
+                    v-if="!['批量新建', '批量修改', '批量传图'].includes(subMenu.label)"
+                    class="download-item-link"
+                    tag="a"
+                    :to="subMenu.link||''"
+                    :disabled="!!subMenu.disabled"
+                    @click="handleClick($event, subMenu.bid)"
+                  >{{subMenu.label}}
+                  </RouteLink>
+                  <PermissionBtn
+                    v-else
+                    placement="left"
+                    component="RouteLink"
+                    :need-permission="needPermission"
+                    :btn-type="subMenu.label === '批量新建' ? 'CREATE' : 'EDIT'"
+                    className="download-item-link"
+                    tag="a"
+                    :to="subMenu.link||''"
+                    :disabled="!!subMenu.disabled"
+                    @click="handleClick($event, subMenu.bid)"
+                  >{{subMenu.label}}</PermissionBtn>
+                </Badge>
+                <div class="sub-desc">{{subMenu.desc}}</div>
               </Tooltip>
             </DropdownItem>
           </DropdownMenu>
@@ -120,7 +126,7 @@
       }
       /deep/ .boo-badge-dot {
         top: 2px;
-        right: -2px;
+        right: -7px;
       }
 
       &.line /deep/ .boo-badge-count {
@@ -129,6 +135,19 @@
       }
     }
   }
+  .sub-icon {
+    margin-right: 5px;
+  }
+  .sub-desc {
+    text-align: left;
+    font-weight: 400;
+    font-family: PingFangSC-Regular;
+    font-size: 10px;
+    color: #666666;
+  }
+  //.sub-badge {
+  //  transform: translate(-3px, -10px);
+  //}
 }
 </style>
 <style lang="less">

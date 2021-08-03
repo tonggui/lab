@@ -109,6 +109,7 @@
     position: fixed;
     bottom: 0;
     margin-left: -1px;
+    z-index: 2;
   }
 }
 </style>

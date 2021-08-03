@@ -67,6 +67,12 @@ export const KEYS = {
   MERCHANT_TASK_PROCESS: 'merchantTaskProcess',
   // 商家中心欢迎提示
   MERCHANT_WELCOME: 'merchantWelcome',
+  // 商家商品中心魔方范围默认开启
+  MERCHANT_CUBE_RANGE_AUTO_SETTING: 'merchantCubeRangeAutoSetting',
+  // 商家商品中心魔方结果页返回
+  MERCHANT_CUBE_RESULT_TIP: 'merchantCubeResultTip',
+  MERCHANT_CUBE_GUIDE: 'merchantCubeGuide',
+  MERCHANT_CUBE_SCOPE_TIP: 'merchantCubeScopeTip',
   // 商家中心导入商品功能 (另一个项目中设置)，如果是自助开通则为true，从商品库列表进入则为false
   IMPORT_FROM_OPEN: 'importFromOpen'
 }

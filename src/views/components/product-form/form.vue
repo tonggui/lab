@@ -62,6 +62,7 @@
   import UpcImage from './components/upc-image'
 
   import getFormConfig from './config'
+  import usageHooks from './usageHooks'
   import { fetchGetCategoryAttrList } from '@/data/repos/category'
   import {
     splitCategoryAttrMap,
@@ -109,7 +110,7 @@
     name: 'ProductForm',
     components: {
       FormFooter,
-      DynamicForm: register({ components: customComponents, FormItemContainer: FormItemLayout })(formConfig)
+      DynamicForm: register({ components: customComponents, FormItemContainer: FormItemLayout, hooks: usageHooks })(formConfig)
     },
     inject: {
       injectProductForm: {

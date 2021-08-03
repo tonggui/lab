@@ -21,6 +21,7 @@ import IconItem from '@components/header-bar/components/IconItem'
 import RouteLink from '@components/link/link'
 import LinkItem from '@components/header-bar/components/LinkItem'
 import PermissionBtn from '@/views/components/permission-bth'
+import DropDown from '@/components/drop-down/dropdown'
 // import Poptip from '@/components/poptip'
 
 // TODO 是否考虑 bootes 是否按需引入
@@ -37,6 +38,7 @@ Vue.component('Drawer', Drawer)
 Vue.component('Tooltip', Tooltip)
 Vue.component('EmptyDefaultShow', EmptyDefaultShow)
 // Vue.component('Poptip', Poptip) 处理代码被意外合并的问题
+Vue.component('Dropdown', DropDown)
 
 // 权限按钮涉及的相关组件需要全局注册
 Vue.component('IconItem', IconItem)

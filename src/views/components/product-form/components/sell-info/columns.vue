@@ -155,12 +155,12 @@
                 isInputFocus = false
                 divFocus = false
               }}
-                vOn:on-div-blur={() => {
-                  if (!isInputFocus && divFocus) {
-                    TimeCounters.stopTime('price')
-                  }
-                  isInputFocus = false
-                  divFocus = false
+              vOn:on-div-blur={() => {
+                if (!isInputFocus && divFocus) {
+                  TimeCounters.stopTime('price')
+                }
+                isInputFocus = false
+                divFocus = false
               }}
               vOn:on-change={() => {
                 TimeCounters.setEndTime('price', +new Date())
@@ -238,39 +238,39 @@
           render: (h, { row }) => {
             const freightStock = row.enableStockEditing !== false
             return <InputNumberDivEvent
-                placeholder='请输入'
-                precision={0}
-                max={PRODUCT_MAX_STOCK}
-                min={-1}
-                disabled={ !this.permissions['MODIFY_STOCK'] || this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'stock') || !freightStock}
-                vOn:on-focus={() => {
-                  isInputFocus = true
-                  if (!divFocus) {
-                    TimeCounters.setTime('stock', +new Date(), 's2e')
-                  }
-                  divFocus = false
-                }}
-                vOn:on-blur={() => {
-                  TimeCounters.stopTime('stock')
-                  isInputFocus = false
-                  divFocus = false
-                }}
-                vOn:on-div-focus={() => {
-                  divFocus = true
+              placeholder='请输入'
+              precision={0}
+              max={PRODUCT_MAX_STOCK}
+              min={-1}
+              disabled={ !this.permissions['MODIFY_STOCK'] || this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'stock') || !freightStock}
+              vOn:on-focus={() => {
+                isInputFocus = true
+                if (!divFocus) {
                   TimeCounters.setTime('stock', +new Date(), 's2e')
-                  isInputFocus = false
-                }}
-                vOn:on-div-blur={() => {
-                  if (!isInputFocus && divFocus) {
-                    TimeCounters.stopTime('stock')
-                  }
-                  isInputFocus = false
-                  divFocus = false
-                }}
-                vOn:on-change={(val) => {
-                  TimeCounters.setEndTime('stock', +new Date())
-                }}
-              />
+                }
+                divFocus = false
+              }}
+              vOn:on-blur={() => {
+                TimeCounters.stopTime('stock')
+                isInputFocus = false
+                divFocus = false
+              }}
+              vOn:on-div-focus={() => {
+                divFocus = true
+                TimeCounters.setTime('stock', +new Date(), 's2e')
+                isInputFocus = false
+              }}
+              vOn:on-div-blur={() => {
+                if (!isInputFocus && divFocus) {
+                  TimeCounters.stopTime('stock')
+                }
+                isInputFocus = false
+                divFocus = false
+              }}
+              vOn:on-change={(val) => {
+                TimeCounters.setEndTime('stock', +new Date())
+              }}
+            />
           }
         }
       },
@@ -457,7 +457,7 @@
               TimeCounters.stopTime('upc')
               this.$emit('upc-blur', row, index)
             }}
-              vOn:on-focus={() => {
+            vOn:on-focus={() => {
               TimeCounters.setTime('upc', +new Date(), 's2e')
             }}
           />

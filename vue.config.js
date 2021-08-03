@@ -158,7 +158,7 @@ module.exports = {
     inline: true, // 实时刷新
     hot: true, // 使用热加载插件 HotModuleReplacementPlugin
     open: true,
-    openPage: 'product/list?wmPoiId=8832796',
+    openPage: 'product/list?wmPoiId=649726',
     overlay: {
       warnings: true,
       errors: true
@@ -202,6 +202,12 @@ module.exports = {
     proxy: {
       '^/api': {
         target: 'http://localhost:10010'
+      },
+      '^/api/reuse/mpc/product': {
+        target: 'http://e.shangou.test.sankuai.com',
+        pathRewrite: { '^/api': '' },
+        changeOrigin: true,
+        secure: false
       },
       // '^/api': {
       //   target: 'http://e.shangou.test.sankuai.com',

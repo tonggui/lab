@@ -51,6 +51,10 @@
       },
       editable: Boolean,
       disabled: Boolean,
+      hasPermission: {
+        type: Boolean,
+        default: true
+      },
       needPermission: Boolean
     },
     computed: {
@@ -155,7 +159,8 @@
           pictureList: this.product.pictureList,
           video: this.hasVideo ? this.product.video : undefined,
           editable: this.editable,
-          needPermission: this.needPermission
+          needPermission: this.needPermission,
+          hasPermission: this.hasPermission
         }, {
           onChange: this.handleChange,
           onClose: this.handleClose
@@ -210,6 +215,11 @@
         }
         &.is-normal {
           background: rgba(63, 65, 86, .9);
+        }
+        &.is-normal-mini {
+          background: rgba(63, 65, 86, .9);
+          white-space: nowrap;
+          padding: 1px;
         }
       }
     }

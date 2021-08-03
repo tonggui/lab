@@ -79,6 +79,10 @@ export const ProductMark = {
     type: 'normal',
     name: '信息缺失'
   },
+  [PRODUCT_MARK.MERCHANT_EXIST]: {
+    type: 'normal-mini',
+    name: '总部已创建'
+  },
   // TODO: 新增库存不足标签
   [PRODUCT_MARK.STOCK_INSUFFICIENT_COUNT]: {
     type: 'danger',

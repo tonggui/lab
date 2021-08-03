@@ -29,7 +29,8 @@
       pagination: Object,
       rowKey: Function,
       rowSelection: Object,
-      group: Boolean
+      group: Boolean,
+      hasPermission: Boolean
     },
     components: {
       Column,
@@ -87,6 +88,7 @@
       return h(Column, {
         props: {
           type: this.type,
+          hasPermission: this.hasPermission,
           modules: this.modules
         },
         on: {

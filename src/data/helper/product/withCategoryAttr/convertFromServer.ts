@@ -60,9 +60,9 @@ export const convertProductDetail = data => {
     sellStatus: defaultTo(data.sellStatus, PRODUCT_SELL_STATUS.OFF),
     isMissingInfo: !!data.missingRequiredInfo,
     marketingPicture: trimSplit(data.marketingPicture),
+    isMedicare: data.isMedicare ? '是' : '否',
     shippingTemplateId: data.shippingTemplateId,
     shippingTemplateName: data.shippingTemplateName,
-    isMedicare: data.isMedicare ? '是' : '否',
     detailSymbol: data.detailSymbol || 0,
     recoverySymbol: data.recoverySymbol || 0,
     preSale: {

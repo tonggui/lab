@@ -8,7 +8,7 @@
   >
     <component :is="component" v-bind="tooltip">
       <template v-if="menu.children">
-        <Dropdown trigger="hover" :visible="menu.initVisible">
+        <Dropdown v-bind="dropDownAttrs">
           <Badge v-bind="badgeProps" class="link-item" :class="{ disabled: isDisabled }">
             <Icon class="icon" v-bind="getIconProps(icon)">
               <component v-if="isComponent(icon)" :is="icon" />

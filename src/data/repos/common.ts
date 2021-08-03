@@ -16,11 +16,10 @@ import {
   getConfig,
   submitApplyBrand as submitApplyBrandFromPoi
 } from '../api/common'
-import { poiId as POI_ID } from '@/common/constants'
 import {
   getBatchExcelTemlateMap
 } from '../api/medicineMerchantApi/batchMenagement'
-
+import { poiId as POI_ID } from '@/common/constants'
 import { submitApplyBrand as submitApplyBrandFromMerchant } from '../merchantApi/product'
 import { isAssociateMedicineMerchant } from '../../module/helper/utils'
 

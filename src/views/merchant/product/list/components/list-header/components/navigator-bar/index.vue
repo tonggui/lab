@@ -15,7 +15,8 @@
   import { mapModule } from '@/module/module-manage/vue'
   import {
     UNAPPROVE_PRODUCT_COUNT,
-    BUSINESS_MEDICINE // TODO 药品兼容 后期优化
+    BUSINESS_MEDICINE,
+    MERCHANT_CUBE_SWITCH // TODO 药品兼容 后期优化
   } from '@/module/moduleTypes'
   import {
     fetchGetPoiAuditProductCount,
@@ -87,7 +88,8 @@
     computed: {
       ...mapModule({
         unApproveProductCount: UNAPPROVE_PRODUCT_COUNT,
-        isMedicine: BUSINESS_MEDICINE
+        isMedicine: BUSINESS_MEDICINE,
+        merchantCubeSwitch: MERCHANT_CUBE_SWITCH
       }),
       fetchGetDownloadTaskList () {
         return fetchGetDownloadTaskList
@@ -99,8 +101,34 @@
         return {
           createProduct: {
             show: !this.isMedicine,
-            link: '/merchant/product/edit',
+            label: '新建商品',
+            // link: '/merchant/product/edit',
+            badge: {
+              dot: true
+            },
+            style: {
+              textAlign: 'left'
+            },
+            initVisible: (this.merchantCubeSwitch && !storage[STORAGE_KEY['MERCHANT_CUBE_GUIDE']]) || !storage[STORAGE_KEY['MERCHANT_GUIDE']]
+          },
+          singleCreate: {
+            show: true,
             id: 'creatSingleProduct'
+          },
+          cubeCreate: {
+            id: 'cubeCreate',
+            show: this.merchantCubeSwitch,
+            order: 4,
+            badge: {
+              dot: true
+            },
+            tooltip: {
+              type: 'guide',
+              placement: 'right',
+              transfer: true,
+              content: '新增“魔方快捷新建”功能，为你智能推荐平台热销及热搜商品，批量选择后可一键快捷创建哦～',
+              keyName: 'MERCHANT_CUBE_GUIDE'
+            }
           },
           download: true,
           unApproveProduct: {

@@ -10,6 +10,7 @@ export enum PRODUCT_MARK {
   MERCHANT_DELETE = 'merchantDelete', // 总部删除
   AUDIT_REJECTED = 'auditRejected', // 审核驳回
   AUDITING = 'auditing', // 审核中
+  MERCHANT_EXIST = 'merchantExist', // 总部已存在
   STOCK_INSUFFICIENT_COUNT = 'stockInsuffientCount' // TODO: 新增库存不足标签
 }
 
@@ -200,6 +201,12 @@ export enum TAG_SOURCE {
   CUSTOM = 1
 }
 
+// 售卖方式， 1 正常售卖，2 预售
+export enum PRODUCT_SALE_TYPE {
+  NORMAL = 1,
+  PRE = 2
+}
+
 /**
  * 商品中心开通状态
  */
@@ -207,12 +214,6 @@ export enum MERCHANT_OPEN_STATUS {
   DEFAULT = 0,
   OPEN = 1,
   CLOSE = 2
-}
-
-// 售卖方式， 1 正常售卖，2 预售
-export enum PRODUCT_SALE_TYPE {
-  NORMAL = 1,
-  PRE = 2
 }
 
 // 详情页业务审核类型

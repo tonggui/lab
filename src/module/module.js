@@ -400,6 +400,10 @@ const module = {
   [types.PRODUCT_PROMOTION_SETTING]: createFelid(
     source.productPromoteSetting,
     false
+  ),
+  [types.MERCHANT_CUBE_SWITCH]: createFelid(
+    source.merchantCubeSwitch,
+    undefined
   )
   // [types.POI_PRODUCT_NEW_ARRIVAL_INFO]: createFelid(
   //   source.productNewArrivalInfo,

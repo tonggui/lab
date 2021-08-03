@@ -14,6 +14,8 @@
       :customTip="customTip"
       :maxLength="8"
       :width="width"
+      @open="$emit('start')"
+      @close="$emit('end')"
       :clearable="clearable"
       arrow
     />

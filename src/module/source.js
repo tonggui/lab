@@ -23,6 +23,9 @@ import {
   fetchGetPoiSizeConfig
 } from '@/data/repos/merchantPoi'
 import {
+  getCubeSwitch
+} from '@/data/repos/merchantCube'
+import {
   isAuditApplyEnabled
 } from '@/data/repos/medicineSpAudit'
 import { fetchGetPackageProductModuleSwitch } from '@/data/repos/packageProduct'
@@ -220,6 +223,12 @@ const source = {
       return fetchSettingBrandProductPromotionGray()
     },
     defaultValue: false
+  },
+  merchantCubeSwitch: {
+    fetch: () => {
+      return getCubeSwitch()
+    },
+    defaultValue: undefined
   },
   allCubeStatus: {
     fetch: () => {
