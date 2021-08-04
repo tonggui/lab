@@ -65,27 +65,17 @@ class TaskSteps extends Component{
         this.setState({current: this.state.current - 1});
     };
     handleSubmit = () => {
-        let requestData = {}
-        if (getAttackType() == 1) {
-            //白盒
-            requestData = {
-                taskName:getTaskName(),
-                taskRemark: getTaskRemark(),
-                whiteParams: getWhiteParams()
-            }
-        } else {
-            //黑盒
-            requestData = {
-                taskName:getTaskName(),
-                taskRemark: getTaskRemark(),
-                blackParams: getBlackParams(),
-            }
+        let requestData = {
+            "taskName":getTaskName(),
+            "taskRemark": getTaskRemark(),
+            "method": getAttackType() == 2 ? getBlackParams() : getWhiteParams()
         }
         console.log("requestData:", requestData)
         this.setState({
             loading: true
         })
-        const requestType = getAttackType() == 1 ? CreateWhiteTask : CreateBlackTask
+        console.log(requestData)
+        const requestType = getAttackType() == 2 ? CreateBlackTask : CreateWhiteTask
         requestType(requestData).then(response => {  // resolves
             this.setState({
                 loading: false

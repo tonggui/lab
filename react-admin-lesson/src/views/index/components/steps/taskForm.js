@@ -32,7 +32,6 @@ class TaskForm extends Component{
     }
     render(){
         const { taskName, taskRemark} = this.state;
-        console.log(taskName, taskRemark, this.state)
         return (
             <>
                 <Form className="taskForm"

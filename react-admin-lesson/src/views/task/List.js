@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Tabs, Table, Tag, Space } from 'antd';
 import {withRouter} from "react-router-dom";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import {
     deleteAttackType, deleteBlackParams,
     deleteTaskName,
@@ -10,7 +11,7 @@ import {
     getTaskName,
     getTaskRemark
 } from "../../utils/cookies";
-import {WhiteAttacks, BlackAttacks,WhiteDetailed,BlackDetailed} from "../../api/task";
+import {attackLists,WhiteDetailed,BlackDetailed} from "../../api/task";
 
 const { TabPane } = Tabs;
 class TaskList extends Component{
@@ -25,11 +26,30 @@ class TaskList extends Component{
         this.setState({
             loading: true
         })
-        WhiteAttacks().then(response => {  // resolves
+        // axios({
+        //     method:"post",
+        //     url:"/devApi/show",
+        //     headers:{
+        //         // 'Content-Type': 'multipart/form-data'
+        //         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        //     },
+        //     data:{
+        //         type:'white',
+        //     },
+        //     transformRequest: [function (data) {
+        //         let ret = ''
+        //         for (let it in data) {
+        //             ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it])
+        //         }
+        //         return ret
+        //     }],
+        // })
+        attackLists({"type": 'black'}).then(response => {  // resolves
             this.setState({
                 loading: false
             })
-            const data = response.data.data
+            const data = response.data
+            console.log(data)
             // 路由跳转
         }).catch(error => {  // reject
             this.setState({
@@ -138,11 +158,11 @@ class TaskList extends Component{
             this.setState({
                 loading: true
             })
-            BlackAttacks().then(response => {  // resolves
+            attackLists({"type": 'black'}).then(response => {  // resolves
                 this.setState({
                     loading: false
                 })
-                const data = response.data.data
+                const data = response.data
                 // 路由跳转
             }).catch(error => {  // reject
                 this.setState({
@@ -234,6 +254,10 @@ class TaskList extends Component{
                         <Table columns={blackColumns} dataSource={blackData} />
                     </TabPane>
                 </Tabs>
+                <form method="post" action="http://10.112.222.93:8000/show"
+                      encType="multipart/form-data">
+                    <input  type="hidden" name="type" value={"white"}/>
+                </form>
             </div>
         )
     }

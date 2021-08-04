@@ -11,7 +11,6 @@ class App extends React.Component {
     this.state = {};
   }
   render(){
-      console.log(this.props)
     return (
         <BrowserRouter>
           <Switch>

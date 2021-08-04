@@ -1,10 +1,11 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 module.exports = function(app) {
+    console.log('---'+process.env.REACT_APP_BASE_URL)
     app.use(createProxyMiddleware([process.env.REACT_APP_API], {
-        target: process.env.REACT_APP_BASE_URL, //配置你要请求的服务器地址
+        target: "http://10.112.222.93:8000/", //配置你要请求的服务器地址
         changeOrigin: true,
         pathRewrite: {
-            [`^${process.env.REACT_APP_API}`] : ""
+            '^/devApi': ''
         },
     }))
     // /devApi/login/
@@ -13,8 +14,8 @@ module.exports = function(app) {
      * 2、/devApi/login/ => /login/
      * 3、替换之后的地址：http://www.web-jshtml.cn/api/react/login/
      */
-    // app.use(proxy("/manage/api", {
-    //     target: "http://admintest.happymmall.com:7000" ,
+    // app.use(proxy("/devApi", {
+    //     target: "http://10.112.222.93:8000/" ,
     //     changeOrigin: true,
     // }))
 };
