@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // antd icon
 import { MenuFoldOutlined } from "@ant-design/icons";
-//css 
+//css
 import "./aside.scss";
 class Index extends Component {
     constructor(props){
@@ -23,7 +23,7 @@ class Index extends Component {
         const { collapsed } = this.state;
         return (
             <div className={collapsed ? "collapsed-close" : ""}>
-                <h1 className="logo"><span>LOGO</span></h1>
+                <h1 className="logo"><span>{collapsed ? "" : "视听人工智能算法安全评估平台"}</span></h1>
                 <div className="header-wrap">
                     <span className="collapsed-icon" onClick={this.toggleMenu}><MenuFoldOutlined /></span>
                 </div>

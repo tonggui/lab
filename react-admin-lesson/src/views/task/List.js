@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Tabs, Table, Tag, Space } from 'antd';
+import { Tabs, Table, Tag, Space,Progress } from 'antd';
 import {withRouter} from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -20,7 +20,8 @@ class TaskList extends Component{
         data :[],
         blackColumns:[],
         blackData:[],
-        loading: false
+        loading: false,
+        currentTab:1
     }
     componentDidMount() {
         this.setState({
@@ -44,7 +45,7 @@ class TaskList extends Component{
         //         return ret
         //     }],
         // })
-        attackLists({"type": 'black'}).then(response => {  // resolves
+        attackLists({"type": 'white'}).then(response => {  // resolves
             this.setState({
                 loading: false
             })
@@ -58,74 +59,148 @@ class TaskList extends Component{
         })
         this.setState({columns : [
                 {
-                    title: 'Name',
-                    dataIndex: 'name',
-                    key: 'name',
+                    title: '任务名称',
+                    dataIndex: 'taskname',
+                    key: 'taskname',
                     render: text => <a>{text}</a>,
                 },
                 {
-                    title: 'Create',
-                    dataIndex: 'create',
-                    key: 'create',
+                    title: '任务创建时间',
+                    dataIndex: 'time',
+                    key: 'time',
                 },
                 {
-                    title: 'Remark',
-                    dataIndex: 'remark',
-                    key: 'remark',
+                    title: '备注',
+                    dataIndex: 'taskremark',
+                    key: 'taskremark',
                 },
                 {
-                    title: '状态',
-                    key: 'status',
-                    dataIndex: 'status',
-                    render: status => (
+                    title: '完成度',
+                    key: 'rate',
+                    dataIndex: 'rate',
+                    render: rate => (
                         <>
-                            {status.map(statu => {
-                                let color = 'green';
-                                if (statu === 'error') {
-                                    color = 'volcano';
-                                }
-                                return (
-                                    <Tag color={color} key={statu}>
-                                        {statu.toUpperCase()}
-                                    </Tag>
-                                );
-                            })}
+                            <Progress type="circle" percent={rate * 100} width={50}/>
                         </>
                     ),
                 },
                 {
+                    title: '处理状态',
+                    key: 'status',
+                    dataIndex: 'status',
+                    render: (status, record) => {
+                        let text,color
+                        if (status === -1) {
+                            text = '失败'
+                            color =  'volcano'
+                        }else {
+                            text = status === 0 ? "处理中" : "成功"
+                            color = status === 0 ? 'geekblue' : 'green'
+                        }
+                        return (
+                            <Tag color={color} key={status}>
+                                {text}
+                            </Tag>
+                        )
+                    }
+                },
+                {
                     title: '查看任务',
                     key: 'action',
-                    render: (text, record) => (
-                        <Space size="middle">
-                            <Link to="/index/task/detail">查看详情  {record.name}
-                            </Link>
-                        </Space>
-                    ),
+                    render: (text, record) => {
+                        let params = {
+                            type : 1,
+                            record: record,
+                            id : record.id
+                        }
+                        if (record.status === 1) {
+                            return (
+                                <Space size="middle" disabled={true}>
+                                    <Link to={{
+                                        pathname: `/index/task/detail/${record.id}`,
+                                        state: params,
+                                    }}>查看详情
+                                    </Link>
+                                </Space>
+                            )
+                        } else {
+                            return (
+                                <Space size="middle">
+                                    <span>查看详情
+                                    </span>
+                                </Space>
+                            )
+                        }
+                    },
                 },
             ],
-            data : [
+            data: [
                 {
-                    key: '1',
-                    name: 'attack1',
-                    create: '2021-01-01',
-                    remark: 'New York No. 1 Lake Park',
-                    status: ['success'],
+                    "id": 23,
+                    "taskname": "ss",
+                    "taskremark": "ss",
+                    "rate": 0.88,
+                    "type": "目标消失",
+                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "status": 0,
+                    "time": "2021-08-04 18:28:35"
                 },
                 {
-                    key: '2',
-                    name: 'attack2',
-                    create: '2021-01-02',
-                    remark: 'London No. 1 Lake Park',
-                    status: ['error'],
+                    "id": 24,
+                    "taskname": "ss",
+                    "taskremark": "ss",
+                    "rate": 0.0,
+                    "type": "目标消失",
+                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "status": -1,
+                    "time": "2021-08-04 18:28:57"
                 },
                 {
-                    key: '3',
-                    name: 'attack3',
-                    create: '2021-01-03',
-                    remark: 'Sidney No. 1 Lake Park',
-                    status: ['success'],
+                    "id": 25,
+                    "taskname": "s",
+                    "taskremark": "ss",
+                    "rate": 1.0,
+                    "type": "目标消失",
+                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "status": 1,
+                    "time": "2021-08-04 11:41:43"
                 },
+                {
+                    "id": 26,
+                    "taskname": "YOLO目标检测算法白盒评估-20210804",
+                    "taskremark": "基于MobileNet的YOLO算法白盒安全评估",
+                    "rate": 1.0,
+                    "type": "识别不到目标,目标消失,制造标签,错误标签1,错误标签2",
+                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "status": 1,
+                    "time": "2021-08-04 10:41:43"
+                }
+            // ]
+            // ,data : [
+            //     {
+            //         key: '1',
+            //         name: 'attack1',
+            //         create: '2021-01-01',
+            //         remark: 'New York No. 1 Lake Park',
+            //         status: ['success'],
+            //         rate:'0'
+            //     },
+            //     {
+            //         key: '2',
+            //         name: 'attack2',
+            //         create: '2021-01-02',
+            //         remark: 'London No. 1 Lake Park',
+            //         status: ['error'],
+            //         rate:'0'
+            //     },
+            //     {
+            //         key: '3',
+            //         name: 'attack3',
+            //         create: '2021-01-03',
+            //         remark: 'Sidney No. 1 Lake Park',
+            //         status: ['success'],
+            //         rate:'70'
+            //     },
             ],})
     }
     goToDetail = () => {
@@ -154,6 +229,7 @@ class TaskList extends Component{
     };
     handleChange = (key) => {
         console.log(key);
+        this.setState({currentTab:key})
         if (key == 2) {
             this.setState({
                 loading: true
@@ -172,74 +248,112 @@ class TaskList extends Component{
         }
         this.setState({blackColumns : [
                 {
-                    title: 'Name',
-                    dataIndex: 'name',
-                    key: 'name',
+                    title: '任务名称',
+                    dataIndex: 'taskname',
+                    key: 'taskname',
                     render: text => <a>{text}</a>,
                 },
                 {
-                    title: 'Create',
-                    dataIndex: 'create',
-                    key: 'create',
+                    title: '任务创建时间',
+                    dataIndex: 'time',
+                    key: 'time',
                 },
                 {
-                    title: 'Remark',
-                    dataIndex: 'remark',
-                    key: 'remark',
+                    title: '备注',
+                    dataIndex: 'taskremark',
+                    key: 'taskremark',
                 },
                 {
-                    title: '状态',
-                    key: 'status',
-                    dataIndex: 'status',
-                    render: status => (
+                    title: '完成度',
+                    key: 'rate',
+                    dataIndex: 'rate',
+                    render: rate => (
                         <>
-                            {status.map(statu => {
-                                let color = 'green';
-                                if (statu === 'error') {
-                                    color = 'volcano';
-                                }
-                                return (
-                                    <Tag color={color} key={statu}>
-                                        {statu.toUpperCase()}
-                                    </Tag>
-                                );
-                            })}
+                            <Progress type="circle" percent={rate * 100} width={50}/>
                         </>
                     ),
                 },
                 {
+                    title: '处理状态',
+                    key: 'status',
+                    dataIndex: 'status',
+                    render: (status, record) => {
+                        let text,color
+                        if (status === -1) {
+                            text = '失败'
+                            color =  'volcano'
+                        }else {
+                            text = status === 0 ? "处理中" : "成功"
+                            color = status === 0 ? 'geekblue' : 'green'
+                        }
+                        return (
+                            <Tag color={color} key={status}>
+                                {text}
+                            </Tag>
+                        )
+                    }
+                },
+                {
                     title: '查看任务',
                     key: 'action',
-                    render: (text, record) => (
-                        <Space size="middle">
-                            <Link to="/index/task/detail">查看详情  {record.name}
-                            </Link>
-                        </Space>
-                    ),
+                    render: (text, record) => {
+                        let params = {
+                            type : 2,
+                            record: record,
+                            id : record.id
+                        }
+                        if (record.status === 1) {
+                            return (
+                                <Space size="middle">
+                                    <Link to={{
+                                        pathname: `/index/task/detail/${record.id}`,
+                                        state: params,
+                                    }}>查看详情 {'sssqqq'+record.taskname}
+                                    </Link>
+                                </Space>
+                            )
+                        } else {
+                            return (
+                                <Space size="middle" disabled={true}>
+                                    <span>查看详情  {'sssqqq'+record.taskname}
+                                    </span>
+                                </Space>
+                            )
+                        }
+                    },
                 },
             ],
             blackData : [
                 {
-                    key: '1',
-                    name: 'attack1',
-                    create: '2021-01-01',
-                    remark: 'New York No. 1 Lake Park',
-                    status: ['success'],
+                    "id": 23,
+                    "taskname": "ss",
+                    "taskremark": "ss",
+                    "rate": 0.88,
+                    "type": "目标消失",
+                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "status": 0,
+                    "time": "2021-08-04 18:28:35"
                 },
                 {
-                    key: '2',
-                    name: 'attack2',
-                    create: '2021-01-02',
-                    remark: 'London No. 1 Lake Park',
-                    status: ['error'],
+                    "id": 24,
+                    "taskname": "ss",
+                    "taskremark": "ss",
+                    "rate": 0.0,
+                    "type": "目标消失",
+                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "status": -1,
+                    "time": "2021-08-04 18:28:57"
                 },
                 {
-                    key: '3',
-                    name: 'attack3',
-                    create: '2021-01-03',
-                    remark: 'Sidney No. 1 Lake Park',
-                    status: ['success'],
-                },
+                    "id": 25,
+                    "taskname": "s",
+                    "taskremark": "ss",
+                    "rate": 1.0,
+                    "type": "目标消失",
+                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "status": 1,
+                    "time": "2021-08-04 11:41:43"
+                }
             ],})
     }
     render(){
@@ -248,10 +362,10 @@ class TaskList extends Component{
             <div>
                 <Tabs defaultActiveKey="1" onChange={this.handleChange}>
                     <TabPane tab="白盒攻击任务" key="1">
-                        <Table columns={columns} dataSource={data} />
+                        <Table columns={columns} dataSource={data} rowKey={record => record.id} />
                     </TabPane>
                     <TabPane tab="黑盒攻击任务" key="2">
-                        <Table columns={blackColumns} dataSource={blackData} />
+                        <Table columns={blackColumns} dataSource={blackData} rowKey={record => record.id}/>
                     </TabPane>
                 </Tabs>
                 <form method="post" action="http://10.112.222.93:8000/show"

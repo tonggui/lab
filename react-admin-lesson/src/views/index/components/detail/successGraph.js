@@ -1,20 +1,24 @@
 import React, {Component} from 'react';
 import ReactEcharts from 'echarts-for-react';
+import Eps from "../steps/data";
+
 
 class SuccessGraph extends Component {
     constructor(props){
         super(props);
         this.state = {
-            success : props.success
+            eps : props.success
         };
     }
-    getOtion = (success) => {
-        const epsData = this.state.success.map((item, index) => {
-            return index/255
+    getOtion = () => {
+        let eps = this.state.eps
+        // Eps.push([tmp[0],tmp[9],tmp[19],tmp[29],tmp[39],tmp[59],tmp[79],tmp[99],tmp[119],tmp[255]])
+        let index = [0,9,19,29,39,59,79,99,119,255].map(item=>{
+            return item/255
         })
         const option = {
             title: {
-                text: '攻击测评',
+                text: '',
                 // subtext: 'eps-success'
             },
             axisTick: {
@@ -30,7 +34,7 @@ class SuccessGraph extends Component {
             legend: {
                 padding: [3,60,0,0],
                 icon: "circle", // 形状 类型包括 circle，rect,line，roundRect，triangle，diamond，pin，arrow，none
-                data: ['eps成功'],
+                data: ['识别不到目标','目标消失','制造标签','错误标签1','错误标签2'],
                 textStyle:{	// 设置图例字体
                     color: '#000000',
                 }
@@ -46,15 +50,47 @@ class SuccessGraph extends Component {
             },
             xAxis: {
                 type: 'category',
-                data: epsData,
+                data: index,
                 boundaryGap: false,
+                name: '扰动大小',   // x轴名称
+                // x轴名称样式
+                nameTextStyle: {
+                    fontWeight: 500,
+                    fontSize: 14
+                }
             },
             yAxis: {
-                type: 'value'
+                type: 'value',
+                name: '算法有效率',   // y轴名称
+                // y轴名称样式
+                nameTextStyle: {
+                    fontWeight: 500,
+                    fontSize: 14
+                }
             },
             series: [{
-                name: 'eps成功',
-                data: this.state.success,
+                name: '识别不到目标',
+                data: this.state.eps[0],
+                type: 'line',
+                smooth: true
+            },{
+                name: '目标消失',
+                data: this.state.eps[1],
+                type: 'line',
+                smooth: true
+            },{
+                name: '制造标签',
+                data: this.state.eps[2],
+                type: 'line',
+                smooth: true
+            },{
+                name: '错误标签1',
+                data: this.state.eps[3],
+                type: 'line',
+                smooth: true
+            },{
+                name: '错误标签2',
+                data: this.state.eps[4],
                 type: 'line',
                 smooth: true
             }]
@@ -65,7 +101,7 @@ class SuccessGraph extends Component {
         return (
             <ReactEcharts
                 option={this.getOtion()}
-                style={{height: '350px', width: '500px'}}
+                style={{height: '350px', width: '750px'}}
                 className='react_for_echarts' />
         );
     }

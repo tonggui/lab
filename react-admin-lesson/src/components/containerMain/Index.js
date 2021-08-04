@@ -15,11 +15,9 @@ class ContainerMain extends React.Component {
   render(){
     return (
         <Switch>
-          {
-            Components.map(item => {
-              return <PrivateRouter exact key={item.path} path={item.path} component={item.component} />
-            })
-          }
+          <PrivateRouter exact key="/index/task/create" path="/index/task/create" component={TaskCreate} />
+          <PrivateRouter exact key="/index/task/list"  path="/index/task/list" component={TaskList} />
+          <PrivateRouter exact key={`/index/task/detail/:id`} path = {`/index/task/detail/:id`} component={Detail} />
         </Switch>
     )
   }

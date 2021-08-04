@@ -6,23 +6,24 @@ import {withRouter} from "react-router-dom";
 class TaskDetail extends Component {
     constructor(props){
         super(props);
+        console.log(this.props.location.state)
         this.state = {
-            attackType: 1
+            attackType: this.props.location.state.type
         };
     }
     render(){
-        if (this.state.attackType) {
+        if (this.state.attackType === 2) {
             return (
                 <div>
-                    <WhiteDetail>
-                    </WhiteDetail>
+                    <BlackDetail record={this.props.location.state.record}>
+                    </BlackDetail>
                 </div>
             )
         } else {
             return (
                 <div>
-                    <BlackDetail>
-                    </BlackDetail>
+                    <WhiteDetail record={this.props.location.state.record}>
+                    </WhiteDetail>
                 </div>
             )
         }

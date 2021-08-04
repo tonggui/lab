@@ -13,10 +13,8 @@ import {
 import './steps.scss'
 const WhiteAttack = () => {
     const onCheckChange = (checkedValues) => {
-        if (getAttackType() == 1) {
-            console.log('checked = ', checkedValues);
-            setWhiteParams( checkedValues)
-        }
+        console.log('checked = ', checkedValues);
+        setWhiteParams( checkedValues)
     }
     return (
         <Checkbox.Group style={{ width: '100%' }} onChange={onCheckChange}>

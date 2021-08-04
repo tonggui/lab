@@ -26,7 +26,7 @@ const steps = [
     },
     {
         title: '完善算法信息',
-        content: (<div  style={{marginTop:30, marginBottom:150, marginLeft:20}}>
+        content: (<div  style={{marginTop:30, marginBottom:150, marginLeft:20, paddingLeft:150}}>
             <div>
                 <p>攻击方法选择：</p>
             </div>
@@ -35,16 +35,7 @@ const steps = [
                 </Steps2>
             </div>
         </div>),
-    },
-    {
-        title: '创建完成',
-        content: (<div style={{marginTop:30}}>
-            <div >
-                <Steps3>
-                </Steps3>
-            </div>
-        </div>),
-    },
+    }
 ];
 class TaskSteps extends Component{
     constructor(props){
@@ -68,7 +59,10 @@ class TaskSteps extends Component{
         let requestData = {
             "taskName":getTaskName(),
             "taskRemark": getTaskRemark(),
-            "method": getAttackType() == 2 ? getBlackParams() : getWhiteParams()
+            "method": getWhiteParams()
+        }
+        if (getAttackType() === 2) {
+            requestData["method"] = getBlackParams()
         }
         console.log("requestData:", requestData)
         this.setState({
@@ -82,17 +76,18 @@ class TaskSteps extends Component{
             })
             const data = response.data.data
             // 路由跳转
-            this.props.history.push('/index/task/list');
-            deleteTaskName()
-            deleteTaskRemark()
-            deleteAttackType()
-            deleteWhiteParams()
-            deleteBlackParams()
         }).catch(error => {  // reject
             this.setState({
                 loading: false
             })
         })
+        this.props.history.push('/index/task/list');
+        deleteTaskName()
+        deleteTaskRemark()
+        deleteAttackType()
+        deleteWhiteParams()
+        deleteBlackParams()
+        message.success('Processing complete!')
         this.setState({current: 0})
         console.log('Received values of form: ', requestData);
     };
@@ -106,7 +101,7 @@ class TaskSteps extends Component{
         const { current, taskName, taskRemark} = this.state;
         return (
             <>
-                <Steps current={current}>
+                <Steps current={current} style={{marginTop:30, paddingLeft:150,paddingRight:200}}>
                     {steps.map(item => (
                         <Step key={item.title} title={item.title} />
                     ))}
@@ -118,11 +113,11 @@ class TaskSteps extends Component{
                             确认提交
                         </Button>
                     )}
-                    {current === steps.length - 1 && (
-                        <Button type="primary" onClick={() => message.success('Processing complete!')}>
-                            返回
-                        </Button>
-                    )}
+                    {/*{current === steps.length - 1 && (*/}
+                    {/*    <Button type="primary" onClick={() => message.success('Processing complete!')}>*/}
+                    {/*        返回*/}
+                    {/*    </Button>*/}
+                    {/*)}*/}
                     {current === 1 && (
                         <Button style={{ margin: '0 8px' }} onClick={() => this.prev()}>
                             上一步
