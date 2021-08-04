@@ -37,18 +37,17 @@ const steps = [
         </div>),
     }
 ];
+let timer
 class TaskSteps extends Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            current:0,
-            taskName:"",
-            taskRemark:"",
-            methodType:0,
-            loading: false
-        }
+    state = {
+        current:0,
+        taskName:"",
+        taskRemark:"",
+        methodType:0,
+        loading: false,
+        status:true,
+        timer:null
     }
-
     next = () => {
         this.setState({current: this.state.current + 1});
     };
@@ -71,24 +70,26 @@ class TaskSteps extends Component{
         console.log(requestData)
         const requestType = getAttackType() == 2 ? CreateBlackTask : CreateWhiteTask
         requestType(requestData).then(response => {  // resolves
+            const info = response.data.info
+            message.error(info,5000)
             this.setState({
                 loading: false
             })
-            const data = response.data.data
             // 路由跳转
         }).catch(error => {  // reject
+            this.state.status=!this.state.status
+            this.props.history.push('/index/task/list');
+            deleteTaskName()
+            deleteTaskRemark()
+            deleteAttackType()
+            deleteWhiteParams()
+            deleteBlackParams()
+            message.success('创建成功!',5000)
+            this.setState({current: 0})
             this.setState({
                 loading: false
             })
         })
-        this.props.history.push('/index/task/list');
-        deleteTaskName()
-        deleteTaskRemark()
-        deleteAttackType()
-        deleteWhiteParams()
-        deleteBlackParams()
-        message.success('Processing complete!')
-        this.setState({current: 0})
         console.log('Received values of form: ', requestData);
     };
     getTaskInfo = (result, msg) => {
@@ -98,7 +99,7 @@ class TaskSteps extends Component{
         })
     }
     render() {
-        const { current, taskName, taskRemark} = this.state;
+        const { current, taskName, taskRemark,loading} = this.state;
         return (
             <>
                 <Steps current={current} style={{marginTop:30, paddingLeft:150,paddingRight:200}}>
@@ -109,7 +110,7 @@ class TaskSteps extends Component{
                 <div className="steps-content">{current == 0 ? (<TaskForm next={this.next}></TaskForm>) : steps[current].content}</div>
                 <div className="steps-action">
                     {current === 1 && (
-                        <Button type="primary" onClick={this.handleSubmit} style={{ margin: '0 8px' }}>
+                        <Button type="primary" loading={loading} onClick={this.handleSubmit} style={{ margin: '0 8px' }}>
                             确认提交
                         </Button>
                     )}

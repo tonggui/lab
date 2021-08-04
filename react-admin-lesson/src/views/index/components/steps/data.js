@@ -28,5 +28,4 @@ Object.keys(Success).forEach(function(key){
   Eps.push([tmp[0],tmp[9],tmp[19],tmp[29],tmp[39],tmp[59],tmp[79],tmp[99],tmp[119],tmp[255]])
  }
 })
-console.log(Eps)
 export default Eps

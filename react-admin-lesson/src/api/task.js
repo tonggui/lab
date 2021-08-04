@@ -15,19 +15,21 @@ import qs from "qs";
 //     })
 // }
 export function CreateWhiteTask(data) {
-    console.log(data)
     return new Promise((resolve, reject) => {
         axios({
             url: "/devApi/white_attack/",
             method: 'post',
-            data:qs.stringify(data),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-            }
+            },
+            data: qs.stringify(data,{ indices: false }),
+            timeout: 3000,
         }).then(res => {
+            console.log("ppp")
             resolve(res)
         }).catch(err => {
-            reject(err)
+            console.log(err)
+            resolve(err)
         })
     })
 }
