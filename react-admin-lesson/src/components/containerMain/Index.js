@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch,Route } from 'react-router-dom';
+import {Switch, Route, Redirect} from 'react-router-dom';
 // 私有组件方法
 import PrivateRouter from "../privateRouter/Index";
 /** 自动化工程 */
@@ -15,9 +15,10 @@ class ContainerMain extends React.Component {
   render(){
     return (
         <Switch>
-          <PrivateRouter exact key="/index/task/create" path="/index/task/create" component={TaskCreate} />
+            <PrivateRouter exact key="/index/task/create" path="/index/task/create" component={TaskCreate} />
           <PrivateRouter exact key="/index/task/list"  path="/index/task/list" component={TaskList} />
           <PrivateRouter exact key={`/index/task/detail/:id`} path = {`/index/task/detail/:id`} component={Detail} />
+            <Redirect form='/*' to={"/index/task/create"} />
         </Switch>
     )
   }

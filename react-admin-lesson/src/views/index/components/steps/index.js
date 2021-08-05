@@ -78,13 +78,14 @@ class TaskSteps extends Component{
             // 路由跳转
         }).catch(error => {  // reject
             this.state.status=!this.state.status
+            // window.location.href="/index/task/list";
             this.props.history.push('/index/task/list');
             deleteTaskName()
             deleteTaskRemark()
             deleteAttackType()
             deleteWhiteParams()
             deleteBlackParams()
-            message.success('创建成功!',5000)
+            message.success('创建成功!')
             this.setState({current: 0})
             this.setState({
                 loading: false
@@ -92,6 +93,9 @@ class TaskSteps extends Component{
         })
         console.log('Received values of form: ', requestData);
     };
+    componentWillUnmount() {
+        this.setState = ()=>false;
+    }
     getTaskInfo = (result, msg) => {
         console.log(result, msg)
         this.setState({
@@ -102,7 +106,7 @@ class TaskSteps extends Component{
         const { current, taskName, taskRemark,loading} = this.state;
         return (
             <>
-                <Steps current={current} style={{marginTop:30, paddingLeft:150,paddingRight:200}}>
+                <Steps current={current} style={{marginTop:30,marginBottom:20, paddingLeft:150,paddingRight:200}}>
                     {steps.map(item => (
                         <Step key={item.title} title={item.title} />
                     ))}
@@ -129,4 +133,4 @@ class TaskSteps extends Component{
         );
     }
 };
-export default TaskSteps
+export default withRouter(TaskSteps)

@@ -11,7 +11,7 @@ import {
     getTaskName,
     getTaskRemark
 } from "../../utils/cookies";
-import {attackLists,WhiteDetailed,BlackDetailed} from "../../api/task";
+import {attackLists} from "../../api/task";
 
 const { TabPane } = Tabs;
 class TaskList extends Component{

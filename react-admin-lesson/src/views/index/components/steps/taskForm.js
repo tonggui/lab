@@ -34,7 +34,7 @@ class TaskForm extends Component{
         const { taskName, taskRemark} = this.state;
         return (
             <>
-                <Form className="taskForm"
+                <Form className="taskForm" style={{margin: '0 auto'}}
                     name="basic"
                     initialValues={{ taskName, taskRemark }}
                     onFinish={this.onFinish}
