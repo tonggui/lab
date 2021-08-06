@@ -10,7 +10,10 @@
       </template>
       <template slot="bottom-marker">
         <span v-if="product.existInPoi" class="recommend-product-info-bottom-marker">已存在</span>
-        <span v-else />
+        <Tooltip v-else transfer placement="top" :width="300" :offset="10" popper-class="recommend-product-info-restore-tooltip" class="recommend-product-info-restore-tooltip"
+                 content="商品在回收站中,点击右侧“从回收站恢复”即可恢复该商品，原有销量也会恢复哦~">
+          <span>回收站中可恢复</span>
+        </Tooltip>
       </template>
     </ProductInfoImage>
     <template slot="info">
@@ -107,6 +110,16 @@
       line-height: 1;
       &.delete {
         background: rgba(244, 113, 107, .9);
+      }
+    }
+    &-restore-tooltip{
+      opacity: 0.8;
+      font-size: 12px !important;
+      .boo-tooltip-rel {
+        display: inline-block;
+        position: relative;
+        width: inherit;
+        background: rgba(63,65,86,0.9);
       }
     }
     &-name {

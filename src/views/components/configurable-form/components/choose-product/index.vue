@@ -61,6 +61,8 @@
       <a :class="{ 'delete': true, 'disabled': disabled }" @click="handleDeleteQuickSelect" v-if="selectedItem">清空快捷录入</a>
       <AuditFieldTip :contents="auditTips" />
     </div>
+    <RestoreProduct :recycleModal="recycleModal" :defaultTag="defaultTag" :restoreProductName="restoreProductName" :selectedSpus="selectedSpus" @on-confirm='confirmSubmit' @on-cancel="cancel">
+    </RestoreProduct>
   </div>
 </template>
 
@@ -75,6 +77,7 @@
   import LibraryAddColorful from '@/assets/icons/library-add-filled-colorful.svg'
   import { SearchTime, FillTime } from '@/common/lx/lxReport/lxTime'
   import lx from '@/common/lx/lxReport'
+  import RestoreProduct from '@/views/components/sp-list/restore-product.vue'
 
   export default {
     name: 'ChooseProduct',
@@ -83,7 +86,8 @@
       AuditFieldTip,
       CustomSearchSelector,
       ProductInfo,
-      LibraryAddColorful
+      LibraryAddColorful,
+      RestoreProduct
     },
     props: {
       value: [String, Number],
@@ -95,6 +99,10 @@
     },
     data () {
       return {
+        restoreProductName: '',
+        defaultTag: [],
+        selectedSpus: [],
+        recycleModal: false,
         val: this.value,
         error: null,
         loading: false,
@@ -128,6 +136,25 @@
       }
     },
     methods: {
+      restoreProduct (item) {
+        console.log(item)
+        // 开启模态框 && 须传（勾选）需恢复的spuIds
+        this.restoreProductName = item.name
+        this.selectedSpus = []
+        this.selectedSpus.push(item.id)
+        this.defaultTag = []
+        this.defaultTag.push({ id: item.tagId, name: item.tagName })
+        this.recycleModal = true
+      },
+      confirmSubmit () {
+        // 回到当前页 & 刷新本页
+        this.cancel()
+      },
+      cancel () {
+        this.recycleModal = false
+        this.selectedSpus = []
+        this.defaultTag = []
+      },
       isQualified (v) {
         return v.qualificationStatus === QUALIFICATION_STATUS.YES
       },
@@ -202,50 +229,52 @@
           cb(new Error('禁用选项，禁止选中！'))
           return
         }
-        SearchTime.searchEndTime = +new Date()
-        FillTime.fillStartTime = +new Date()
-        // 如果选择弹窗显示中，不继续提示选择弹窗
-        if (this.confirmVisible) {
-          return
-        }
-
-        const isAccepted = await new Promise(resolve => {
-          if (!this.selectedItem) {
-            resolve(true)
-            return
-          }
-          this.confirmVisible = true
-          this.$Modal.confirm({
-            title: '确定选择此商品',
-            content: '选择此商品后，已填写的商品信息将被覆盖。是否选择此商品？',
-            transfer: false,
-            onOk: () => resolve(true),
-            onCancel: () => resolve(false)
-          })
-        })
-        this.confirmVisible = false
-
-        if (isAccepted) {
-          this.$emit('on-select-product', item)
-          this.selectedItem = item
-          this.confirmed = true
-          // 选中商品时重新获取商品信息
-          this.dataSource = []
-          this.getSpList(item.name)
-          this.$refs['custom-search'].hide()
-          this.$Message.success('信息填充成功，请继续完善')
-          lx.mc({
-            bid: 'b_shangou_online_e_q9bg9t89_mc',
-            val: {
-              st_spu_id: item.id,
-              select_time: new Date().getTime()
-            }
-          })
-        } else {
-          // 取消后，重新设置为选中状态。保持选中的场景
-          setTimeout(() => this.resetToEditingMode(), 400)
-        }
-        cb(isAccepted ? null : new Error())
+        // 回收站恢复逻辑 existInRecycle
+        this.restoreProduct(item)
+        // SearchTime.searchEndTime = +new Date()
+        // FillTime.fillStartTime = +new Date()
+        // // 如果选择弹窗显示中，不继续提示选择弹窗
+        // if (this.confirmVisible) {
+        //   return
+        // }
+        //
+        // const isAccepted = await new Promise(resolve => {
+        //   if (!this.selectedItem) {
+        //     resolve(true)
+        //     return
+        //   }
+        //   this.confirmVisible = true
+        //   this.$Modal.confirm({
+        //     title: '确定选择此商品',
+        //     content: '选择此商品后，已填写的商品信息将被覆盖。是否选择此商品？',
+        //     transfer: false,
+        //     onOk: () => resolve(true),
+        //     onCancel: () => resolve(false)
+        //   })
+        // })
+        // this.confirmVisible = false
+        //
+        // if (isAccepted) {
+        //   this.$emit('on-select-product', item)
+        //   this.selectedItem = item
+        //   this.confirmed = true
+        //   // 选中商品时重新获取商品信息
+        //   this.dataSource = []
+        //   this.getSpList(item.name)
+        //   this.$refs['custom-search'].hide()
+        //   this.$Message.success('信息填充成功，请继续完善')
+        //   lx.mc({
+        //     bid: 'b_shangou_online_e_q9bg9t89_mc',
+        //     val: {
+        //       st_spu_id: item.id,
+        //       select_time: new Date().getTime()
+        //     }
+        //   })
+        // } else {
+        //   // 取消后，重新设置为选中状态。保持选中的场景
+        //   setTimeout(() => this.resetToEditingMode(), 400)
+        // }
+        // cb(isAccepted ? null : new Error())
       },
       handleChange (val) {
         this.val = val

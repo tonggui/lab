@@ -61,10 +61,13 @@
         </div>
       </div>
     </div>
+    <RestoreProduct :recycleModal="recycleModal" :defaultTag="defaultTag" :restoreProductName="restoreProductName" :selectedSpus="selectedSpus" @on-confirm='confirmSubmit' @on-cancel="cancel">
+    </RestoreProduct>
   </div>
 </template>
 
 <script>
+  import RestoreProduct from './restore-product'
   import { poiId } from '@/common/constants'
   import Brand from '@/components/brand'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
@@ -90,7 +93,7 @@
   export default {
     name: 'sp-table',
     components: {
-      Brand, ProductApplyDrawer
+      Brand, ProductApplyDrawer, RestoreProduct
     },
     props: {
       fetchData: {
@@ -119,6 +122,10 @@
     },
     data () {
       return {
+        restoreProductName: '',
+        defaultTag: [],
+        selectedSpus: [],
+        recycleModal: false,
         sortType: 0,
         categoryLoading: false,
         categoryList: [],
@@ -174,6 +181,17 @@
                     {isSp && <Button type="primary" size="small">标品</Button>}
                     {!isSp && <Button type="default" size="small">非标品</Button>}
                     {existInPoi && <Button type="warning" size="small" ghost>已存在</Button>}
+                    {<Tooltip always class="restore-tooltip" popper-class="restore-tooltip"
+                      placement="bottom"
+                      width={400} style="font-size:12px"
+                      // content="商品在回收站中,点击右侧“从回收站恢复”即可恢复该商品，原有销量也会恢复哦~"
+                    >
+                      <Button type="primary" size="small" ghost>回收站可恢复</Button>
+                      <div slot="content">
+                        <p class="display-tip">商品在回收站中,点击右侧“从回收站恢复”即可恢复该商品，原有销量也会恢复哦~</p>
+                      </div>
+                    </Tooltip>
+                    }
                   </div>
                   {source === 6 ? <div class="desc">数据支持：网拍天下 www.viwor.net</div> : null}
                 </div>
@@ -242,12 +260,15 @@
           key: 'action',
           align: 'center',
           render: (hh, { row: item }) => {
-            const disabled = this.isDisabled(item)
-            const isQualified = this.isQualified(item)
+            // const disabled = false
+            // const isQualified = this.isQualified(item)
+            // const recycle = true
             return (
-              <Tooltip content={this.disabledTip(item)} placement="left" transfer width={!isQualified ? 250 : undefined} disabled={!disabled}>
-                <span class={{ disabled, opr: true }} onClick={() => this.selectProduct(item)}>选择该商品</span>
-              </Tooltip>
+              // <Tooltip content={this.disabledTip(item)} placement="left" transfer width={!isQualified ? 250 : undefined} disabled={!disabled}>
+              //   {recycle ? <span class={{ disabled, opr: true }} onClick={() => this.selectProduct(item)}>从回收站恢复</span>
+              //     : <span class={{ disabled, opr: true }} onClick={() => this.selectProduct(item)}>选择该商品</span> }
+              // </Tooltip>
+              <span class={{ opr: true }} onClick={() => this.restoreProduct(item)} >从回收站恢复</span>
             )
           }
         })
@@ -273,6 +294,27 @@
       }
     },
     methods: {
+      restoreProduct (item) {
+        console.log(item, this.productList)
+        // 开启模态框 && 须传（勾选）需恢复的spuIds
+        this.restoreProductName = item.name
+        this.selectedSpus = []
+        this.selectedSpus.push(item.id)
+        this.defaultTag = []
+        this.defaultTag.push({ id: item.tagId, name: item.tagName })
+        console.log(this.defaultTag)
+        this.recycleModal = true
+      },
+      confirmSubmit () {
+        // 回到当前页 & 刷新本页
+        this.cancel()
+        this.handlePageChange(this.pagination)
+      },
+      cancel () {
+        this.recycleModal = false
+        this.selectedSpus = []
+        this.defaultTag = []
+      },
       isQualified (v) {
         return v.qualificationStatus === QUALIFICATION_STATUS.YES
       },
@@ -327,6 +369,7 @@
       },
       handlePageChange (page) {
         this.pagination = page
+        console.log('--bbbbb', page)
         this.fetchProductList()
       },
       qualificationTip (item) {
@@ -373,6 +416,7 @@
           const data = await this.fetchData(postData)
           this.loading = false
           this.productList = data.list || []
+          console.log('----', data.list)
           Object.assign(this.pagination, data.pagination)
         } catch (e) {
           this.$Message.error(e.message || '网络请求失败，请稍后再试')
@@ -568,6 +612,18 @@
           margin-right: 8px;
           padding: 0 7px;
         }
+        /deep/ .restore-tooltip{
+          opacity: 0.8;
+          max-width: 400px !important;
+          /deep/ boo-tooltip-inner boo-tooltip-inner-with-width {
+            max-width: 300px;
+          }
+          .boo-tooltip-popper {
+            font-size: 12px;
+            line-height: 1.5;
+            max-width: 300px;
+          }
+        }
       }
       .meta {
         flex: 1;
@@ -596,5 +652,6 @@
         line-height: 36px;
       }
     }
+
   }
 </style>

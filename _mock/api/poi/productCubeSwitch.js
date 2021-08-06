@@ -4,5 +4,5 @@
 module.exports = {
   code: 0,
   msg: '',
-  data: true
+  data: false
 }
