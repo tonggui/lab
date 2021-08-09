@@ -122,7 +122,7 @@
         width: 110%;
         margin-left: -5%;
         background: rgba(63,65,86,0.9);
-        padding: 2px;
+        padding: 2px 5px;
         font-style: normal;
         transform: scale(0.9);
       }
