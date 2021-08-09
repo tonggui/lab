@@ -336,6 +336,9 @@ declare interface StandardProduct extends BaseProduct {
   origin: Origin; // 产地
   monthSale?: number; // 月销量信息
   existInPoi?: boolean; // 门店是否已有此标品
+  existInRecycle?:boolean;// 该商品是否存在于回收站
+  tagId?:number;
+  tagName?:string;
   source?: number; // TODO
   suggestedPrice: number;
   maxPrice: number;

@@ -171,7 +171,7 @@
             align: 'left',
             minWidth: 250,
             render: (hh, params) => {
-              const { name, pictureList, isSp, existInPoi, source } = params.row
+              const { name, pictureList, isSp, existInPoi, source, existInRecycle } = params.row
               return (
               <div class="productInfo">
                 <img src={convertToCompatiblePicture(pictureList)} class="pic" />
@@ -181,7 +181,7 @@
                     {isSp && <Button type="primary" size="small">标品</Button>}
                     {!isSp && <Button type="default" size="small">非标品</Button>}
                     {existInPoi && <Button type="warning" size="small" ghost>已存在</Button>}
-                    {<Tooltip always class="restore-tooltip" popper-class="restore-tooltip"
+                    {existInRecycle && <Tooltip class="restore-tooltip" popper-class="restore-tooltip"
                       placement="bottom"
                       width={400} style="font-size:12px"
                       // content="商品在回收站中,点击右侧“从回收站恢复”即可恢复该商品，原有销量也会恢复哦~"
@@ -260,15 +260,13 @@
           key: 'action',
           align: 'center',
           render: (hh, { row: item }) => {
-            // const disabled = false
-            // const isQualified = this.isQualified(item)
-            // const recycle = true
+            const disabled = this.isDisabled(item)
+            const isQualified = this.isQualified(item)
+            const isNotInRecycle = !item.existInRecycle
             return (
-              // <Tooltip content={this.disabledTip(item)} placement="left" transfer width={!isQualified ? 250 : undefined} disabled={!disabled}>
-              //   {recycle ? <span class={{ disabled, opr: true }} onClick={() => this.selectProduct(item)}>从回收站恢复</span>
-              //     : <span class={{ disabled, opr: true }} onClick={() => this.selectProduct(item)}>选择该商品</span> }
-              // </Tooltip>
-              <span class={{ opr: true }} onClick={() => this.restoreProduct(item)} >从回收站恢复</span>
+              isNotInRecycle ? (<Tooltip content={this.disabledTip(item)} placement="left" transfer width={!isQualified ? 250 : undefined} disabled={!disabled}>
+                <span class={{ disabled, opr: true }} onClick={() => this.selectProduct(item)}>选择该商品</span>
+              </Tooltip>) : <span class={{ opr: true }} onClick={() => this.restoreProduct(item)}>从回收站恢复</span>
             )
           }
         })
@@ -416,7 +414,6 @@
           const data = await this.fetchData(postData)
           this.loading = false
           this.productList = data.list || []
-          console.log('----', data.list)
           Object.assign(this.pagination, data.pagination)
         } catch (e) {
           this.$Message.error(e.message || '网络请求失败，请稍后再试')
@@ -615,6 +612,7 @@
         /deep/ .restore-tooltip{
           opacity: 0.8;
           max-width: 400px !important;
+          color: rgb(176, 176, 176);
           /deep/ boo-tooltip-inner boo-tooltip-inner-with-width {
             max-width: 300px;
           }

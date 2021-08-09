@@ -97,7 +97,6 @@
           return
         }
         let selectedSpu = [...this.selectedSpus]
-        console.log(this.curTag)
         const params = {
           poiId: this.poiId,
           tagId: this.curTag[0].id,
@@ -126,7 +125,6 @@
         this.$emit('on-cancel')
       },
       findTarget (tree, target) {
-        console.log(tree, target)
         let found = false
         for (let i = 0; i < tree.length; i++) {
           const node = tree[i]

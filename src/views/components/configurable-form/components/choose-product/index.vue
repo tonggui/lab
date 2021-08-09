@@ -159,7 +159,7 @@
         return v.qualificationStatus === QUALIFICATION_STATUS.YES
       },
       isDisabled (v) {
-        return !!v.existInPoi || !this.isQualified(v)
+        return !!v.existInPoi || (!v.existInRecycle && !this.isQualified(v))
       },
       getSpList: debounce(function (value) {
         const formData = {
@@ -225,56 +225,58 @@
         //   })
       },
       async handleClickItem (item, cb = noop) {
-        if (this.isDisabled(item)) {
-          cb(new Error('禁用选项，禁止选中！'))
-          return
+        if (item.existInRecycle) {
+          this.restoreProduct(item)
+        } else {
+          if (this.isDisabled(item)) {
+            cb(new Error('禁用选项，禁止选中！'))
+            return
+          }
+          SearchTime.searchEndTime = +new Date()
+          FillTime.fillStartTime = +new Date()
+          // 如果选择弹窗显示中，不继续提示选择弹窗
+          if (this.confirmVisible) {
+            return
+          }
+
+          const isAccepted = await new Promise(resolve => {
+            if (!this.selectedItem) {
+              resolve(true)
+              return
+            }
+            this.confirmVisible = true
+            this.$Modal.confirm({
+              title: '确定选择此商品',
+              content: '选择此商品后，已填写的商品信息将被覆盖。是否选择此商品？',
+              transfer: false,
+              onOk: () => resolve(true),
+              onCancel: () => resolve(false)
+            })
+          })
+          this.confirmVisible = false
+
+          if (isAccepted) {
+            this.$emit('on-select-product', item)
+            this.selectedItem = item
+            this.confirmed = true
+            // 选中商品时重新获取商品信息
+            this.dataSource = []
+            this.getSpList(item.name)
+            this.$refs['custom-search'].hide()
+            this.$Message.success('信息填充成功，请继续完善')
+            lx.mc({
+              bid: 'b_shangou_online_e_q9bg9t89_mc',
+              val: {
+                st_spu_id: item.id,
+                select_time: new Date().getTime()
+              }
+            })
+          } else {
+            // 取消后，重新设置为选中状态。保持选中的场景
+            setTimeout(() => this.resetToEditingMode(), 400)
+          }
+          cb(isAccepted ? null : new Error())
         }
-        // 回收站恢复逻辑 existInRecycle
-        this.restoreProduct(item)
-        // SearchTime.searchEndTime = +new Date()
-        // FillTime.fillStartTime = +new Date()
-        // // 如果选择弹窗显示中，不继续提示选择弹窗
-        // if (this.confirmVisible) {
-        //   return
-        // }
-        //
-        // const isAccepted = await new Promise(resolve => {
-        //   if (!this.selectedItem) {
-        //     resolve(true)
-        //     return
-        //   }
-        //   this.confirmVisible = true
-        //   this.$Modal.confirm({
-        //     title: '确定选择此商品',
-        //     content: '选择此商品后，已填写的商品信息将被覆盖。是否选择此商品？',
-        //     transfer: false,
-        //     onOk: () => resolve(true),
-        //     onCancel: () => resolve(false)
-        //   })
-        // })
-        // this.confirmVisible = false
-        //
-        // if (isAccepted) {
-        //   this.$emit('on-select-product', item)
-        //   this.selectedItem = item
-        //   this.confirmed = true
-        //   // 选中商品时重新获取商品信息
-        //   this.dataSource = []
-        //   this.getSpList(item.name)
-        //   this.$refs['custom-search'].hide()
-        //   this.$Message.success('信息填充成功，请继续完善')
-        //   lx.mc({
-        //     bid: 'b_shangou_online_e_q9bg9t89_mc',
-        //     val: {
-        //       st_spu_id: item.id,
-        //       select_time: new Date().getTime()
-        //     }
-        //   })
-        // } else {
-        //   // 取消后，重新设置为选中状态。保持选中的场景
-        //   setTimeout(() => this.resetToEditingMode(), 400)
-        // }
-        // cb(isAccepted ? null : new Error())
       },
       handleChange (val) {
         this.val = val

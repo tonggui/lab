@@ -88,6 +88,9 @@ export const convertSpInfo = (product: any): StandardProduct => {
     qualificationStatus: product.lockStatus || QUALIFICATION_STATUS.YES,
     qualificationTip: product.lockTips,
     spId: product.spId || product.id || '',
+    existInRecycle: product.existInRecycle || false,
+    tagId: Number(product.tagId),
+    tagName: product.tagName || '',
     ...categoryAttr
   }
   // 如果有月销量信息，需要保留

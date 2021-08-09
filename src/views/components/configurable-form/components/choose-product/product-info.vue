@@ -2,7 +2,7 @@
   <Layout class="recommend-product-info">
     <ProductInfoImage
       slot="image"
-      :product="product"
+      :product="product" :disabled="product.existInRecycle"
       class="recommend-product-info-image"
     >
       <template slot="top-left-marker" v-if="!product.isSp">
@@ -10,10 +10,11 @@
       </template>
       <template slot="bottom-marker">
         <span v-if="product.existInPoi" class="recommend-product-info-bottom-marker">已存在</span>
-        <Tooltip v-else transfer placement="top" :width="300" :offset="10" popper-class="recommend-product-info-restore-tooltip" class="recommend-product-info-restore-tooltip"
+        <Tooltip v-else-if="product.existInRecycle" transfer placement="top" :width="320" :offset="6" popper-class="recommend-product-info-restore-tooltip" class="recommend-product-info-restore-tooltip"
                  content="商品在回收站中,点击右侧“从回收站恢复”即可恢复该商品，原有销量也会恢复哦~">
           <span>回收站中可恢复</span>
         </Tooltip>
+        <span v-else />
       </template>
     </ProductInfoImage>
     <template slot="info">
@@ -118,8 +119,12 @@
       .boo-tooltip-rel {
         display: inline-block;
         position: relative;
-        width: inherit;
+        width: 110%;
+        margin-left: -5%;
         background: rgba(63,65,86,0.9);
+        padding: 2px;
+        font-style: normal;
+        transform: scale(0.9);
       }
     }
     &-name {

@@ -56,7 +56,7 @@
               <li
                 :key="item.id || index"
                 class="list-item-container"
-                :class="{ disabled: isItemDisabled(item), 'selection-state': index === selectionIndex }"
+                :class="{ disabled: isItemDisabled(item), 'selection-state': index === selectionIndex, 'recycle-state':item.existInRecycle }"
                 @click="handleClickItem(item)"
               >
                 <slot name="list-item" :data="item" :index="index" :keyword="val"></slot>
@@ -326,20 +326,7 @@
             width: 100%;
             min-height: 82px;
             position: relative;
-            &::before {
-              content: '';
-              position: absolute;
-              display: inline-block;
-              cursor: default;
-              left: 0;
-              top: 0;
-              width: 100%;
-              height: 100%;
-              min-height: 82px;
-              background: #fff;
-              z-index: 1;
-              opacity: 0.5;
-            }
+            opacity: 0.5;
           }
           &.disabled {
             width: 100%;
