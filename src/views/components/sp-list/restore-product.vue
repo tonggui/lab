@@ -1,5 +1,5 @@
 <template>
-  <Modal v-model="recycleModal" :title="MODAL_TYPE[modalType].title" :transfer="false" class="recycle-modal">
+  <Modal v-model="recycleVisible" :title="MODAL_TYPE[modalType].title" :transfer="false" class="recycle-modal" @on-cancel="cancel">
     <template v-if="MODAL_TYPE[modalType].config['TIP']">
       <Alert type="warning" show-icon>{{ MODAL_TYPE[modalType].tipText }}</Alert>
     </template>
@@ -37,7 +37,7 @@
     props: {
       recycleModal: {
         type: Boolean,
-        default: () => true
+        default: () => false
       },
       restoreProductName: {
         type: String
@@ -54,6 +54,7 @@
     },
     data () {
       return {
+        recycleVisible: false,
         MODAL_TYPE,
         modalType: 'SINGLE_RECOVER', // 模态框类型：'CLEAN'-清理模态框，'SINGLE_RECOVER'-恢复，'BATCH_RECOVER'-批量恢复
         tagList: [],
@@ -65,6 +66,7 @@
       recycleModal: {
         immediate: true,
         handler (show) {
+          this.recycleVisible = show
           if (show && (this.modalType === 'SINGLE_RECOVER' || this.modalType === 'BATCH_RECOVER')) {
             const tagStillExist = this.findTarget(this.tagList, ...this.defaultTag)
             if (tagStillExist) {
@@ -106,6 +108,7 @@
           this.$Message.success('恢复成功')
           this.curTag = []
           // this.cancel()
+          this.recycleVisible = false
           this.$emit('on-confirm')
         }).catch(err => {
           console.log(err)
@@ -122,6 +125,7 @@
       },
       cancel () {
         this.curTag = []
+        this.recycleVisible = false
         this.$emit('on-cancel')
       },
       findTarget (tree, target) {
