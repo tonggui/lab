@@ -3,13 +3,13 @@ const router = [
     {
       title: '任务创建',
       icon: 'laptop',
-      key: '/index/task/create',
+      key: '/task/create',
       breadcrumbName: '任务创建'
     },
     {
       title: '任务管理',
       icon: 'bars',
-      key: '/index/task/list',
+      key: '/task/list',
     }
   ]
 //

@@ -1,19 +1,18 @@
 import React, {Component} from 'react';
 import ReactEcharts from 'echarts-for-react';
-import Eps from "../steps/data";
-
 
 class SuccessGraph extends Component {
     constructor(props){
         super(props);
         this.state = {
-            eps : props.success
+            eps : props.success,
+            attackType : props.attackType
         };
     }
-    getOtion = () => {
+    getOption = () => {
         let eps = this.state.eps
         // Eps.push([tmp[0],tmp[9],tmp[19],tmp[29],tmp[39],tmp[59],tmp[79],tmp[99],tmp[119],tmp[255]])
-        let index = [0,9,19,29,39,59,79,99,119,255].map(item=>{
+        let index = this.state.attackType == 2 ? [2,4,8,16,32] :[0,9,19,29,39,59,79,99,119,255].map(item=>{
             return item/255
         })
         const option = {
@@ -100,7 +99,7 @@ class SuccessGraph extends Component {
     render() {
         return (
             <ReactEcharts
-                option={this.getOtion()}
+                option={this.getOption()}
                 style={{height: '350px', width: '750px'}}
                 className='react_for_echarts' />
         );

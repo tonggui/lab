@@ -29,7 +29,7 @@ class BlackAttack extends Component {
     // }
 
     render() {
-        const {resultset,taskname,taskremark,time,type } = this.props.record
+        const {resultest,taskname,taskremark,time,type } = this.props.record
         return (
             <>
                 <script src="http://html5media.googlecode.com/svn/trunk/src/html5media.min.js"></script>

@@ -1,10 +1,9 @@
 import React, { Component, Fragment } from "react";
 import { Steps, Button, message, Select, Input, Form } from 'antd';
 import Steps2 from './steps2'
-import Steps3 from './steps3'
 import './steps.scss'
 import TaskForm from "./taskForm";
-import {CreateWhiteTask, CreateBlackTask} from "../../../../api/task";
+import {CreateWhiteTask, CreateBlackTask,WhiteMethods,BlackMethods} from "../../../../api/task";
 import {
     setTaskRemark,
     getTaskRemark,
@@ -46,7 +45,9 @@ class TaskSteps extends Component{
         methodType:0,
         loading: false,
         status:true,
-        timer:null
+        timer:null,
+        WhiteMethods:[],
+        BlackMethods:[]
     }
     next = () => {
         this.setState({current: this.state.current + 1});
@@ -93,6 +94,33 @@ class TaskSteps extends Component{
         })
         console.log('Received values of form: ', requestData);
     };
+    componentDidMount() {
+        WhiteMethods().then(response => {  // resolves
+            const info = response.data.info
+            this.setState({WhiteMethods:info})
+            console.log(info)
+            this.setState({
+                loading: false
+            })
+        }).catch(error => {
+            this.setState({
+                loading: false
+            })
+        })
+        BlackMethods().then(response => {
+            const info = response.data.info
+            this.setState({BlackMethods:info})
+            console.log(info)
+            this.setState({
+                loading: false
+            })
+        }).catch(error => {
+            this.setState({
+                loading: false
+            })
+        })
+    }
+
     componentWillUnmount() {
         this.setState = ()=>false;
     }

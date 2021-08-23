@@ -34,12 +34,12 @@ export function CreateWhiteTask(data) {
     })
 }
 /**
- * 创建任务接口
+ * 创建黑盒任务接口
  */
 export function CreateBlackTask(data){
     return new Promise((resolve, reject) => {
         axios({
-            url: "/devApi/black_attack/",
+            url: "/black_predict_attack/",
             method: 'post',
             data
         }).then(res => {
@@ -102,6 +102,38 @@ export function BlackDetail(data){
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             data:qs.stringify(data)
+        }).then(res => {
+            resolve(res)
+        }).catch(err => {
+            reject(err)
+        })
+    })
+}
+
+/**
+ * 白盒所有可选攻击方法
+ */
+export function WhiteMethods() {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: "/white_attack_info/",
+            method: 'post'
+        }).then(res => {
+            resolve(res)
+        }).catch(err => {
+            reject(err)
+        })
+    })
+}
+
+/**
+ * 黑盒所有可选数据集
+ */
+export function BlackMethods() {
+    return new Promise((resolve, reject) => {
+        axios({
+            url: "/black_attack_info/",
+            method: 'post'
         }).then(res => {
             resolve(res)
         }).catch(err => {

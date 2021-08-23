@@ -117,7 +117,7 @@ class TaskList extends Component{
                             return (
                                 <Space size="middle" disabled={true}>
                                     <Link to={{
-                                        pathname: `/index/task/detail/${record.id}`,
+                                        pathname: `/task/detail/${record.id}`,
                                         state: params,
                                     }}>查看详情
                                     </Link>
@@ -141,7 +141,7 @@ class TaskList extends Component{
                     "taskremark": "ss",
                     "rate": 0.88,
                     "type": "目标消失",
-                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "resultest": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
                     "status": 0,
                     "time": "2021-08-04 18:28:35"
                 },
@@ -151,7 +151,7 @@ class TaskList extends Component{
                     "taskremark": "ss",
                     "rate": 0.0,
                     "type": "目标消失",
-                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "resultest": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
                     "status": -1,
                     "time": "2021-08-04 18:28:57"
                 },
@@ -161,7 +161,7 @@ class TaskList extends Component{
                     "taskremark": "ss",
                     "rate": 1.0,
                     "type": "目标消失",
-                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "resultest": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
                     "status": 1,
                     "time": "2021-08-04 11:41:43"
                 },
@@ -171,7 +171,7 @@ class TaskList extends Component{
                     "taskremark": "基于MobileNet的YOLO算法白盒安全评估",
                     "rate": 1.0,
                     "type": "识别不到目标,目标消失,制造标签,错误标签1,错误标签2",
-                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "resultest": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
                     "status": 1,
                     "time": "2021-08-04 10:41:43"
                 }
@@ -211,7 +211,7 @@ class TaskList extends Component{
         // this.setState({
         //     loading: true
         // })
-        // this.props.history.push('/index/task/detail');
+        // this.props.history.push('/task/detail');
         // Login(requestData).then(response => {  // resolves
         //     this.setState({
         //         loading: false
@@ -306,7 +306,7 @@ class TaskList extends Component{
                             return (
                                 <Space size="middle">
                                     <Link to={{
-                                        pathname: `/index/task/detail/${record.id}`,
+                                        pathname: `/task/detail/${record.id}`,
                                         state: params,
                                     }}>查看详情 {'sssqqq'+record.taskname}
                                     </Link>
@@ -330,7 +330,7 @@ class TaskList extends Component{
                     "taskremark": "ss",
                     "rate": 0.88,
                     "type": "目标消失",
-                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "resultest": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
                     "status": 0,
                     "time": "2021-08-04 18:28:35"
                 },
@@ -340,7 +340,7 @@ class TaskList extends Component{
                     "taskremark": "ss",
                     "rate": 0.0,
                     "type": "目标消失",
-                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "resultest": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
                     "status": -1,
                     "time": "2021-08-04 18:28:57"
                 },
@@ -350,7 +350,7 @@ class TaskList extends Component{
                     "taskremark": "ss",
                     "rate": 1.0,
                     "type": "目标消失",
-                    "resultset": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
+                    "resultest": "{\"untargeted\": {\"eps\": [], \"img\": []}, \"vanishing\": {\"eps\": [], \"img\": []}, \"fabrication\": {\"eps\": [], \"img\": []}, \"mislabeling_ml\": {\"eps\": [], \"img\": []}, \"mislabeling_ll\": {\"eps\": [], \"img\": []}}",
                     "status": 1,
                     "time": "2021-08-04 11:41:43"
                 }

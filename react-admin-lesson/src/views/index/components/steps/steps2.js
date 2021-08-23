@@ -1,6 +1,5 @@
 import React from "react";
-import {Radio, Checkbox, Row, Col, Image, Upload, Button, Modal} from 'antd';
-import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
+import {Radio, Checkbox, Row, Col} from 'antd';
 import {
     setWhiteParams,
     setBlackParams,
@@ -27,118 +26,16 @@ const WhiteAttack = () => {
     );
 };
 
-function getBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
-}
-
-class Pictures extends React.Component {
-    state = {
-        previewVisible: false,
-        previewImage: '',
-        previewTitle: '',
-        fileList: [],
-    };
-
-    handleCancel = () => this.setState({ previewVisible: false });
-
-    handlePreview = async file => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
-        }
-
-        this.setState({
-            previewImage: file.url || file.preview,
-            previewVisible: true,
-            previewTitle: file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
-        });
-    };
-
-    handleChange = ({ fileList }) => {
-        this.setState({ fileList })
-        console.log(fileList)
-        setBlackParams(fileList)
-    };
-
-    render() {
-        const { previewVisible, previewImage, fileList, previewTitle } = this.state;
-        const uploadButton = (
-            <div>
-                <PlusOutlined />
-                <div style={{ marginTop: 8 }}>Upload</div>
-            </div>
-        );
-        return (
-            <>
-                <Upload
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                    listType="picture-card"
-                    fileList={fileList}
-                    onPreview={this.handlePreview}
-                    onChange={this.handleChange}
-                >
-                    {fileList.length >= 8 ? null : uploadButton}
-                </Upload>
-                <Modal
-                    visible={previewVisible}
-                    title={previewTitle}
-                    footer={null}
-                    onCancel={this.handleCancel}
-                >
-                    <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                </Modal>
-            </>
-        );
-    }
-}
 const BlackAttack = () => {
-    const [type, setType] = React.useState(1);
-    const onRadioChange = e => {
-        let value = e.target.value
-        console.log('type checked', value);
-        setType(value);
-    };
-    const props = {
-        action: '//jsonplaceholder.typicode.com/posts/',
-        listType: 'picture',
-        previewFile(file) {
-            console.log('Your upload file:', file);
-            // Your process logic. Here we just mock to the same file
-            return fetch('https://next.json-generator.com/api/json/get/4ytyBoLK8', {
-                method: 'POST',
-                body: file,
-            })
-                .then(res => res.json())
-                .then(({ thumbnail }) => thumbnail);
-        },
-    };
-    const UploadType = props => {
-        if (props.type === 1) {
-            return (
-                <Pictures></Pictures>
-            );
-        } else {
-            return (
-                <Upload {...props}>
-                    <Button icon={<UploadOutlined />}>Upload</Button>
-                </Upload>
-            );
-        }
+    const onCheckChange = (checkedValues) => {
+        console.log('checked = ', checkedValues);
+        setBlackParams( checkedValues)
     }
     return (
-        <div>
-            <Radio.Group onChange={onRadioChange} value={type}  style={{marginBottom:20}}>
-                <Radio value={1}>图片</Radio>
-                <Radio value={2}>视频</Radio>
-            </Radio.Group>
-            <div>
-                <UploadType type = {type} />
-            </div>
-        </div>
+        <Checkbox.Group style={{ width: '100%' }} onChange={onCheckChange}>
+            <Checkbox value="deep_false_detection">深度伪造</Checkbox>
+            <Checkbox value="face_recognition">人脸识别</Checkbox>
+        </Checkbox.Group>
     );
 };
 const RenderAttack = props => {

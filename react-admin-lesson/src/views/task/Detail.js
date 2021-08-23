@@ -12,21 +12,12 @@ class TaskDetail extends Component {
         };
     }
     render(){
-        if (this.state.attackType === 2) {
-            return (
-                <div>
-                    <BlackDetail record={this.props.location.state.record}>
-                    </BlackDetail>
-                </div>
-            )
-        } else {
-            return (
-                <div>
-                    <WhiteDetail record={this.props.location.state.record}>
-                    </WhiteDetail>
-                </div>
-            )
-        }
+        return (
+            <div>
+                <WhiteDetail attackType={this.state.attackType} record={this.props.location.state.record}>
+                </WhiteDetail>
+            </div>
+        )
     }
 }
 export default withRouter(TaskDetail);

@@ -41,11 +41,15 @@ class AsideMenu extends Component {
             openKeys: [openKeys[openKeys.length - 1]]
         })
     }
-
+    defaultHighKey = ()=>{
+        return Router && Router.map(item => {
+            return item.key
+        })
+    }
     /** 菜单高光 */
     selectMenuHigh = ({selectedKeys, openKeys}) => {
         this.setState({
-            selectedKeys: [selectedKeys],
+            selectedKeys: this.defaultHighKey().indexOf(selectedKeys) != -1 ? [selectedKeys] : '/task/create',
             openKeys: [openKeys]
         })
     }
