@@ -79,7 +79,7 @@ class WhiteAttack extends Component{
         return (
             <>
                 <section className="site-card-wrapper">
-                    <Card title={attackType == 2 ? "黑盒任务" : "白盒任务"} bordered={false}>
+                    <Card style={{lineHeight: 2,fontSize:18}} title={attackType == 2 ? "黑盒任务" : "白盒任务"} bordered={false}>
                         <p style={{fontWeight:"bold",fontSize:18}}>任务名称：{taskname}</p>
                         <p>创建时间：{time}</p>
                         <h1>攻击方式：{type}</h1>
@@ -89,7 +89,7 @@ class WhiteAttack extends Component{
                         <p className='content-title'>测评图表</p>
                         <SuccessGraph attackType={attackType} success={Eps}>
                         </SuccessGraph>
-                        <p className='content-title2' >攻破结果图：</p>
+                        <p className='content-title2' >攻破结果图</p>
                         <Carousel autoplay autoplaySpeed={2000} className="imgCarousel">
                             {imgs.map((item,index)=>{
                                 return <Image key={index}
